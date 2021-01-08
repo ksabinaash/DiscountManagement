@@ -1,0 +1,79 @@
+﻿@model OfferManagement.Models.DiscountTransaction
+
+@{
+    ViewBag.Title = "Transaction Page - Details";
+}
+
+<h2>@ViewBag.Title.</h2>
+
+<div>
+    <hr />
+    <h3 class="text-success">@ViewBag.Message</h3>
+    <br />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CustomerName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CustomerName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UserEmail)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserEmail)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MobileNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MobileNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ShopName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ShopName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BilledValue)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BilledValue)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Discount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Discount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OTP)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OTP)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BilledDateTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BilledDateTime)
+        </dd>
+
+    </dl>
+</div>

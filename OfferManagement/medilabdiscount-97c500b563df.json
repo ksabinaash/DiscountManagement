@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "medilabdiscount",
+  "private_key_id": "97c500b563df23c24f3c644a49b310ad70874a71",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCXCgBU/ZoROGwQ\nP2aLQsO4+2EPxL7g1zzFrMlAXJ/fzgqVBMjAkF9i+IwPj6oCe85F8l6MWrdz/8Rj\nCXZAeEEAU/OYExsrcGdYM8B/0OGuqNPT6Yqed+nZ1DyVEF1V2nj6t66Z5qx/X12g\nWroVuqr2CQeMJjUGGYhGxjaNuiv1ABEc0uHO4lNKmnP7rV2vQecU3avxIFXm88YN\nGD62mYChVn6OTtoIBtutqS9MqbC1bxw2CLjzCgzLOLd30YA977+H2lfyFLfOD63x\nk7wdUiB+OyKCbFNc8br+nkceK81GiBDazHmvmQmff33ZNdyiQlEsMdTwx744dTjB\nsjMh+0KxAgMBAAECggEAQrNp/h6YwW4XWv2EvY9YfAKXlK0gVo73CZ0Kq1+8Qsvt\nJG4ecdvQJBb7U4vwWnRuXblxQ650Qcf75HizPjldC1YHx2r4nrBfEzaXllqar9Vi\n5rzGOMFgBpCRyIqXjWiT8LTZaKHUH9PvtvcaIqpzAYBvUtc0p2LzKb4zLVfAPcuB\nxoNYtOkVlqv74mu+OuP/SsKX0UX7IaFSboC30FUZfSgVzXv7pwt/vwEKeDpgdd1g\nUNqv5VZHrlEPpPMf+Da3mjOhAyeIOFR8JCVmt1K7BraAFOzzpOJr6Z/c7/0afePh\nKgZH1ywp+MLc3wOkhqDL9/DMh30rx1Mf3aobulFreQKBgQDQu0fNfQMKd9C3x3ZV\nswNkZpznf95Xktg0+ckUdgNTT1FNIlT36QoB6EVoQbvXmQeZb5sy2k5BBWMOLIdx\n+RRblbIFaSgnGtIxGAPWn664jLj+1B9rJNt28Q+akue9TcHdrJRs1OBvC+oxpBi5\nnfGie10e4dLfzJTo73yExMxsnwKBgQC5PiJyV8PXjY0NOR5Y3GYwUw8objwHNm/F\n77SnJ++EEpXyRTNHcYWJ4EW+XPPkZThYolkRIF/U3EcBSWzKtu/yzoSRYeleaDnb\nYfFPigtVvqb2zhTJojG/+ZGoor2purHdORX6ufVKPEpmLaTT0Fin0f5wY/ZX+ANG\nhtASawG+rwKBgDQZatSpjWbBfUFB8hF1+zTGQAewbOji6EBg0IXg5veWZq6gESFH\n842CUkCxl5c6xSDRMKXCw6GLHKxfBPe3uhMaDDM5iiIomapTWjHp7Yx2434HqEfw\nDS9lAAYPAPTJQch42RtJDzPof24gjWNXPwbVT+rzZtUhlVGG5Uemb3f1AoGAVEU1\n+np+t3LHtjpD2fz56AYBIU10tXtIQe2Ya2q5hYXG/R4KA/ha3axPThiPQ1ng1kGU\n7zuhHP7Qtn8mpNmwMu9MU68NMUuM9oaJ9rtACNPgtOpvfoLwyvrIDsVqLuqlu5Qa\nsaMjOZBP8EfXchyYGFBpxctT6BUFuHHf+mD/vDUCgYEAj6DGXwPXcu5JbASmMVG4\n1+JsfqHii/KFtvdCAXdX6vdPDR6NkALUQbhgDi7v/LNAUBPKrnL8gGG7t1N8nRza\nSywqsjjZ1bc8Q7oHb1kTIk2cadDTQvcf+ucY/JKygqZtbzh83IveApssa922fV55\naBnxx3Ivllh7R+yFmEtrAsA=\n-----END PRIVATE KEY-----\n",
+  "client_email": "medilabdiscount@medilabdiscount.iam.gserviceaccount.com",
+  "client_id": "109002071158392868123",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/medilabdiscount%40medilabdiscount.iam.gserviceaccount.com"
+}
