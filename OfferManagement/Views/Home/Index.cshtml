@@ -2,7 +2,7 @@
 @using OfferManagement.Models;
 
 @{
-    ViewBag.Title = "Transaction Page";
+    ViewBag.Title = System.Configuration.ConfigurationManager.AppSettings["TransactionsPageName"];
 }
 <h2>@ViewBag.Title.</h2>
 

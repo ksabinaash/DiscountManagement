@@ -1,7 +1,7 @@
 ﻿@model OfferManagement.Models.DiscountTransaction
 
 @{
-    ViewBag.Title = "Transaction Page - Details";
+    ViewBag.Title = @System.Configuration.ConfigurationManager.AppSettings["TransactionsPageName"] + " - Details";
 }
 
 <h2>@ViewBag.Title.</h2>

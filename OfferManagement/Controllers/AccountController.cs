@@ -488,10 +488,14 @@ namespace OfferManagement.Controllers
 
         private List<string> GetRegisteredUsers()
         {
-            String _sheetName = "AuthorizedUsers";
+            String _sheetName = System.Configuration.ConfigurationManager.AppSettings["UsersSheetName"];
+
             var gsh = new GoogleSheetsHelper();
+
             var gsp = new GoogleSheetParameters() { RangeColumnStart = 1, RangeRowStart = 1, RangeColumnEnd = 2, RangeRowEnd = 100, FirstRowIsHeaders = true, SheetName = _sheetName };
+
             var rowValues = gsh.GetUserEmailsFromSheet(gsp);
+
             return rowValues;
         }
 

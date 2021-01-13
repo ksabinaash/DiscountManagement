@@ -16,9 +16,9 @@ namespace OfferManagement.Helpers
     {
         static string[] Scopes = { SheetsService.Scope.Spreadsheets };
 
-        static string ApplicationName = "DiscountManagement";
+        static string ApplicationName = System.Configuration.ConfigurationManager.AppSettings["ApplicationName"];
 
-        static string SpreadSheetId = "1BL0kWy6sfE_Nf0_QXkzb2h65FCdBXUdwBqUoav5kA38";
+        static string SpreadSheetId = System.Configuration.ConfigurationManager.AppSettings["GoogleSheetId"];
 
         private readonly SheetsService _sheetsService;
 
@@ -41,7 +41,7 @@ namespace OfferManagement.Helpers
 
         public void CreateEntry(DiscountTransaction transaction)
         {
-            string sheetName = "Transactions";
+            string sheetName = System.Configuration.ConfigurationManager.AppSettings["TransactionsSheetName"];
 
             var range = $"{sheetName}!A:J";
 

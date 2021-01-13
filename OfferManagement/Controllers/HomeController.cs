@@ -33,7 +33,7 @@ namespace OfferManagement.Controllers
 
                 google.CreateEntry(transaction);
 
-                ViewBag.Message = "Transaction saved to googlesheets successfully with the following details!";
+                ViewBag.Message = System.Configuration.ConfigurationManager.AppSettings["SuccessfulTransactionMsg"];
 
                 return View("Transaction", transaction);
             }

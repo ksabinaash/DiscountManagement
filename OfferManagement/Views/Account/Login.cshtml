@@ -12,14 +12,14 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Discount Management - @ViewBag.Title</title>
+    <title>@System.Configuration.ConfigurationManager.AppSettings["ApplicationName"] - @ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
     <div class="container">
         <div class="jumbotron">
-            <h1>Discount Management</h1>
+            <h1>@System.Configuration.ConfigurationManager.AppSettings["ApplicationName"]</h1>
         </div>
 
         <div class="row">
