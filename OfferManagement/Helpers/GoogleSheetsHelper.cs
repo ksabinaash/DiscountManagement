@@ -39,23 +39,73 @@ namespace OfferManagement.Helpers
             _spreadsheetId = SpreadSheetId;
         }
 
-        public void CreateEntry(DiscountTransaction transaction)
+        public void CreateTransaction(DiscountTransaction transaction)
         {
             string sheetName = System.Configuration.ConfigurationManager.AppSettings["TransactionsSheetName"];
 
-            var range = $"{sheetName}!A:J";
+            var range = $"{sheetName}!A:M";
 
             var valueRange = new ValueRange();
 
-            var oblist = new List<object>() { transaction.CustomerName, transaction.UserEmail, transaction.MobileNumber, transaction.ShopName, transaction.BilledValue, transaction.Discount, transaction.DiscountReason, transaction.OTP, transaction.MessageTemplate, transaction.BilledDateTime };
-            
+            var oblist = new List<object>() { transaction.CustomerName, transaction.CustomerEmail, transaction.MobileNumber, transaction.UserEmail, transaction.PCCName, transaction.BillValue, transaction.Discount, transaction.BilledValue, transaction.DiscountReason, transaction.OTP, transaction.MessageTemplate, transaction.BilledDateTime };
+
             valueRange.Values = new List<IList<object>> { oblist };
 
             var appendRequest = _sheetsService.Spreadsheets.Values.Append(valueRange, _spreadsheetId, range);
-            
+
             appendRequest.ValueInputOption = SpreadsheetsResource.ValuesResource.AppendRequest.ValueInputOptionEnum.USERENTERED;
-            
+
             var appendReponse = appendRequest.Execute();
+        }
+
+        public IList<DiscountTransaction> ReadTransactions(bool IsFirstRowHeader)
+        {
+            string sheetName = System.Configuration.ConfigurationManager.AppSettings["TransactionsSheetName"];
+
+            var range = $"{sheetName}!A:M";
+
+            SpreadsheetsResource.ValuesResource.GetRequest request = _sheetsService.Spreadsheets.Values.Get(_spreadsheetId, range);
+
+            var response = request.Execute();
+
+            IList<IList<object>> values = response.Values;
+
+            IList<DiscountTransaction> transactions = new List<DiscountTransaction>();
+
+           if (values != null && values.Count > 0)
+            {
+                if (IsFirstRowHeader)
+                {
+                    values = values.Skip(1).ToList();
+                }
+
+                foreach (var row in values)
+                {
+                   DiscountTransaction transaction = new DiscountTransaction();
+
+                    transaction.CustomerName = row[0].ToString();
+                    transaction.CustomerEmail = row[1].ToString();
+                    transaction.MobileNumber = row[2].ToString();
+                    transaction.UserEmail = row[3].ToString();
+                    //discount.PCCName = row[4].ToString();
+                    transaction.BillValue = Convert.ToDouble(row[5].ToString());
+                    transaction.Discount = Convert.ToDouble(row[6].ToString());
+                    //discount.DiscountReason = row[8].ToString();
+                    transaction.OTP = row[9].ToString();
+                    //discount.MessageTemplate = row[10].ToString();
+                    transaction.BilledDateTime = Convert.ToDateTime(row[11].ToString());
+                    transaction.ValidationStatus = row[12].ToString();
+
+                    transactions.Add(transaction);
+
+                    // Print columns A to F, which correspond to indices 0 and 4.
+                    //Console.WriteLine("{0} | {1} | {2} | {3} | {4} | {5}", row[0], row[1], row[2], row[3], row[4], row[5]);
+                }
+            }
+
+
+            return transactions;
+
         }
 
         public List<string> GetUserEmailsFromSheet(GoogleSheetParameters googleSheetParameters)

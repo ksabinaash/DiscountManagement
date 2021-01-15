@@ -18,9 +18,20 @@ namespace OfferManagement.Controllers
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
+            var google = new GoogleSheetsHelper();
 
-            return View();
+           var transactions = google.ReadTransactions(true);
+
+            if (transactions.Count == 0)
+            {
+                ViewBag.Message = "No Data Available";
+
+                return View();
+            }
+            else
+            {
+                return View("Reports", transactions);
+            }
         }
 
         [HttpPost]
@@ -31,7 +42,7 @@ namespace OfferManagement.Controllers
             {
                 var google = new GoogleSheetsHelper();
 
-                google.CreateEntry(transaction);
+                google.CreateTransaction(transaction);
 
                 ViewBag.Message = System.Configuration.ConfigurationManager.AppSettings["SuccessfulTransactionMsg"];
 

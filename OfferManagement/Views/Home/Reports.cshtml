@@ -1,0 +1,78 @@
+﻿@model IEnumerable<OfferManagement.Models.DiscountTransaction>
+
+@{
+    ViewBag.Title = @System.Configuration.ConfigurationManager.AppSettings["ReportPageName"];
+}
+<h2>@ViewBag.Title.</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.CustomerName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UserEmail)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CustomerEmail)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MobileNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BillValue)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Discount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BilledValue)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OTP)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BilledDateTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ValidationStatus)
+        </th>
+  </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CustomerName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CustomerEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MobileNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BillValue)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Discount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BilledValue)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OTP)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BilledDateTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ValidationStatus)
+            </td>
+     </tr>
+    }
+
+</table>

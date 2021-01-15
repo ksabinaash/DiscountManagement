@@ -13,10 +13,12 @@ namespace OfferManagement.Models
         [StringLength(50, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 3)]
         public string CustomerName { get; set; }
 
-        [Required]
-        [Display(Name = "Email")]
         [EmailAddress]
         public string UserEmail { get; set; }
+
+        [Display(Name = "Email")]
+        [EmailAddress]
+        public string CustomerEmail { get; set; }
 
         [Required]
         [Display(Name = "Mobile Number")]
@@ -24,17 +26,28 @@ namespace OfferManagement.Models
         public string MobileNumber { get; set; }
 
         [Required]
-        [Display(Name = "Shop Name")]
-        [StringLength(75, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 3)]
-        public string ShopName { get; set; }
+        [Display(Name = "PCC Name")]
+        public PccName PCCName { get; set; }
 
         [Required]
-        [Display(Name = "Billed Value")]
-        public double BilledValue { get; set; }
+        [Range(1, double.MaxValue, ErrorMessage = "Only positive number allowed")]
+        [Display(Name = "Bill Value")]
+        public double BillValue { get; set; }
 
         [Required]
         [Display(Name = "Discount Amount")]
+        [Range(1, double.MaxValue, ErrorMessage = "Only positive number allowed")]
         public double Discount { get; set; }
+
+        [Required]
+        [Display(Name = "Billed Value")]
+        public double BilledValue
+        {
+            get
+            { 
+                return BillValue - Discount; 
+            }
+        }
 
         [Required]
         [Display(Name = "Reason for Discount")]
@@ -51,6 +64,8 @@ namespace OfferManagement.Models
 
         [Required]
         public DateTime BilledDateTime { get; set; } = DateTime.Now.ToLocalTime();
+        
+        public string ValidationStatus { get; set; }
     }
 
     public enum MessageTemplate
@@ -67,5 +82,12 @@ namespace OfferManagement.Models
         PrivilegedCustomer,
         PromotionalOffer,
         CorporateBenefits
+    }
+
+    public enum PccName
+    {
+        ABC,
+        DEF,
+        GHI
     }
 }
