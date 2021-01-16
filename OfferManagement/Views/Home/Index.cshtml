@@ -41,9 +41,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.PCCName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(m => m.PCCName,
-                  new SelectList(Enum.GetValues(typeof(PccName))),
-                  "Select PCC", htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownListFor(model => model.PCCName, (IEnumerable<SelectListItem>)ViewData["PCCNames"], "Select a PCC Name", htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.PCCName, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -74,9 +72,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.DiscountReason, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(m => m.DiscountReason,
-                  new SelectList(Enum.GetValues(typeof(DiscountReason))),
-                  "Select Reason", htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownListFor(model => model.DiscountReason, (IEnumerable<SelectListItem>)ViewData["DiscountReasons"], "Select a Reason", htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.DiscountReason, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -95,9 +91,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.MessageTemplate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(m => m.MessageTemplate,
-                  new SelectList(Enum.GetValues(typeof(MessageTemplate))),
-                  "Select Template", htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownListFor(model => model.MessageTemplate, (IEnumerable<SelectListItem>)ViewData["SMSTemplates"], "Select a Template", htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.MessageTemplate, "", new { @class = "text-danger" })
             </div>
         </div>

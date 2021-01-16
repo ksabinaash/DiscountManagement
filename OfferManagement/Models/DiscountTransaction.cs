@@ -13,10 +13,11 @@ namespace OfferManagement.Models
         [StringLength(50, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 3)]
         public string CustomerName { get; set; }
 
+        [Display(Name = "User Email")]
         [EmailAddress]
         public string UserEmail { get; set; }
 
-        [Display(Name = "Email")]
+        [Display(Name = "Customer Email")]
         [EmailAddress]
         public string CustomerEmail { get; set; }
 
@@ -27,7 +28,7 @@ namespace OfferManagement.Models
 
         [Required]
         [Display(Name = "PCC Name")]
-        public PccName PCCName { get; set; }
+        public string PCCName { get; set; }
 
         [Required]
         [Range(1, double.MaxValue, ErrorMessage = "Only positive number allowed")]
@@ -51,7 +52,7 @@ namespace OfferManagement.Models
 
         [Required]
         [Display(Name = "Reason for Discount")]
-        public DiscountReason DiscountReason { get; set; }
+        public string DiscountReason { get; set; }
 
         [Required]
         [Display(Name = "OTP")]
@@ -60,34 +61,11 @@ namespace OfferManagement.Models
 
         [Required]
         [Display(Name = "OTP Message Template")]
-        public MessageTemplate MessageTemplate { get; set; }
+        public string MessageTemplate { get; set; }
 
         [Required]
         public DateTime BilledDateTime { get; set; } = DateTime.Now.ToLocalTime();
         
         public string ValidationStatus { get; set; }
-    }
-
-    public enum MessageTemplate
-    {
-        TemplateA,
-        TemplateB,
-        TemplateC,
-        TemplateD
-    }
-
-    public enum DiscountReason
-    {
-        RegularCustomer,
-        PrivilegedCustomer,
-        PromotionalOffer,
-        CorporateBenefits
-    }
-
-    public enum PccName
-    {
-        ABC,
-        DEF,
-        GHI
     }
 }

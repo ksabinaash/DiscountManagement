@@ -13,6 +13,20 @@ namespace OfferManagement.Controllers
     {
         public ActionResult Index()
         {
+            var google = new GoogleSheetsHelper();
+
+            Session["templates"] = google.ReadSMSTemplates(true);
+
+            Session["reasons"] = google.ReadDiscontReasons(true);
+
+            Session["names"] = google.ReadPCCNames(true);
+
+            ViewData["SMSTemplates"] = Transform(Session["templates"] as IList<string>);
+
+            ViewData["DiscountReasons"] = Transform(Session["reasons"] as IList<string>);
+
+            ViewData["PCCNames"] = Transform(Session["names"] as IList<string>);
+
             return View();
         }
 
@@ -20,7 +34,7 @@ namespace OfferManagement.Controllers
         {
             var google = new GoogleSheetsHelper();
 
-           var transactions = google.ReadTransactions(true);
+            var transactions = google.ReadTransactions(true);
 
             if (transactions.Count == 0)
             {
@@ -37,10 +51,19 @@ namespace OfferManagement.Controllers
         [HttpPost]
         public ActionResult Index(DiscountTransaction transaction)
         {
+            ViewData["SMSTemplates"] = Transform(Session["templates"] as IList<string>);
+
+            ViewData["DiscountReasons"] = Transform(Session["reasons"] as IList<string>);
+
+            ViewData["PCCNames"] = Transform(Session["names"] as IList<string>);
 
             if (ModelState.IsValid)
             {
-                var google = new GoogleSheetsHelper();
+               var google = new GoogleSheetsHelper();
+
+                transaction.UserEmail = Session["UserEmail"].ToString();
+
+                transaction.ValidationStatus = "Completed";
 
                 google.CreateTransaction(transaction);
 
@@ -51,6 +74,21 @@ namespace OfferManagement.Controllers
 
             return View();
 
+        }
+
+        private List<SelectListItem> Transform(IList<string> values)
+        {
+            List<SelectListItem> items = new List<SelectListItem>();
+
+            if (values != null && values.Count > 0)
+            {
+                foreach (var item in values)
+                {
+                    items.Add(new SelectListItem { Text = item, Value = item });
+                }
+            }
+
+            return items;
         }
 
     }

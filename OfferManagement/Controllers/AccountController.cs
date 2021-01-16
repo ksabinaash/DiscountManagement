@@ -337,6 +337,7 @@ namespace OfferManagement.Controllers
             bool authorizedUser = IsRegisteredUser(loginInfo.Email);
             if (authorizedUser)
             {
+                Session["UserEmail"] = loginInfo.Email;
                 var response = await SignInManager.ExternalSignInAsync(loginInfo, isPersistent: false);
                 switch (response)
                 {

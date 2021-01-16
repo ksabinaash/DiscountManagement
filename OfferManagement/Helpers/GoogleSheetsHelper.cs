@@ -72,7 +72,7 @@ namespace OfferManagement.Helpers
 
             IList<DiscountTransaction> transactions = new List<DiscountTransaction>();
 
-           if (values != null && values.Count > 0)
+            if (values != null && values.Count > 0)
             {
                 if (IsFirstRowHeader)
                 {
@@ -81,7 +81,7 @@ namespace OfferManagement.Helpers
 
                 foreach (var row in values)
                 {
-                   DiscountTransaction transaction = new DiscountTransaction();
+                    DiscountTransaction transaction = new DiscountTransaction();
 
                     transaction.CustomerName = row[0].ToString();
                     transaction.CustomerEmail = row[1].ToString();
@@ -106,6 +106,93 @@ namespace OfferManagement.Helpers
 
             return transactions;
 
+        }
+
+        public IList<string> ReadPCCNames(bool IsFirstRowHeader)
+        {
+            string sheetName = System.Configuration.ConfigurationManager.AppSettings["PCCValuesSheetName"];
+
+            var range = $"{sheetName}!A:A";
+
+            SpreadsheetsResource.ValuesResource.GetRequest request = _sheetsService.Spreadsheets.Values.Get(_spreadsheetId, range);
+
+            var response = request.Execute();
+
+            IList<IList<object>> values = response.Values;
+
+            IList<string> PCCNames = new List<String>();
+
+            if (values != null && values.Count > 0)
+            {
+                if (IsFirstRowHeader)
+                {
+                    values = values.Skip(1).ToList();
+                }
+                foreach (var row in values)
+                {
+                    PCCNames.Add(row[0].ToString());
+                }
+            }
+
+            return PCCNames;
+        }
+
+        public IList<string> ReadDiscontReasons(bool IsFirstRowHeader)
+        {
+            string sheetName = System.Configuration.ConfigurationManager.AppSettings["DiscountValuesSheetName"];
+
+            var range = $"{sheetName}!A:A";
+
+            SpreadsheetsResource.ValuesResource.GetRequest request = _sheetsService.Spreadsheets.Values.Get(_spreadsheetId, range);
+
+            var response = request.Execute();
+
+            IList<IList<object>> values = response.Values;
+
+            IList<string> DiscountReasons = new List<String>();
+
+            if (values != null && values.Count > 0)
+            {
+                if (IsFirstRowHeader)
+                {
+                    values = values.Skip(1).ToList();
+                }
+                foreach (var row in values)
+                {
+                    DiscountReasons.Add(row[0].ToString());
+                }
+            }
+
+            return DiscountReasons;
+        }
+
+        public IList<string> ReadSMSTemplates(bool IsFirstRowHeader)
+        {
+            string sheetName = System.Configuration.ConfigurationManager.AppSettings["MsgTemplateValuesSheetName"];
+
+            var range = $"{sheetName}!A:A";
+
+            SpreadsheetsResource.ValuesResource.GetRequest request = _sheetsService.Spreadsheets.Values.Get(_spreadsheetId, range);
+
+            var response = request.Execute();
+
+            IList<IList<object>> values = response.Values;
+
+            IList<string> Templates = new List<String>();
+
+            if (values != null && values.Count > 0)
+            {
+                if (IsFirstRowHeader)
+                {
+                    values = values.Skip(1).ToList();
+                }
+                foreach (var row in values)
+                {
+                    Templates.Add(row[0].ToString());
+                }
+            }
+
+            return Templates;
         }
 
         public List<string> GetUserEmailsFromSheet(GoogleSheetParameters googleSheetParameters)
