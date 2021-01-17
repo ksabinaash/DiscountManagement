@@ -1,0 +1,15 @@
+UserLogin - GooleAuthentication - without layout
+TransactionsPage 
+	- With layout [menus->transactions,reports,logout]
+	-Content
+		-Customer Name [limit to 50chars], Mobile, Shop Name [limit to 50chars], Billed value[number validation], Discount [number validation],Discount Reason [dropdown- values from sheet]-> button click[btnsendOTP] - OTP textbox - validate
+		-Details to be saved onSuccess :
+			Customer Name, Mobile[validation], Shop Name, Billed value, Discount, Discount Reason,Triggered SMS, Validation Status, UpdatedDateTime, UpdatedGoogleUserMail
+		-Error 
+			Invalid OTP
+ReportsPage
+	-Grid 
+		-Customer Name, Mobile, Shop Name, Billed value, Discount, Discount Reason, DateTime, UpdatedGoogleUserMail
+		-Export Status
+ErrorPage
+404 Page

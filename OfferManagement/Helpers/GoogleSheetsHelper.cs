@@ -41,76 +41,97 @@ namespace OfferManagement.Helpers
 
         public void CreateTransaction(DiscountTransaction transaction)
         {
-            string sheetName = System.Configuration.ConfigurationManager.AppSettings["TransactionsSheetName"];
+            try
+            {
+                string sheetName = System.Configuration.ConfigurationManager.AppSettings["TransactionsSheetName"];
 
-            var range = $"{sheetName}!A:M";
+                var range = $"{sheetName}!A:M";
 
-            var valueRange = new ValueRange();
+                var valueRange = new ValueRange();
 
-            var oblist = new List<object>() { transaction.CustomerName, transaction.CustomerEmail, transaction.MobileNumber, transaction.UserEmail, transaction.PCCName, transaction.BillValue, transaction.Discount, transaction.BilledValue, transaction.DiscountReason, transaction.OTP, transaction.MessageTemplate, transaction.BilledDateTime };
+                var oblist = new List<object>() { transaction.CustomerName, transaction.CustomerEmail, transaction.MobileNumber, transaction.UserEmail, transaction.PCCName, transaction.BillValue, transaction.Discount, transaction.BilledValue, transaction.DiscountReason, transaction.OTP, transaction.MessageTemplate, transaction.BilledDateTime };
 
-            valueRange.Values = new List<IList<object>> { oblist };
+                valueRange.Values = new List<IList<object>> { oblist };
 
-            var appendRequest = _sheetsService.Spreadsheets.Values.Append(valueRange, _spreadsheetId, range);
+                var appendRequest = _sheetsService.Spreadsheets.Values.Append(valueRange, _spreadsheetId, range);
 
-            appendRequest.ValueInputOption = SpreadsheetsResource.ValuesResource.AppendRequest.ValueInputOptionEnum.USERENTERED;
+                appendRequest.ValueInputOption = SpreadsheetsResource.ValuesResource.AppendRequest.ValueInputOptionEnum.USERENTERED;
 
-            var appendReponse = appendRequest.Execute();
+                var appendReponse = appendRequest.Execute();
+            }
+            catch (AggregateException err)
+            {
+                foreach (var errInner in err.InnerExceptions)
+                {
+                    Console.WriteLine(errInner); //this will call ToString() on the inner execption and get you message, stacktrace and you could perhaps drill down further into the inner exception of it if necessary 
+                }
+            }
         }
 
         public IList<DiscountTransaction> ReadTransactions(bool IsFirstRowHeader)
         {
-            string sheetName = System.Configuration.ConfigurationManager.AppSettings["TransactionsSheetName"];
-
-            var range = $"{sheetName}!A:M";
-
-            SpreadsheetsResource.ValuesResource.GetRequest request = _sheetsService.Spreadsheets.Values.Get(_spreadsheetId, range);
-
-            var response = request.Execute();
-
-            IList<IList<object>> values = response.Values;
-
             IList<DiscountTransaction> transactions = new List<DiscountTransaction>();
-
-            if (values != null && values.Count > 0)
+            try
             {
-                if (IsFirstRowHeader)
+                string sheetName = System.Configuration.ConfigurationManager.AppSettings["TransactionsSheetName"];
+
+                var range = $"{sheetName}!A:M";
+
+                SpreadsheetsResource.ValuesResource.GetRequest request = _sheetsService.Spreadsheets.Values.Get(_spreadsheetId, range);
+
+                var response = request.Execute();
+
+                IList<IList<object>> values = response.Values;
+
+               
+
+                if (values != null && values.Count > 0)
                 {
-                    values = values.Skip(1).ToList();
-                }
+                    if (IsFirstRowHeader)
+                    {
+                        values = values.Skip(1).ToList();
+                    }
 
-                foreach (var row in values)
-                {
-                    DiscountTransaction transaction = new DiscountTransaction();
+                    foreach (var row in values)
+                    {
+                        DiscountTransaction transaction = new DiscountTransaction();
 
-                    transaction.CustomerName = row[0].ToString();
-                    transaction.CustomerEmail = row[1].ToString();
-                    transaction.MobileNumber = row[2].ToString();
-                    transaction.UserEmail = row[3].ToString();
-                    //discount.PCCName = row[4].ToString();
-                    transaction.BillValue = Convert.ToDouble(row[5].ToString());
-                    transaction.Discount = Convert.ToDouble(row[6].ToString());
-                    //discount.DiscountReason = row[8].ToString();
-                    transaction.OTP = row[9].ToString();
-                    //discount.MessageTemplate = row[10].ToString();
-                    transaction.BilledDateTime = Convert.ToDateTime(row[11].ToString());
-                    transaction.ValidationStatus = row[12].ToString();
+                        transaction.CustomerName = row[0].ToString();
+                        transaction.CustomerEmail = row[1].ToString();
+                        transaction.MobileNumber = row[2].ToString();
+                        transaction.UserEmail = row[3].ToString();
+                        //discount.PCCName = row[4].ToString();
+                        transaction.BillValue = Convert.ToDouble(row[5].ToString());
+                        transaction.Discount = Convert.ToDouble(row[6].ToString());
+                        //discount.DiscountReason = row[8].ToString();
+                        transaction.OTP = row[9].ToString();
+                        //discount.MessageTemplate = row[10].ToString();
+                        transaction.BilledDateTime = Convert.ToDateTime(row[11].ToString());
+                        transaction.ValidationStatus = row[12].ToString();
 
-                    transactions.Add(transaction);
+                        transactions.Add(transaction);
 
-                    // Print columns A to F, which correspond to indices 0 and 4.
-                    //Console.WriteLine("{0} | {1} | {2} | {3} | {4} | {5}", row[0], row[1], row[2], row[3], row[4], row[5]);
+                        // Print columns A to F, which correspond to indices 0 and 4.
+                        //Console.WriteLine("{0} | {1} | {2} | {3} | {4} | {5}", row[0], row[1], row[2], row[3], row[4], row[5]);
+                    }
+
                 }
             }
-
-
+            catch (AggregateException err)
+            {
+                foreach (var errInner in err.InnerExceptions)
+                {
+                    Console.WriteLine(errInner); //this will call ToString() on the inner execption and get you message, stacktrace and you could perhaps drill down further into the inner exception of it if necessary 
+                }
+            }
             return transactions;
-
         }
 
         public IList<string> ReadPCCNames(bool IsFirstRowHeader)
         {
-            string sheetName = System.Configuration.ConfigurationManager.AppSettings["PCCValuesSheetName"];
+            IList<string> PCCNames = new List<String>();
+            try
+            { string sheetName = System.Configuration.ConfigurationManager.AppSettings["PCCValuesSheetName"];
 
             var range = $"{sheetName}!A:A";
 
@@ -120,7 +141,7 @@ namespace OfferManagement.Helpers
 
             IList<IList<object>> values = response.Values;
 
-            IList<string> PCCNames = new List<String>();
+           
 
             if (values != null && values.Count > 0)
             {
@@ -134,12 +155,23 @@ namespace OfferManagement.Helpers
                 }
             }
 
+            
+            }
+            catch (AggregateException err)
+            {
+                foreach (var errInner in err.InnerExceptions)
+                {
+                    Console.WriteLine(errInner); //this will call ToString() on the inner execption and get you message, stacktrace and you could perhaps drill down further into the inner exception of it if necessary 
+                }
+            }
             return PCCNames;
         }
 
         public IList<string> ReadDiscontReasons(bool IsFirstRowHeader)
         {
-            string sheetName = System.Configuration.ConfigurationManager.AppSettings["DiscountValuesSheetName"];
+            IList<string> DiscountReasons = new List<String>();
+            try
+            {string sheetName = System.Configuration.ConfigurationManager.AppSettings["DiscountValuesSheetName"];
 
             var range = $"{sheetName}!A:A";
 
@@ -149,7 +181,7 @@ namespace OfferManagement.Helpers
 
             IList<IList<object>> values = response.Values;
 
-            IList<string> DiscountReasons = new List<String>();
+            
 
             if (values != null && values.Count > 0)
             {
@@ -163,12 +195,23 @@ namespace OfferManagement.Helpers
                 }
             }
 
+            
+            }
+            catch (AggregateException err)
+            {
+                foreach (var errInner in err.InnerExceptions)
+                {
+                    Console.WriteLine(errInner); //this will call ToString() on the inner execption and get you message, stacktrace and you could perhaps drill down further into the inner exception of it if necessary 
+                }
+            }
             return DiscountReasons;
         }
 
         public IList<string> ReadSMSTemplates(bool IsFirstRowHeader)
         {
-            string sheetName = System.Configuration.ConfigurationManager.AppSettings["MsgTemplateValuesSheetName"];
+            IList<string> Templates = new List<String>();
+            try
+            { string sheetName = System.Configuration.ConfigurationManager.AppSettings["MsgTemplateValuesSheetName"];
 
             var range = $"{sheetName}!A:A";
 
@@ -178,7 +221,7 @@ namespace OfferManagement.Helpers
 
             IList<IList<object>> values = response.Values;
 
-            IList<string> Templates = new List<String>();
+           
 
             if (values != null && values.Count > 0)
             {
@@ -192,14 +235,25 @@ namespace OfferManagement.Helpers
                 }
             }
 
+           
+            }
+            catch (AggregateException err)
+            {
+                foreach (var errInner in err.InnerExceptions)
+                {
+                    Console.WriteLine(errInner); //this will call ToString() on the inner execption and get you message, stacktrace and you could perhaps drill down further into the inner exception of it if necessary 
+                }
+            }
             return Templates;
         }
 
         public List<string> GetUserEmailsFromSheet(GoogleSheetParameters googleSheetParameters)
         {
-            List<ExpandoObject> sheetData = GetDataFromSheet(googleSheetParameters);
-            //List<object> userEmails = new List<object>();
             List<string> userEmail = new List<string>();
+            try
+            { List<ExpandoObject> sheetData = GetDataFromSheet(googleSheetParameters);
+            //List<object> userEmails = new List<object>();
+            
             //IDictionary<String, object> keyValues;
             //var cal = sheetData as IDictionary<String, object>;
 
@@ -216,12 +270,23 @@ namespace OfferManagement.Helpers
             }
 
 
+            
+            }
+            catch (AggregateException err)
+            {
+                foreach (var errInner in err.InnerExceptions)
+                {
+                    Console.WriteLine(errInner); //this will call ToString() on the inner execption and get you message, stacktrace and you could perhaps drill down further into the inner exception of it if necessary 
+                }
+            }
             return userEmail;
         }
 
         public List<ExpandoObject> GetDataFromSheet(GoogleSheetParameters googleSheetParameters)
         {
-            googleSheetParameters = MakeGoogleSheetDataRangeColumnsZeroBased(googleSheetParameters);
+            var returnValues = new List<ExpandoObject>();
+            try
+            { googleSheetParameters = MakeGoogleSheetDataRangeColumnsZeroBased(googleSheetParameters);
             var range = $"{googleSheetParameters.SheetName}!{GetColumnName(googleSheetParameters.RangeColumnStart)}{googleSheetParameters.RangeRowStart}:{GetColumnName(googleSheetParameters.RangeColumnEnd)}{googleSheetParameters.RangeRowEnd}";
 
             SpreadsheetsResource.ValuesResource.GetRequest request =
@@ -229,7 +294,7 @@ namespace OfferManagement.Helpers
 
             var numberOfColumns = googleSheetParameters.RangeColumnEnd - googleSheetParameters.RangeColumnStart;
             var columnNames = new List<string>();
-            var returnValues = new List<ExpandoObject>();
+           
 
             if (!googleSheetParameters.FirstRowIsHeaders)
             {
@@ -271,12 +336,22 @@ namespace OfferManagement.Helpers
                 }
             }
 
+           
+            }
+            catch (AggregateException err)
+            {
+                foreach (var errInner in err.InnerExceptions)
+                {
+                    Console.WriteLine(errInner); //this will call ToString() on the inner execption and get you message, stacktrace and you could perhaps drill down further into the inner exception of it if necessary 
+                }
+            }
             return returnValues;
         }
 
         public void AddCells(GoogleSheetParameters googleSheetParameters, List<GoogleSheetRow> rows)
         {
-            var requests = new BatchUpdateSpreadsheetRequest { Requests = new List<Request>() };
+            try
+            { var requests = new BatchUpdateSpreadsheetRequest { Requests = new List<Request>() };
 
             var sheetId = GetSheetId(_sheetsService, _spreadsheetId, googleSheetParameters.SheetName);
 
@@ -322,6 +397,14 @@ namespace OfferManagement.Helpers
             requests.Requests.Add(request);
 
             _sheetsService.Spreadsheets.BatchUpdate(requests, _spreadsheetId).Execute();
+            }
+            catch (AggregateException err)
+            {
+                foreach (var errInner in err.InnerExceptions)
+                {
+                    Console.WriteLine(errInner); //this will call ToString() on the inner execption and get you message, stacktrace and you could perhaps drill down further into the inner exception of it if necessary 
+                }
+            }
         }
 
         private string GetColumnName(int index)

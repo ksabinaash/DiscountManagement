@@ -60,8 +60,8 @@ namespace OfferManagement
 
             app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             {
-                ClientId = "558074004680-pt450nqdpf1mah6qn5l280vonsk7fcpd.apps.googleusercontent.com",
-                ClientSecret = "_vM41tfAJCGeQ-udao2nqApy"
+                ClientId = "510409940223-1pclr9uuo53dsuj538gqjuedc62lmmp7.apps.googleusercontent.com",
+                ClientSecret = "Nl1bCBxJCexTpDpp5OUX18yE"
             });
         }
     }

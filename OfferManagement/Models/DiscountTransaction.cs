@@ -54,9 +54,9 @@ namespace OfferManagement.Models
         [Display(Name = "Reason for Discount")]
         public string DiscountReason { get; set; }
 
-        [Required]
+        
         [Display(Name = "OTP")]
-        [StringLength(6, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 4)]
+        [StringLength(4, ErrorMessage = "The OTP must be 4 characters long.")]
         public string OTP { get; set; }
 
         [Required]
@@ -67,5 +67,9 @@ namespace OfferManagement.Models
         public DateTime BilledDateTime { get; set; } = DateTime.Now.ToLocalTime();
         
         public string ValidationStatus { get; set; }
+
+        public bool enableValidatebtn { get; set; } = false;
+
+        public bool enableResendbtn { get; set; } = false;
     }
 }

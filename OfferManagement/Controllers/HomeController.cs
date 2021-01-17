@@ -13,6 +13,10 @@ namespace OfferManagement.Controllers
     {
         public ActionResult Index()
         {
+            ViewBag.Message = string.Empty;
+
+            DiscountTransaction transaction = new DiscountTransaction();
+
             var google = new GoogleSheetsHelper();
 
             Session["templates"] = google.ReadSMSTemplates(true);
@@ -27,7 +31,7 @@ namespace OfferManagement.Controllers
 
             ViewData["PCCNames"] = Transform(Session["names"] as IList<string>);
 
-            return View();
+            return View(transaction);
         }
 
         public ActionResult About()
@@ -67,6 +71,28 @@ namespace OfferManagement.Controllers
 
                 google.CreateTransaction(transaction);
 
+                //Send OTP
+                MSGWowHelper helper =new  MSGWowHelper();
+
+                var isOTPSent = helper.sendOTP(transaction.MobileNumber);
+
+                if(isOTPSent)
+                {
+                    ViewBag.Message = "OTP Sent Succesfully, Kindly Enter the received OTP for validation";
+                    transaction.enableValidatebtn = true;
+                    transaction.enableResendbtn = false;
+                    return View(transaction);
+                    //enable validate otp button , disabled resend
+                }
+                else
+                {
+                    ViewBag.Message = "OTP failure,Try Resend Option";
+                    transaction.enableValidatebtn = false;
+                    transaction.enableResendbtn = true;
+                    //Should we wait for 30 sec or enable resend button ??  -> enable resend button , disabled validate otp btn
+                    return View(transaction);
+                }
+
                 ViewBag.Message = System.Configuration.ConfigurationManager.AppSettings["SuccessfulTransactionMsg"];
 
                 return View("Transaction", transaction);
@@ -76,6 +102,7 @@ namespace OfferManagement.Controllers
 
         }
 
+        
         private List<SelectListItem> Transform(IList<string> values)
         {
             List<SelectListItem> items = new List<SelectListItem>();
@@ -91,5 +118,24 @@ namespace OfferManagement.Controllers
             return items;
         }
 
+        //public ActionResult ValidateOTP(string otp,string mobile, DiscountTransaction model)
+        public ActionResult ValidateOTP( DiscountTransaction modelval)
+        {
+            MSGWowHelper helper = new MSGWowHelper();
+
+            var isOTPSent = helper.verifyOTP(modelval.OTP, modelval.MobileNumber);
+
+            return View();
+        }
+
+
+        public ActionResult ResendOTP(string mobile)
+        {
+            MSGWowHelper helper = new MSGWowHelper();
+
+            var isOTPSent = helper.resendOTP(mobile);
+
+            return View();
+        }
     }
 }
