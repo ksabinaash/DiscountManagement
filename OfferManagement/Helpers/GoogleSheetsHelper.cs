@@ -49,7 +49,7 @@ namespace OfferManagement.Helpers
 
                 var valueRange = new ValueRange();
 
-                var oblist = new List<object>() { transaction.CustomerName, transaction.CustomerEmail, transaction.MobileNumber, transaction.UserEmail, transaction.PCCName, transaction.BillValue, transaction.Discount, transaction.BilledValue, transaction.DiscountReason, transaction.OTP, transaction.MessageTemplate, transaction.BilledDateTime };
+                var oblist = new List<object>() { transaction.CustomerName, transaction.CustomerEmail, transaction.MobileNumber, transaction.UserEmail, transaction.PCCName, transaction.BillValue, transaction.Discount, transaction.BilledValue, transaction.DiscountReason, transaction.OTP, transaction.MessageTemplate, transaction.BilledDateTime, transaction.ValidationStatus };
 
                 valueRange.Values = new List<IList<object>> { oblist };
 
@@ -67,14 +67,31 @@ namespace OfferManagement.Helpers
                 }
             }
         }
+        public int GetLastRow()
+        {
+            IList<DiscountTransaction> transactions = new List<DiscountTransaction>();
+            string sheetName = System.Configuration.ConfigurationManager.AppSettings["TransactionsSheetName"];
+
+                var range = $"{sheetName}!A:M";
+
+                SpreadsheetsResource.ValuesResource.GetRequest request = _sheetsService.Spreadsheets.Values.Get(_spreadsheetId, range);
+
+                var response = request.Execute();
+
+                IList<IList<object>> values = response.Values;
+
+                return values != null && values.Count > 0 ? values.Count : 0;
+        }
 
         public void UpdateTransaction(DiscountTransaction transaction)
         {
             try
             {
+                var lastrow = GetLastRow();
+
                 string sheetName = System.Configuration.ConfigurationManager.AppSettings["TransactionsSheetName"];
 
-                var range = $"{sheetName}!M:M";
+                var range = $"{sheetName}!M" + lastrow;
 
                 var valueRange = new ValueRange();
 
@@ -467,6 +484,28 @@ namespace OfferManagement.Helpers
             int sheetId = (int)sheet.Properties.SheetId;
             return sheetId;
         }
+
+        //protected static string GetRange(SheetsService service, string SheetId)
+        //{
+        //    // Define request parameters.  
+        //    String spreadsheetId = SheetId;
+        //    String range = "A:A";
+
+        //    SpreadsheetsResource.ValuesResource.GetRequest getRequest =
+        //               service.Spreadsheets.Values.Get(spreadsheetId, range);
+        //    System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate (object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
+        //    ValueRange getResponse = getRequest.Execute();
+        //    IList<IList<Object>> getValues = getResponse.Values;
+        //    if (getValues == null)
+        //    {
+        //        // spreadsheet is empty return Row A Column A  
+        //        return "A:A";
+        //    }
+
+        //    int currentCount = getValues.Count() + 1;
+        //    String newRange = "A" + currentCount + ":A";
+        //    return newRange;
+        //}
     }
 
     public class GoogleSheetCell

@@ -1,6 +1,7 @@
 ﻿using OfferManagement.Models;
 using System.IO;
 using System.Net;
+using System.Web;
 using System.Web.Helpers;
 
 namespace OfferManagement.Helpers
@@ -11,10 +12,12 @@ namespace OfferManagement.Helpers
         string authKey = "156632AfcQbHHTG0594552e4";
         string messageApiURL = "http://my.msgwow.com/api";
 
-        public bool sendOTP(string mobileNumber)
+
+        public bool sendOTP(string mobileNumber,string messageTemplate)
         {
+            messageTemplate = HttpUtility.UrlEncode(messageTemplate);
             bool result = false;
-            var url = messageApiURL + "/otp.php?authkey=" + authKey +"&mobile=" + mobileNumber + "&sender=" + senderid + "";
+            var url = messageApiURL + "/otp.php?authkey=" + authKey +"&mobile=" + mobileNumber +"&message=" + messageTemplate + "&sender=" + senderid + "";
             WebRequest request = WebRequest.Create(url);
             WebResponse response = request.GetResponse();
             string responsestring;
@@ -50,11 +53,13 @@ namespace OfferManagement.Helpers
             return result;
         }
 
-        public bool resendOTP(string mobileNumber)
+        public bool resendOTP(string mobileNumber, string messageTemplate)
         {
+            messageTemplate = HttpUtility.UrlEncode(messageTemplate);
+
             bool result = false;
 
-            var url = messageApiURL + "/retryotp.php?authkey=" + authKey + "&mobile=" + mobileNumber + "&retrytype=text";
+            var url = messageApiURL + "/retryotp.php?authkey=" + authKey + "&mobile=" + mobileNumber + "&message=" + messageTemplate + "&retrytype=text";
             WebRequest request = WebRequest.Create(url);
             WebResponse response = request.GetResponse();
             string responsestring;

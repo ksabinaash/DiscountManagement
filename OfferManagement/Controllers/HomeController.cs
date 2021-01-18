@@ -69,14 +69,19 @@ namespace OfferManagement.Controllers
 
                 transaction.ValidationStatus = "OTP Verification Pending";
 
-
-
                 google.CreateTransaction(transaction);
 
+                transaction.enableSubmitbtn = false;
 
                 MSGWowHelper helper = new MSGWowHelper();
 
-                var isOTPSent = helper.sendOTP(transaction.MobileNumber);
+
+                var messageTempalte = transaction.MessageTemplate.Replace("#Customername", transaction.CustomerName)
+                    .Replace("#discount ", transaction.Discount.ToString()+" ")
+                    .Replace("#discountreason", transaction.DiscountReason)
+                    .Replace("#billedvalue", transaction.BillValue.ToString());
+
+                var isOTPSent = helper.sendOTP(transaction.MobileNumber, messageTempalte);
 
                 //var isOTPSent = true;
 
@@ -126,6 +131,8 @@ namespace OfferManagement.Controllers
         //public ActionResult ValidateOTP(DiscountTransaction model)
         //public ActionResult ValidateOTP( DiscountTransaction modelval)
         {
+            var google = new GoogleSheetsHelper();
+
             var model = Session["transaction"] as DiscountTransaction;
 
             ViewData["SMSTemplates"] = Transform(Session["templates"] as IList<string>);
@@ -140,6 +147,8 @@ namespace OfferManagement.Controllers
 
                 var isOTPSent = helper.verifyOTP(otp, model.MobileNumber);
 
+                //var isOTPSent = true;
+
                 if (isOTPSent)
                 {
                     model.ValidationStatus = "OTP Verified";
@@ -147,6 +156,7 @@ namespace OfferManagement.Controllers
                     model.OTP = otp;
 
                     //update google sheet
+                    google.UpdateTransaction(model);
 
                     ViewBag.Message = System.Configuration.ConfigurationManager.AppSettings["SuccessfulTransactionMsg"];
 
@@ -180,13 +190,22 @@ namespace OfferManagement.Controllers
 
             ViewData["PCCNames"] = Transform(Session["names"] as IList<string>);
 
+            var messageTempalte = model.MessageTemplate.Replace("#Customername", model.CustomerName)
+                   .Replace("#discount ", model.Discount.ToString() + " ")
+                   .Replace("#discountreason", model.DiscountReason)
+                   .Replace("#billedvalue", model.BillValue.ToString());
 
-            var isOTPSent = helper.resendOTP(model.MobileNumber);
+            var isOTPSent = helper.resendOTP(model.MobileNumber, messageTempalte);
+
+            //var isOTPSent = true;
+
+
             if (isOTPSent)
             {
                 ViewBag.Message = "OTP Sent Succesfully, Kindly Enter the received OTP for validation";
                 model.enableValidatebtn = true;
                 model.enableResendbtn = false;
+
             }
             else
             {
