@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using ClosedXML.Excel;
+using System.Data;
+using System.IO;
 
 namespace OfferManagement.Controllers
 {
@@ -52,7 +55,59 @@ namespace OfferManagement.Controllers
             }
         }
 
-        [HttpPost]
+
+        public IList<DiscountTransaction> readGooglesheetvalues()
+        {
+            var google = new GoogleSheetsHelper();
+
+            IList<DiscountTransaction> transactions = google.ReadTransactions(true);
+
+            if (transactions.Count >= 0)
+            {
+                return transactions;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public FileResult Export(IList<DiscountTransaction> lst)
+        {
+
+            DataTable dt = new DataTable("ElixerTransactions");
+            dt.Columns.AddRange(new DataColumn[10] {
+                                            new DataColumn("CustomerName"),
+                                            new DataColumn("UserEmail"),
+                                            new DataColumn("CustomerEmail"),
+                                            new DataColumn("MobileNumber"),
+                                            new DataColumn("BillValue"),
+                                            new DataColumn("Discount"),
+                                            new DataColumn("BilledValue"),
+                                            new DataColumn("DiscountReason"),
+                                            new DataColumn("BilledDateTime"),
+                                            new DataColumn("ValidationStatus")});
+
+            IList<DiscountTransaction> list = readGooglesheetvalues();
+
+            foreach (var modelval in list)
+            {
+                dt.Rows.Add(modelval.CustomerName,modelval.UserEmail,modelval.CustomerEmail,modelval.MobileNumber,
+                    modelval.BillValue, modelval.Discount, modelval.BilledValue,modelval.DiscountReason,modelval.BilledDateTime,modelval.ValidationStatus);
+            }
+
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                wb.Worksheets.Add(dt);
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    wb.SaveAs(stream);
+                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ElixerTransactions"+DateTime.Now+".xlsx");
+                }
+            }
+        }
+    
+    [HttpPost]
         public ActionResult Index(DiscountTransaction transaction)
         {
             ViewData["SMSTemplates"] = Transform(Session["templates"] as IList<string>);

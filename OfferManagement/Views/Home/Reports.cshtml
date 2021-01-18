@@ -3,76 +3,159 @@
 @{
     ViewBag.Title = @System.Configuration.ConfigurationManager.AppSettings["ReportPageName"];
 }
-<h2>@ViewBag.Title.</h2>
+<h2>@ViewBag.Title</h2>
+<style>
+    /** {
+        box-sizing: border-box;
+    }*/
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.CustomerName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UserEmail)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CustomerEmail)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.MobileNumber)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.BillValue)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Discount)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.BilledValue)
-        </th>
-        @*<th>
-            @Html.DisplayNameFor(model => model.OTP)
-        </th>*@
-        <th>
-            @Html.DisplayNameFor(model => model.BilledDateTime)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ValidationStatus)
-        </th>
-  </tr>
-
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.CustomerName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserEmail)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CustomerEmail)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MobileNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BillValue)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Discount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BilledValue)
-            </td>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.OTP)
-            </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.BilledDateTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ValidationStatus)
-            </td>
-     </tr>
+    #tablediv {
+        height: 500px;
+        max-height: 500px;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
 
-</table>
+    #filtertxtbox {
+        width: 100%;
+        font-size: 15px;
+        /*padding: 1px 10px 12px 20px;
+        border: 1px solid #ddd;
+        margin-bottom: 12px;*/
+    }
+
+    #ElixerList {
+    border-collapse: collapse;
+    width: 100%;
+    border: 1px solid #ddd;
+    font-size: 12px;
+    }
+
+    #ElixerList th, #myTable td {
+    text-align: left;
+    padding: 5px;
+    background-color:black;
+    color:white;
+
+    }
+
+    #ElixerList tr {
+    border-bottom: 1px solid #ddd;
+    }
+
+    #ElixerList tr.header, #myTable tr:hover {
+    background-color: #f1f1f1;
+    }
+            
+</style>
+
+<script type="text/javascript">
+
+    function applyfilter() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("filtertxtbox");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("ElixerList");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+
+</script>
+
+
+
+<div class="form-horizontal">
+    <div class="col-md-10">
+        <input type="text" id="filtertxtbox" onkeyup="applyfilter()" placeholder="Search" title="Type"> //works on first column
+    </div>
+
+    <div class="col-md-2">
+        <input type="button" value="Export" id="btnExport" class="btn btn-primary"
+               onclick="location.href='@Url.Action("Export","Home", Model)'" />
+    </div>
+</div>
+
+<div>
+    <table id="ElixerList" class="table table-bordered table-condensed">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CustomerName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CustomerEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MobileNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BillValue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Discount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BilledValue)
+            </th>
+            @*<th>
+                    @Html.DisplayNameFor(model => model.OTP)
+                </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.BilledDateTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ValidationStatus)
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CustomerName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserEmail)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CustomerEmail)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MobileNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BillValue)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Discount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BilledValue)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.OTP)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.BilledDateTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ValidationStatus)
+                </td>
+            </tr>
+        }
+
+
+    </table>
+</div>

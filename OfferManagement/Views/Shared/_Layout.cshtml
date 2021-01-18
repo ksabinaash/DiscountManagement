@@ -3,10 +3,11 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="@Url.Content("~/Content/Logo.jpg")" />  
+    <link rel="icon" href="@Url.Content("~/Content/Logo.jpg")" />
     <title>@System.Configuration.ConfigurationManager.AppSettings["ApplicationName"] - @ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/Scripts/jquery.filtertable.min.js")
 
 </head>
 <body>
@@ -32,7 +33,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - Elixer </p>
         </footer>
     </div>
 
