@@ -68,6 +68,35 @@ namespace OfferManagement.Helpers
             }
         }
 
+        public void UpdateTransaction(DiscountTransaction transaction)
+        {
+            try
+            {
+                string sheetName = System.Configuration.ConfigurationManager.AppSettings["TransactionsSheetName"];
+
+                var range = $"{sheetName}!M:M";
+
+                var valueRange = new ValueRange();
+
+                var oblist = new List<object>() { transaction.ValidationStatus };
+
+                valueRange.Values = new List<IList<object>> { oblist };
+
+                var updateRequest = _sheetsService.Spreadsheets.Values.Update(valueRange, _spreadsheetId, range);
+
+                updateRequest.ValueInputOption = SpreadsheetsResource.ValuesResource.UpdateRequest.ValueInputOptionEnum.USERENTERED;
+
+                var appendReponse = updateRequest.Execute();
+            }
+            catch (AggregateException err)
+            {
+                foreach (var errInner in err.InnerExceptions)
+                {
+                    Console.WriteLine(errInner); //this will call ToString() on the inner execption and get you message, stacktrace and you could perhaps drill down further into the inner exception of it if necessary 
+                }
+            }
+        }
+
         public IList<DiscountTransaction> ReadTransactions(bool IsFirstRowHeader)
         {
             IList<DiscountTransaction> transactions = new List<DiscountTransaction>();
@@ -83,7 +112,6 @@ namespace OfferManagement.Helpers
 
                 IList<IList<object>> values = response.Values;
 
-               
 
                 if (values != null && values.Count > 0)
                 {
@@ -100,12 +128,12 @@ namespace OfferManagement.Helpers
                         transaction.CustomerEmail = row[1].ToString();
                         transaction.MobileNumber = row[2].ToString();
                         transaction.UserEmail = row[3].ToString();
-                        //discount.PCCName = row[4].ToString();
+                        transaction.PCCName = row[4].ToString();
                         transaction.BillValue = Convert.ToDouble(row[5].ToString());
                         transaction.Discount = Convert.ToDouble(row[6].ToString());
-                        //discount.DiscountReason = row[8].ToString();
+                        transaction.DiscountReason = row[8].ToString();
                         transaction.OTP = row[9].ToString();
-                        //discount.MessageTemplate = row[10].ToString();
+                        transaction.MessageTemplate = row[10].ToString();
                         transaction.BilledDateTime = Convert.ToDateTime(row[11].ToString());
                         transaction.ValidationStatus = row[12].ToString();
 
@@ -131,31 +159,32 @@ namespace OfferManagement.Helpers
         {
             IList<string> PCCNames = new List<String>();
             try
-            { string sheetName = System.Configuration.ConfigurationManager.AppSettings["PCCValuesSheetName"];
-
-            var range = $"{sheetName}!A:A";
-
-            SpreadsheetsResource.ValuesResource.GetRequest request = _sheetsService.Spreadsheets.Values.Get(_spreadsheetId, range);
-
-            var response = request.Execute();
-
-            IList<IList<object>> values = response.Values;
-
-           
-
-            if (values != null && values.Count > 0)
             {
-                if (IsFirstRowHeader)
-                {
-                    values = values.Skip(1).ToList();
-                }
-                foreach (var row in values)
-                {
-                    PCCNames.Add(row[0].ToString());
-                }
-            }
+                string sheetName = System.Configuration.ConfigurationManager.AppSettings["PCCValuesSheetName"];
 
-            
+                var range = $"{sheetName}!A:A";
+
+                SpreadsheetsResource.ValuesResource.GetRequest request = _sheetsService.Spreadsheets.Values.Get(_spreadsheetId, range);
+
+                var response = request.Execute();
+
+                IList<IList<object>> values = response.Values;
+
+
+
+                if (values != null && values.Count > 0)
+                {
+                    if (IsFirstRowHeader)
+                    {
+                        values = values.Skip(1).ToList();
+                    }
+                    foreach (var row in values)
+                    {
+                        PCCNames.Add(row[0].ToString());
+                    }
+                }
+
+
             }
             catch (AggregateException err)
             {
@@ -171,31 +200,32 @@ namespace OfferManagement.Helpers
         {
             IList<string> DiscountReasons = new List<String>();
             try
-            {string sheetName = System.Configuration.ConfigurationManager.AppSettings["DiscountValuesSheetName"];
-
-            var range = $"{sheetName}!A:A";
-
-            SpreadsheetsResource.ValuesResource.GetRequest request = _sheetsService.Spreadsheets.Values.Get(_spreadsheetId, range);
-
-            var response = request.Execute();
-
-            IList<IList<object>> values = response.Values;
-
-            
-
-            if (values != null && values.Count > 0)
             {
-                if (IsFirstRowHeader)
-                {
-                    values = values.Skip(1).ToList();
-                }
-                foreach (var row in values)
-                {
-                    DiscountReasons.Add(row[0].ToString());
-                }
-            }
+                string sheetName = System.Configuration.ConfigurationManager.AppSettings["DiscountValuesSheetName"];
 
-            
+                var range = $"{sheetName}!A:A";
+
+                SpreadsheetsResource.ValuesResource.GetRequest request = _sheetsService.Spreadsheets.Values.Get(_spreadsheetId, range);
+
+                var response = request.Execute();
+
+                IList<IList<object>> values = response.Values;
+
+
+
+                if (values != null && values.Count > 0)
+                {
+                    if (IsFirstRowHeader)
+                    {
+                        values = values.Skip(1).ToList();
+                    }
+                    foreach (var row in values)
+                    {
+                        DiscountReasons.Add(row[0].ToString());
+                    }
+                }
+
+
             }
             catch (AggregateException err)
             {
@@ -211,31 +241,32 @@ namespace OfferManagement.Helpers
         {
             IList<string> Templates = new List<String>();
             try
-            { string sheetName = System.Configuration.ConfigurationManager.AppSettings["MsgTemplateValuesSheetName"];
-
-            var range = $"{sheetName}!A:A";
-
-            SpreadsheetsResource.ValuesResource.GetRequest request = _sheetsService.Spreadsheets.Values.Get(_spreadsheetId, range);
-
-            var response = request.Execute();
-
-            IList<IList<object>> values = response.Values;
-
-           
-
-            if (values != null && values.Count > 0)
             {
-                if (IsFirstRowHeader)
-                {
-                    values = values.Skip(1).ToList();
-                }
-                foreach (var row in values)
-                {
-                    Templates.Add(row[0].ToString());
-                }
-            }
+                string sheetName = System.Configuration.ConfigurationManager.AppSettings["MsgTemplateValuesSheetName"];
 
-           
+                var range = $"{sheetName}!A:A";
+
+                SpreadsheetsResource.ValuesResource.GetRequest request = _sheetsService.Spreadsheets.Values.Get(_spreadsheetId, range);
+
+                var response = request.Execute();
+
+                IList<IList<object>> values = response.Values;
+
+
+
+                if (values != null && values.Count > 0)
+                {
+                    if (IsFirstRowHeader)
+                    {
+                        values = values.Skip(1).ToList();
+                    }
+                    foreach (var row in values)
+                    {
+                        Templates.Add(row[0].ToString());
+                    }
+                }
+
+
             }
             catch (AggregateException err)
             {
@@ -251,26 +282,27 @@ namespace OfferManagement.Helpers
         {
             List<string> userEmail = new List<string>();
             try
-            { List<ExpandoObject> sheetData = GetDataFromSheet(googleSheetParameters);
-            //List<object> userEmails = new List<object>();
-            
-            //IDictionary<String, object> keyValues;
-            //var cal = sheetData as IDictionary<String, object>;
-
-            //userEmail = sheetData as IDictionary<String, object>();
-
-
-            foreach (ExpandoObject ex in sheetData)
             {
-                foreach (KeyValuePair<string, object> obj in ex)
+                List<ExpandoObject> sheetData = GetDataFromSheet(googleSheetParameters);
+                //List<object> userEmails = new List<object>();
+
+                //IDictionary<String, object> keyValues;
+                //var cal = sheetData as IDictionary<String, object>;
+
+                //userEmail = sheetData as IDictionary<String, object>();
+
+
+                foreach (ExpandoObject ex in sheetData)
                 {
-                    if (string.Equals(obj.Key.ToString(), "USEREMAIL", StringComparison.OrdinalIgnoreCase))
-                        userEmail.Add(obj.Value.ToString());
+                    foreach (KeyValuePair<string, object> obj in ex)
+                    {
+                        if (string.Equals(obj.Key.ToString(), "USEREMAIL", StringComparison.OrdinalIgnoreCase))
+                            userEmail.Add(obj.Value.ToString());
+                    }
                 }
-            }
 
 
-            
+
             }
             catch (AggregateException err)
             {
@@ -286,57 +318,58 @@ namespace OfferManagement.Helpers
         {
             var returnValues = new List<ExpandoObject>();
             try
-            { googleSheetParameters = MakeGoogleSheetDataRangeColumnsZeroBased(googleSheetParameters);
-            var range = $"{googleSheetParameters.SheetName}!{GetColumnName(googleSheetParameters.RangeColumnStart)}{googleSheetParameters.RangeRowStart}:{GetColumnName(googleSheetParameters.RangeColumnEnd)}{googleSheetParameters.RangeRowEnd}";
-
-            SpreadsheetsResource.ValuesResource.GetRequest request =
-                _sheetsService.Spreadsheets.Values.Get(_spreadsheetId, range);
-
-            var numberOfColumns = googleSheetParameters.RangeColumnEnd - googleSheetParameters.RangeColumnStart;
-            var columnNames = new List<string>();
-           
-
-            if (!googleSheetParameters.FirstRowIsHeaders)
             {
-                for (var i = 0; i <= numberOfColumns; i++)
+                googleSheetParameters = MakeGoogleSheetDataRangeColumnsZeroBased(googleSheetParameters);
+                var range = $"{googleSheetParameters.SheetName}!{GetColumnName(googleSheetParameters.RangeColumnStart)}{googleSheetParameters.RangeRowStart}:{GetColumnName(googleSheetParameters.RangeColumnEnd)}{googleSheetParameters.RangeRowEnd}";
+
+                SpreadsheetsResource.ValuesResource.GetRequest request =
+                    _sheetsService.Spreadsheets.Values.Get(_spreadsheetId, range);
+
+                var numberOfColumns = googleSheetParameters.RangeColumnEnd - googleSheetParameters.RangeColumnStart;
+                var columnNames = new List<string>();
+
+
+                if (!googleSheetParameters.FirstRowIsHeaders)
                 {
-                    columnNames.Add($"Column{i}");
-                }
-            }
-
-            var response = request.Execute();
-
-            int rowCounter = 0;
-            IList<IList<Object>> values = response.Values;
-
-            if (values != null && values.Count > 0)
-            {
-                foreach (var row in values)
-                {
-                    if (googleSheetParameters.FirstRowIsHeaders && rowCounter == 0)
+                    for (var i = 0; i <= numberOfColumns; i++)
                     {
-                        for (var i = 0; i <= numberOfColumns; i++)
+                        columnNames.Add($"Column{i}");
+                    }
+                }
+
+                var response = request.Execute();
+
+                int rowCounter = 0;
+                IList<IList<Object>> values = response.Values;
+
+                if (values != null && values.Count > 0)
+                {
+                    foreach (var row in values)
+                    {
+                        if (googleSheetParameters.FirstRowIsHeaders && rowCounter == 0)
                         {
-                            columnNames.Add(row[i].ToString());
+                            for (var i = 0; i <= numberOfColumns; i++)
+                            {
+                                columnNames.Add(row[i].ToString());
+                            }
+                            rowCounter++;
+                            continue;
                         }
+
+                        var expando = new ExpandoObject();
+                        var expandoDict = expando as IDictionary<String, object>;
+                        var columnCounter = 0;
+                        foreach (var columnName in columnNames)
+                        {
+                            expandoDict.Add(columnName, row[columnCounter].ToString());
+                            columnCounter++;
+                        }
+                        returnValues.Add(expando);
                         rowCounter++;
-                        continue;
                     }
-
-                    var expando = new ExpandoObject();
-                    var expandoDict = expando as IDictionary<String, object>;
-                    var columnCounter = 0;
-                    foreach (var columnName in columnNames)
-                    {
-                        expandoDict.Add(columnName, row[columnCounter].ToString());
-                        columnCounter++;
-                    }
-                    returnValues.Add(expando);
-                    rowCounter++;
                 }
-            }
 
-           
+
             }
             catch (AggregateException err)
             {
@@ -351,52 +384,53 @@ namespace OfferManagement.Helpers
         public void AddCells(GoogleSheetParameters googleSheetParameters, List<GoogleSheetRow> rows)
         {
             try
-            { var requests = new BatchUpdateSpreadsheetRequest { Requests = new List<Request>() };
-
-            var sheetId = GetSheetId(_sheetsService, _spreadsheetId, googleSheetParameters.SheetName);
-
-            GridCoordinate gc = new GridCoordinate
             {
-                ColumnIndex = googleSheetParameters.RangeColumnStart - 1,
-                RowIndex = googleSheetParameters.RangeRowStart - 1,
-                SheetId = sheetId
-            };
+                var requests = new BatchUpdateSpreadsheetRequest { Requests = new List<Request>() };
 
-            var request = new Request { UpdateCells = new UpdateCellsRequest { Start = gc, Fields = "*" } };
+                var sheetId = GetSheetId(_sheetsService, _spreadsheetId, googleSheetParameters.SheetName);
 
-            var listRowData = new List<RowData>();
-
-            foreach (var row in rows)
-            {
-                var rowData = new RowData();
-                var listCellData = new List<CellData>();
-                foreach (var cell in row.Cells)
+                GridCoordinate gc = new GridCoordinate
                 {
-                    var cellData = new CellData();
-                    var extendedValue = new ExtendedValue { StringValue = cell.CellValue };
+                    ColumnIndex = googleSheetParameters.RangeColumnStart - 1,
+                    RowIndex = googleSheetParameters.RangeRowStart - 1,
+                    SheetId = sheetId
+                };
 
-                    cellData.UserEnteredValue = extendedValue;
-                    var cellFormat = new CellFormat { TextFormat = new TextFormat() };
+                var request = new Request { UpdateCells = new UpdateCellsRequest { Start = gc, Fields = "*" } };
 
-                    if (cell.IsBold)
+                var listRowData = new List<RowData>();
+
+                foreach (var row in rows)
+                {
+                    var rowData = new RowData();
+                    var listCellData = new List<CellData>();
+                    foreach (var cell in row.Cells)
                     {
-                        cellFormat.TextFormat.Bold = true;
+                        var cellData = new CellData();
+                        var extendedValue = new ExtendedValue { StringValue = cell.CellValue };
+
+                        cellData.UserEnteredValue = extendedValue;
+                        var cellFormat = new CellFormat { TextFormat = new TextFormat() };
+
+                        if (cell.IsBold)
+                        {
+                            cellFormat.TextFormat.Bold = true;
+                        }
+
+                        cellFormat.BackgroundColor = new Color { Blue = (float)cell.BackgroundColor.B / 255, Red = (float)cell.BackgroundColor.R / 255, Green = (float)cell.BackgroundColor.G / 255 };
+
+                        cellData.UserEnteredFormat = cellFormat;
+                        listCellData.Add(cellData);
                     }
-
-                    cellFormat.BackgroundColor = new Color { Blue = (float)cell.BackgroundColor.B / 255, Red = (float)cell.BackgroundColor.R / 255, Green = (float)cell.BackgroundColor.G / 255 };
-
-                    cellData.UserEnteredFormat = cellFormat;
-                    listCellData.Add(cellData);
+                    rowData.Values = listCellData;
+                    listRowData.Add(rowData);
                 }
-                rowData.Values = listCellData;
-                listRowData.Add(rowData);
-            }
-            request.UpdateCells.Rows = listRowData;
+                request.UpdateCells.Rows = listRowData;
 
-            // It's a batch request so you can create more than one request and send them all in one batch. Just use reqs.Requests.Add() to add additional requests for the same spreadsheet
-            requests.Requests.Add(request);
+                // It's a batch request so you can create more than one request and send them all in one batch. Just use reqs.Requests.Add() to add additional requests for the same spreadsheet
+                requests.Requests.Add(request);
 
-            _sheetsService.Spreadsheets.BatchUpdate(requests, _spreadsheetId).Execute();
+                _sheetsService.Spreadsheets.BatchUpdate(requests, _spreadsheetId).Execute();
             }
             catch (AggregateException err)
             {
