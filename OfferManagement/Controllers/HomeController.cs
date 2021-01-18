@@ -61,26 +61,31 @@ namespace OfferManagement.Controllers
 
             ViewData["PCCNames"] = Transform(Session["names"] as IList<string>);
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && Session["UserEmail"].ToString() != null)  //check useremail session failure case
             {
                var google = new GoogleSheetsHelper();
 
                 transaction.UserEmail = Session["UserEmail"].ToString();
 
-                transaction.ValidationStatus = "Completed";
+                transaction.ValidationStatus = "OTP Verification Pending";
+
+
 
                 google.CreateTransaction(transaction);
 
-                //Send OTP
-                MSGWowHelper helper =new  MSGWowHelper();
+
+                MSGWowHelper helper = new MSGWowHelper();
 
                 var isOTPSent = helper.sendOTP(transaction.MobileNumber);
 
-                if(isOTPSent)
+                //var isOTPSent = true;
+
+                if (isOTPSent)
                 {
                     ViewBag.Message = "OTP Sent Succesfully, Kindly Enter the received OTP for validation";
                     transaction.enableValidatebtn = true;
                     transaction.enableResendbtn = false;
+                    Session["transaction"] = transaction;
                     return View(transaction);
                     //enable validate otp button , disabled resend
                 }
@@ -89,13 +94,12 @@ namespace OfferManagement.Controllers
                     ViewBag.Message = "OTP failure,Try Resend Option";
                     transaction.enableValidatebtn = false;
                     transaction.enableResendbtn = true;
+                    Session["transaction"] = transaction;
                     //Should we wait for 30 sec or enable resend button ??  -> enable resend button , disabled validate otp btn
                     return View(transaction);
                 }
 
-                ViewBag.Message = System.Configuration.ConfigurationManager.AppSettings["SuccessfulTransactionMsg"];
-
-                return View("Transaction", transaction);
+               
             }
 
             return View();
@@ -118,24 +122,83 @@ namespace OfferManagement.Controllers
             return items;
         }
 
-        //public ActionResult ValidateOTP(string otp,string mobile, DiscountTransaction model)
-        public ActionResult ValidateOTP( DiscountTransaction modelval)
+        public ActionResult ValidateOTP(string otp)
+        //public ActionResult ValidateOTP(DiscountTransaction model)
+        //public ActionResult ValidateOTP( DiscountTransaction modelval)
         {
-            MSGWowHelper helper = new MSGWowHelper();
+            var model = Session["transaction"] as DiscountTransaction;
 
-            var isOTPSent = helper.verifyOTP(modelval.OTP, modelval.MobileNumber);
+            ViewData["SMSTemplates"] = Transform(Session["templates"] as IList<string>);
 
-            return View();
+            ViewData["DiscountReasons"] = Transform(Session["reasons"] as IList<string>);
+
+            ViewData["PCCNames"] = Transform(Session["names"] as IList<string>);
+
+            if (otp.Length == 4)
+            {
+                MSGWowHelper helper = new MSGWowHelper();
+
+                var isOTPSent = helper.verifyOTP(otp, model.MobileNumber);
+
+                if (isOTPSent)
+                {
+                    model.ValidationStatus = "OTP Verified";
+
+                    model.OTP = otp;
+
+                    //update google sheet
+
+                    ViewBag.Message = System.Configuration.ConfigurationManager.AppSettings["SuccessfulTransactionMsg"];
+
+                    Session["transaction"] = model;
+                }
+                else
+                {
+                    ViewBag.Message = "Invalid OTP, Please try with valid OTP";
+
+                    return View("Index",model);
+                }
+
+                return View("Transaction", model);
+            }
+            else
+            {
+                ViewBag.Message = "Please provide OTP";
+
+                return View("Index", model);
+            }
         }
 
 
-        public ActionResult ResendOTP(string mobile)
+        public ActionResult ResendOTP(DiscountTransaction model)
         {
             MSGWowHelper helper = new MSGWowHelper();
 
-            var isOTPSent = helper.resendOTP(mobile);
+            ViewData["SMSTemplates"] = Transform(Session["templates"] as IList<string>);
 
-            return View();
+            ViewData["DiscountReasons"] = Transform(Session["reasons"] as IList<string>);
+
+            ViewData["PCCNames"] = Transform(Session["names"] as IList<string>);
+
+
+            var isOTPSent = helper.resendOTP(model.MobileNumber);
+            if (isOTPSent)
+            {
+                ViewBag.Message = "OTP Sent Succesfully, Kindly Enter the received OTP for validation";
+                model.enableValidatebtn = true;
+                model.enableResendbtn = false;
+            }
+            else
+            {
+                ViewBag.Message = "OTP failure,Try Resend Option";
+                model.enableValidatebtn = false;
+                model.enableResendbtn = true;
+
+            }
+
+            Session["transaction"] = model;
+
+            return View("Index", model);
         }
     }
 }
