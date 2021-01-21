@@ -6,9 +6,10 @@
     <link rel="icon" href="@Url.Content("~/Content/Logo.jpg")" />
     <title>@System.Configuration.ConfigurationManager.AppSettings["ApplicationName"] - @ViewBag.Title</title>
     @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jquery-ui")
     @Scripts.Render("~/bundles/modernizr")
-    @Scripts.Render("~/Scripts/jquery.filtertable.min.js")
-
+    @Scripts.Render("~/bundles/bootstrap")
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -18,11 +19,14 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
-                </button>               
-                @Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["ApplicationName"], "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                </button>
+                <img src="~/Content/Logo.jpg" style="height:50px;width:60px" alt=@System.Configuration.ConfigurationManager.AppSettings["ApplicationName"]>
+
+                @*@Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["ApplicationName"], "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["TransactionsPageName"], "Index", "Home")</li>
                     <li>@Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["ReportPageName"], "About", "Home")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
@@ -36,9 +40,7 @@
             <p>&copy; @DateTime.Now.Year - Elixer </p>
         </footer>
     </div>
-
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+   
     @RenderSection("scripts", required: false)
 </body>
 </html>

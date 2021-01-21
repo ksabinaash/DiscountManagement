@@ -480,22 +480,26 @@ namespace OfferManagement.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        private bool IsRegisteredUser(object userEmail)
+        private bool IsRegisteredUser(string userEmail)
         {
-            List<string> UsersEmail = GetRegisteredUsers();
+            IList<UserModel> UsersList = GetRegisteredUsers();
 
-            return UsersEmail.Contains(userEmail);
+            //return UsersEmail.Contains(userEmail);
+
+            Session["UserModel"] = UsersList.FirstOrDefault(x => x.UserEmail.Equals(userEmail, StringComparison.InvariantCulture));
+
+            return UsersList.First(x => x.UserEmail.Equals(userEmail, StringComparison.InvariantCulture)) != null; 
         }
 
-        private List<string> GetRegisteredUsers()
+        private IList<UserModel> GetRegisteredUsers()
         {
-            String _sheetName = System.Configuration.ConfigurationManager.AppSettings["UsersSheetName"];
+            //String _sheetName = System.Configuration.ConfigurationManager.AppSettings["UsersSheetName"];
 
             var gsh = new GoogleSheetsHelper();
 
-            var gsp = new GoogleSheetParameters() { RangeColumnStart = 1, RangeRowStart = 1, RangeColumnEnd = 2, RangeRowEnd = 100, FirstRowIsHeaders = true, SheetName = _sheetName };
+            //var gsp = new GoogleSheetParameters() { RangeColumnStart = 1, RangeRowStart = 1, RangeColumnEnd = 3, RangeRowEnd = 1000, FirstRowIsHeaders = true, SheetName = _sheetName };
 
-            var rowValues = gsh.GetUserEmailsFromSheet(gsp);
+            IList<UserModel> rowValues = gsh.ReadUsersList(true);
 
             return rowValues;
         }

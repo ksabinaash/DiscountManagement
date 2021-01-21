@@ -43,18 +43,34 @@ namespace OfferManagement.Controllers
 
             var transactions = google.ReadTransactions(true);
 
-            if (transactions.Count == 0)
+            if (transactions.Count >= 0)
             {
+                ViewBag.ExportPermission = (bool)((UserModel)Session["UserModel"]).Role.ToString().Equals("ADMINUSER", StringComparison.InvariantCultureIgnoreCase);
+
                 ViewBag.Message = "No Data Available";
 
-                return View();
+                ViewBag.PCCNames = Transform(Session["names"] as IList<string>);
+
+                ViewBag.ValidationStatus = Transform(getValidationStatus() as IList<string>);
+
+                return View("Reports", transactions);
             }
             else
             {
-                return View("Reports", transactions);
+                return View();
             }
         }
 
+        public IList<string> getValidationStatus()
+        {
+            IList<string> ValidationStatus = new List<String>();
+
+            ValidationStatus.Add("OTP Verification Pending");
+
+            ValidationStatus.Add("OTP Verified");
+
+            return ValidationStatus;
+        }
 
         public IList<DiscountTransaction> readGooglesheetvalues()
         {
@@ -76,11 +92,14 @@ namespace OfferManagement.Controllers
         {
 
             DataTable dt = new DataTable("ElixerTransactions");
-            dt.Columns.AddRange(new DataColumn[10] {
+            dt.Columns.AddRange(new DataColumn[13] {
                                             new DataColumn("CustomerName"),
                                             new DataColumn("UserEmail"),
                                             new DataColumn("CustomerEmail"),
                                             new DataColumn("MobileNumber"),
+                                            new DataColumn("PCC Name"),
+                                            new DataColumn("OTP"),
+                                            new DataColumn("OTP Mesage Template"),
                                             new DataColumn("BillValue"),
                                             new DataColumn("Discount"),
                                             new DataColumn("BilledValue"),
@@ -93,6 +112,9 @@ namespace OfferManagement.Controllers
             foreach (var modelval in list)
             {
                 dt.Rows.Add(modelval.CustomerName,modelval.UserEmail,modelval.CustomerEmail,modelval.MobileNumber,
+                    modelval.PCCName,
+                    modelval.OTP,
+                    modelval.MessageTemplate,
                     modelval.BillValue, modelval.Discount, modelval.BilledValue,modelval.DiscountReason,modelval.BilledDateTime,modelval.ValidationStatus);
             }
 
@@ -108,7 +130,7 @@ namespace OfferManagement.Controllers
         }
     
     [HttpPost]
-        public ActionResult Index(DiscountTransaction transaction)
+        public ActionResult Index(DiscountTransaction model)
         {
             ViewData["SMSTemplates"] = Transform(Session["templates"] as IList<string>);
 
@@ -116,47 +138,55 @@ namespace OfferManagement.Controllers
 
             ViewData["PCCNames"] = Transform(Session["names"] as IList<string>);
 
-            if (ModelState.IsValid && Session["UserEmail"].ToString() != null)  //check useremail session failure case
+            if (ModelState.IsValid && Session["UserEmail"]!= null)  //check useremail session failure case
             {
                var google = new GoogleSheetsHelper();
 
-                transaction.UserEmail = Session["UserEmail"].ToString();
+                model.UserEmail = Session["UserEmail"].ToString();
 
-                transaction.ValidationStatus = "OTP Verification Pending";
+                model.ValidationStatus = "OTP Verification Pending";
 
-                google.CreateTransaction(transaction);
+                
 
-                transaction.enableSubmitbtn = false;
+                model.enableSubmitbtn = false;
 
                 MSGWowHelper helper = new MSGWowHelper();
 
 
-                var messageTempalte = transaction.MessageTemplate.Replace("#Customername", transaction.CustomerName)
-                    .Replace("#discount ", transaction.Discount.ToString()+" ")
-                    .Replace("#discountreason", transaction.DiscountReason)
-                    .Replace("#billedvalue", transaction.BillValue.ToString());
+                var messageTempalte = model.MessageTemplate.Replace("#Customername", model.CustomerName)
+                    .Replace("#discount ", model.Discount.ToString()+" ")
+                    .Replace("#discountreason", model.DiscountReason)
+                    .Replace("#billedvalue", model.BillValue.ToString());
 
-                var isOTPSent = helper.sendOTP(transaction.MobileNumber, messageTempalte);
+                model.MessageTemplate = messageTempalte;
+
+                google.CreateTransaction(model);
+
+                var isOTPSent = helper.sendOTP(model.MobileNumber, messageTempalte);
 
                 //var isOTPSent = true;
 
                 if (isOTPSent)
                 {
                     ViewBag.Message = "OTP Sent Succesfully, Kindly Enter the received OTP for validation";
-                    transaction.enableValidatebtn = true;
-                    transaction.enableResendbtn = false;
-                    Session["transaction"] = transaction;
-                    return View(transaction);
+                    model.enableValidatebtn = true;
+                    model.enableResendbtn = false;
+                    Session["transaction"] = model;
+                  
+                    google.UpdateMsgTemplate(model);
+
+
+                    return View(model);
                     //enable validate otp button , disabled resend
                 }
                 else
                 {
                     ViewBag.Message = "OTP failure,Try Resend Option";
-                    transaction.enableValidatebtn = false;
-                    transaction.enableResendbtn = true;
-                    Session["transaction"] = transaction;
+                    model.enableValidatebtn = false;
+                    model.enableResendbtn = true;
+                    Session["transaction"] = model;
                     //Should we wait for 30 sec or enable resend button ??  -> enable resend button , disabled validate otp btn
-                    return View(transaction);
+                    return View(model);
                 }
 
                
@@ -211,7 +241,7 @@ namespace OfferManagement.Controllers
                     model.OTP = otp;
 
                     //update google sheet
-                    google.UpdateTransaction(model);
+                    google.UpdateValidationStatus(model);
 
                     ViewBag.Message = System.Configuration.ConfigurationManager.AppSettings["SuccessfulTransactionMsg"];
 
@@ -219,7 +249,7 @@ namespace OfferManagement.Controllers
                 }
                 else
                 {
-                    ViewBag.Message = "Invalid OTP, Please try with valid OTP";
+                    ViewBag.Message = System.Configuration.ConfigurationManager.AppSettings["InvalidOTPMsg"]; ;
 
                     return View("Index",model);
                 }
@@ -239,6 +269,8 @@ namespace OfferManagement.Controllers
         {
             MSGWowHelper helper = new MSGWowHelper();
 
+            var google = new GoogleSheetsHelper();
+
             ViewData["SMSTemplates"] = Transform(Session["templates"] as IList<string>);
 
             ViewData["DiscountReasons"] = Transform(Session["reasons"] as IList<string>);
@@ -257,14 +289,15 @@ namespace OfferManagement.Controllers
 
             if (isOTPSent)
             {
-                ViewBag.Message = "OTP Sent Succesfully, Kindly Enter the received OTP for validation";
+                ViewBag.Message = System.Configuration.ConfigurationManager.AppSettings["SuccessfulOTPMsg"];
+
                 model.enableValidatebtn = true;
                 model.enableResendbtn = false;
 
             }
             else
             {
-                ViewBag.Message = "OTP failure,Try Resend Option";
+                ViewBag.Message = System.Configuration.ConfigurationManager.AppSettings["FailureOTPMsg"];  ;
                 model.enableValidatebtn = false;
                 model.enableResendbtn = true;
 

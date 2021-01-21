@@ -45,8 +45,8 @@ namespace OfferManagement.Models
         public double BilledValue
         {
             get
-            { 
-                return BillValue - Discount; 
+            {
+                return BillValue - Discount;
             }
         }
 

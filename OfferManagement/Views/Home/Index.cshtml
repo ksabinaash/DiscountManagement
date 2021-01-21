@@ -6,7 +6,20 @@
 }
 <h2>@ViewBag.Title</h2>
 
+<script>
+    $(document).ready(function (){
 
+        $('#discount').change(function () {
+            $('#BilledValue').val($('#BillValue').val() - $('#discount').val());
+        });
+
+        //$('#discount').change(function () {
+        //    alert("currentDate changed")
+
+        //});
+
+    });
+</script>
 
 @using (Html.BeginForm("Index", "Home", FormMethod.Post))
 {
@@ -53,7 +66,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.BillValue, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.BillValue, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.BillValue, new { htmlAttributes = new { @class = "form-control",@id = "BillValue" } })
                 @Html.ValidationMessageFor(model => model.BillValue, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -61,7 +74,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Discount, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Discount, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Discount, new { htmlAttributes = new { @class = "form-control", @id = "discount" } })
                 @Html.ValidationMessageFor(model => model.Discount, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -69,7 +82,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.BilledValue, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DisplayFor(model => model.BilledValue, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.BilledValue, new { htmlAttributes = new { @class = "form-control",@disabled = "disabled", @id = "BilledValue" } })
             </div>
         </div>
 
@@ -87,7 +100,9 @@
         <div class="form-group">
             @Html.LabelFor(model => model.MessageTemplate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.MessageTemplate, (IEnumerable<SelectListItem>)ViewData["SMSTemplates"], "Select a Template", htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownListFor(model => model.MessageTemplate,
+               ((IEnumerable<SelectListItem>)ViewData["SMSTemplates"]),
+               htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.MessageTemplate, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -101,7 +116,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.OTP, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-4">
-                <input type="text" id="txtOtp" min="4" name="OTPfield" maxlength="4" placeholder="Please Enter OTP" class="form-control" />
+                <input type="text" id="txtOtp" disabled="@(Model.enableSubmitbtn == true)"  min="4" name="OTPfield" maxlength="4" placeholder="Please Enter OTP" class="form-control" />
                 @*@Html.EditorFor(model => model.OTP, new { htmlAttributes = new { @class = "form-control" } })*@
                 @*@Html.ValidationMessageFor(model => model.OTP, "", new { @class = "text-danger" })*@
             </div>
@@ -109,8 +124,7 @@
         </div>
 
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-2">
-
+            <div class="col-md-2">
                 <input type="button" disabled="@(Model.enableValidatebtn == false)" value="Validate OTP" id="btnValidateOTP" class="btn btn-success"
                        onclick="location.href='@Url.Action("ValidateOTP","Home")?otp=' + $('#txtOtp').val()" />
             </div>
@@ -118,9 +132,8 @@
                 <input type="button" disabled="@(Model.enableResendbtn == false)" value="Resend OTP" id="btnResendOTP" class="btn btn-success"
                        onclick="location.href='@Url.Action("ResendOTP","Home",Model)'" />
             </div>
+
         </div>
-
-
-    </div>
+</div>
 
 }

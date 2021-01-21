@@ -83,6 +83,68 @@ namespace OfferManagement.Helpers
                 return values != null && values.Count > 0 ? values.Count : 0;
         }
 
+        public void UpdateValidationStatus(DiscountTransaction transaction)
+        {
+            try
+            {
+                UpdateTransaction("M",transaction.ValidationStatus);
+            }
+            catch (AggregateException err)
+            {
+                foreach (var errInner in err.InnerExceptions)
+                {
+                    Console.WriteLine(errInner); //this will call ToString() on the inner execption and get you message, stacktrace and you could perhaps drill down further into the inner exception of it if necessary 
+                }
+            }
+        }
+
+        public void UpdateMsgTemplate(DiscountTransaction transaction)
+        {
+            try
+            {
+                UpdateTransaction("K", transaction.MessageTemplate);
+            }
+            catch (AggregateException err)
+            {
+                foreach (var errInner in err.InnerExceptions)
+                {
+                    Console.WriteLine(errInner); //this will call ToString() on the inner execption and get you message, stacktrace and you could perhaps drill down further into the inner exception of it if necessary 
+                }
+            }
+        }
+
+        public void UpdateTransaction(string ColumnName, string propertyName)
+        {
+            try
+            {
+                var lastrow = GetLastRow();
+
+                string sheetName = System.Configuration.ConfigurationManager.AppSettings["TransactionsSheetName"];
+
+                var range = $"{sheetName}!"+ ColumnName + lastrow;
+
+                var valueRange = new ValueRange();
+
+                var oblist = new List<object>() { propertyName };
+
+                valueRange.Values = new List<IList<object>> { oblist };
+
+                var updateRequest = _sheetsService.Spreadsheets.Values.Update(valueRange, _spreadsheetId, range);
+
+                updateRequest.ValueInputOption = SpreadsheetsResource.ValuesResource.UpdateRequest.ValueInputOptionEnum.USERENTERED;
+
+                var appendReponse = updateRequest.Execute();
+            }
+            catch (AggregateException err)
+            {
+                foreach (var errInner in err.InnerExceptions)
+                {
+                    Console.WriteLine(errInner); //this will call ToString() on the inner execption and get you message, stacktrace and you could perhaps drill down further into the inner exception of it if necessary 
+                }
+            }
+        }
+
+        //not used
         public void UpdateTransaction(DiscountTransaction transaction)
         {
             try
@@ -294,6 +356,53 @@ namespace OfferManagement.Helpers
             }
             return Templates;
         }
+
+        public IList<UserModel> ReadUsersList(bool IsFirstRowHeader)
+        {
+            IList<UserModel> usersList = new List<UserModel>();
+            try
+            {
+                string sheetName = System.Configuration.ConfigurationManager.AppSettings["UsersSheetName"];
+
+                var range = $"{sheetName}!A:C";
+
+                SpreadsheetsResource.ValuesResource.GetRequest request = _sheetsService.Spreadsheets.Values.Get(_spreadsheetId, range);
+
+                var response = request.Execute();
+
+                IList<IList<object>> values = response.Values;
+
+
+                if (values != null && values.Count > 0)
+                {
+                    if (IsFirstRowHeader)
+                    {
+                        values = values.Skip(1).ToList();
+                    }
+
+                    foreach (var row in values)
+                    {
+                        UserModel user = new UserModel();
+
+                        user.UserEmail = row[0].ToString();
+                        user.UserName = row[1].ToString();
+                        user.Role = row[2].ToString();
+
+                        usersList.Add(user);
+                    }
+
+                }
+            }
+            catch (AggregateException err)
+            {
+                foreach (var errInner in err.InnerExceptions)
+                {
+                    Console.WriteLine(errInner); //this will call ToString() on the inner execption and get you message, stacktrace and you could perhaps drill down further into the inner exception of it if necessary 
+                }
+            }
+            return usersList;
+        }
+
 
         public List<string> GetUserEmailsFromSheet(GoogleSheetParameters googleSheetParameters)
         {

@@ -11,6 +11,9 @@ namespace OfferManagement
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/jquery-ui").Include(
+                        "~/Scripts/jquery-ui-{version}.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
 
@@ -24,6 +27,7 @@ namespace OfferManagement
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
+                      "~/Content/themes/base/jquery-ui.css",
                       "~/Content/site.css"));
         }
     }
