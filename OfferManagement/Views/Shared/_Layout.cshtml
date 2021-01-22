@@ -10,6 +10,7 @@
     @Scripts.Render("~/bundles/jquery-ui")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/bootstrap")
+    <link href="~/Content/MvcGrid/mvc-grid.css" rel="stylesheet" />
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -35,12 +36,19 @@
     </div>
     <div class="container body-content">
         @RenderBody()
+        <script src="~/Scripts/MvcGrid/mvc-grid.js"></script>
+        <script>
+            [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+                new MvcGrid(element);
+            });
+        </script>
+
         <hr />
         <footer>
             <p>&copy; @DateTime.Now.Year - Elixer </p>
         </footer>
     </div>
-   
+
     @RenderSection("scripts", required: false)
 </body>
 </html>

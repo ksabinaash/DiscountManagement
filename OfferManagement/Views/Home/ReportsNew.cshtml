@@ -1,0 +1,6 @@
+﻿@{
+    ViewBag.Title = @System.Configuration.ConfigurationManager.AppSettings["ReportPageName"];
+}
+<h2>@ViewBag.Title</h2>
+
+@Html.AjaxGrid(Url.Action("ReportsGrid"))

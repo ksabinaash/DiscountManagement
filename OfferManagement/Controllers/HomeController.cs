@@ -43,22 +43,34 @@ namespace OfferManagement.Controllers
 
             var transactions = google.ReadTransactions(true);
 
-            if (transactions.Count >= 0)
-            {
-                ViewBag.ExportPermission = (bool)((UserModel)Session["UserModel"]).Role.ToString().Equals("ADMINUSER", StringComparison.InvariantCultureIgnoreCase);
+            //if (transactions.Count >= 0)
+            //{
+            //    ViewBag.ExportPermission = (bool)((UserModel)Session["UserModel"]).Role.ToString().Equals("ADMINUSER", StringComparison.InvariantCultureIgnoreCase);
 
-                ViewBag.Message = "No Data Available";
+            //    ViewBag.Message = "No Data Available";
 
-                ViewBag.PCCNames = Transform(Session["names"] as IList<string>);
+            //    ViewBag.PCCNames = Transform(Session["names"] as IList<string>);
 
-                ViewBag.ValidationStatus = Transform(getValidationStatus() as IList<string>);
+            //    ViewBag.ValidationStatus = Transform(getValidationStatus() as IList<string>);
 
-                return View("Reports", transactions);
-            }
-            else
-            {
-                return View();
-            }
+            //    return View("Reports", transactions);
+            //}
+            //else
+            //{
+            //    return View();
+            //}
+
+            Session["ReportsList"] = (transactions != null && transactions.Count >= 0) ? transactions as List<DiscountTransaction> : new List<DiscountTransaction>();
+            
+            return View("ReportsNew");
+        }
+
+        [HttpGet]
+        public PartialViewResult ReportsGrid()
+        {
+            var reports = Session["ReportsList"] as List<DiscountTransaction>;
+            // Only grid query values will be available here.
+            return PartialView("ReportsGrid", reports.AsQueryable());
         }
 
         public IList<string> getValidationStatus()
@@ -111,11 +123,11 @@ namespace OfferManagement.Controllers
 
             foreach (var modelval in list)
             {
-                dt.Rows.Add(modelval.CustomerName,modelval.UserEmail,modelval.CustomerEmail,modelval.MobileNumber,
+                dt.Rows.Add(modelval.CustomerName, modelval.UserEmail, modelval.CustomerEmail, modelval.MobileNumber,
                     modelval.PCCName,
                     modelval.OTP,
                     modelval.MessageTemplate,
-                    modelval.BillValue, modelval.Discount, modelval.BilledValue,modelval.DiscountReason,modelval.BilledDateTime,modelval.ValidationStatus);
+                    modelval.BillValue, modelval.Discount, modelval.BilledValue, modelval.DiscountReason, modelval.BilledDateTime, modelval.ValidationStatus);
             }
 
             using (XLWorkbook wb = new XLWorkbook())
@@ -124,12 +136,12 @@ namespace OfferManagement.Controllers
                 using (MemoryStream stream = new MemoryStream())
                 {
                     wb.SaveAs(stream);
-                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ElixerTransactions"+DateTime.Now+".xlsx");
+                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ElixerTransactions" + DateTime.Now + ".xlsx");
                 }
             }
         }
-    
-    [HttpPost]
+
+        [HttpPost]
         public ActionResult Index(DiscountTransaction model)
         {
             ViewData["SMSTemplates"] = Transform(Session["templates"] as IList<string>);
@@ -138,23 +150,20 @@ namespace OfferManagement.Controllers
 
             ViewData["PCCNames"] = Transform(Session["names"] as IList<string>);
 
-            if (ModelState.IsValid && Session["UserEmail"]!= null)  //check useremail session failure case
+            if (ModelState.IsValid && Session["UserEmail"] != null)  //check useremail session failure case
             {
-               var google = new GoogleSheetsHelper();
+                var google = new GoogleSheetsHelper();
 
                 model.UserEmail = Session["UserEmail"].ToString();
 
                 model.ValidationStatus = "OTP Verification Pending";
 
-                
-
                 model.enableSubmitbtn = false;
 
                 MSGWowHelper helper = new MSGWowHelper();
 
-
                 var messageTempalte = model.MessageTemplate.Replace("#Customername", model.CustomerName)
-                    .Replace("#discount ", model.Discount.ToString()+" ")
+                    .Replace("#discount ", model.Discount.ToString() + " ")
                     .Replace("#discountreason", model.DiscountReason)
                     .Replace("#billedvalue", model.BillValue.ToString());
 
@@ -169,10 +178,13 @@ namespace OfferManagement.Controllers
                 if (isOTPSent)
                 {
                     ViewBag.Message = "OTP Sent Succesfully, Kindly Enter the received OTP for validation";
+
                     model.enableValidatebtn = true;
+
                     model.enableResendbtn = false;
+
                     Session["transaction"] = model;
-                  
+
                     google.UpdateMsgTemplate(model);
 
 
@@ -182,21 +194,23 @@ namespace OfferManagement.Controllers
                 else
                 {
                     ViewBag.Message = "OTP failure,Try Resend Option";
+
                     model.enableValidatebtn = false;
+
                     model.enableResendbtn = true;
+
                     Session["transaction"] = model;
+
                     //Should we wait for 30 sec or enable resend button ??  -> enable resend button , disabled validate otp btn
                     return View(model);
                 }
-
-               
             }
 
             return View();
 
         }
 
-        
+
         private List<SelectListItem> Transform(IList<string> values)
         {
             List<SelectListItem> items = new List<SelectListItem>();
@@ -251,7 +265,7 @@ namespace OfferManagement.Controllers
                 {
                     ViewBag.Message = System.Configuration.ConfigurationManager.AppSettings["InvalidOTPMsg"]; ;
 
-                    return View("Index",model);
+                    return View("Index", model);
                 }
 
                 return View("Transaction", model);
@@ -297,7 +311,7 @@ namespace OfferManagement.Controllers
             }
             else
             {
-                ViewBag.Message = System.Configuration.ConfigurationManager.AppSettings["FailureOTPMsg"];  ;
+                ViewBag.Message = System.Configuration.ConfigurationManager.AppSettings["FailureOTPMsg"]; ;
                 model.enableValidatebtn = false;
                 model.enableResendbtn = true;
 

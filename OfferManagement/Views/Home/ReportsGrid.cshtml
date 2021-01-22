@@ -1,0 +1,30 @@
+﻿@model IQueryable<OfferManagement.Models.DiscountTransaction>
+
+@* Should only include grid declaration *@
+
+@(Html
+    .Grid(Model)
+    .Build(columns =>
+    {
+        columns.Add(model => model.CustomerName).Titled("Customer Name");
+        columns.Add(model => model.CustomerEmail).Titled("Customer Email");
+        columns.Add(model => model.UserEmail).Titled("User Email");
+        columns.Add(model => model.PCCName).Titled("PCC Name");
+        columns.Add(model => model.DiscountReason).Titled("Discount Reason");
+        columns.Add(model => model.BillValue).Titled("Bill Value");
+        columns.Add(model => model.Discount).Titled("Discount");
+        columns.Add(model => model.BilledValue).Titled("Billed Value");
+        columns.Add(model => model.MessageTemplate).Titled("Template");
+        columns.Add(model => model.BilledDateTime).Titled("Billed Date").Formatted("{0:d}");
+        columns.Add(model => model.ValidationStatus).Titled("Status");
+    })
+    .Empty("No data found")
+    .Id("my-ajax-grid")
+    .Pageable(pager =>
+    {
+        pager.PagesToDisplay = 2;
+        pager.RowsPerPage = 5;
+    })
+    .Filterable()
+    .Sortable()
+)
