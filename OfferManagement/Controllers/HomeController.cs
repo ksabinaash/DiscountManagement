@@ -171,9 +171,9 @@ namespace OfferManagement.Controllers
 
                 google.CreateTransaction(model);
 
-                var isOTPSent = helper.sendOTP(model.MobileNumber, messageTempalte);
+                //var isOTPSent = helper.sendOTP(model.MobileNumber, messageTempalte);
 
-                //var isOTPSent = true;
+                var isOTPSent = true;
 
                 if (isOTPSent)
                 {
@@ -244,9 +244,9 @@ namespace OfferManagement.Controllers
             {
                 MSGWowHelper helper = new MSGWowHelper();
 
-                var isOTPSent = helper.verifyOTP(otp, model.MobileNumber);
+                //var isOTPSent = helper.verifyOTP(otp, model.MobileNumber);
 
-                //var isOTPSent = true;
+                var isOTPSent = true;
 
                 if (isOTPSent)
                 {
@@ -285,40 +285,38 @@ namespace OfferManagement.Controllers
 
             var google = new GoogleSheetsHelper();
 
-            ViewData["SMSTemplates"] = Transform(Session["templates"] as IList<string>);
-
-            ViewData["DiscountReasons"] = Transform(Session["reasons"] as IList<string>);
-
-            ViewData["PCCNames"] = Transform(Session["names"] as IList<string>);
-
-            var messageTempalte = model.MessageTemplate.Replace("#Customername", model.CustomerName)
-                   .Replace("#discount ", model.Discount.ToString() + " ")
-                   .Replace("#discountreason", model.DiscountReason)
-                   .Replace("#billedvalue", model.BillValue.ToString());
-
-            var isOTPSent = helper.resendOTP(model.MobileNumber, messageTempalte);
-
-            //var isOTPSent = true;
-
-
-            if (isOTPSent)
+            if(model!=null)
             {
-                ViewBag.Message = System.Configuration.ConfigurationManager.AppSettings["SuccessfulOTPMsg"];
+                ViewData["SMSTemplates"] = Transform(Session["templates"] as IList<string>);
 
-                model.enableValidatebtn = true;
-                model.enableResendbtn = false;
+                ViewData["DiscountReasons"] = Transform(Session["reasons"] as IList<string>);
 
+                ViewData["PCCNames"] = Transform(Session["names"] as IList<string>);
+
+                var messageTempalte = model.MessageTemplate.Replace("#Customername", model.CustomerName)
+                       .Replace("#discount ", model.Discount.ToString() + " ")
+                       .Replace("#discountreason", model.DiscountReason)
+                       .Replace("#billedvalue", model.BillValue.ToString());
+
+                var isOTPSent = helper.resendOTP(model.MobileNumber, messageTempalte);
+                if (isOTPSent)
+                {
+                    ViewBag.Message = System.Configuration.ConfigurationManager.AppSettings["SuccessfulOTPMsg"];
+
+                    model.enableValidatebtn = true;
+                    model.enableResendbtn = false;
+
+                }
+                else
+                {
+                    ViewBag.Message = System.Configuration.ConfigurationManager.AppSettings["FailureOTPMsg"]; ;
+                    model.enableValidatebtn = false;
+                    model.enableResendbtn = true;
+
+                }
+
+                Session["transaction"] = model;
             }
-            else
-            {
-                ViewBag.Message = System.Configuration.ConfigurationManager.AppSettings["FailureOTPMsg"]; ;
-                model.enableValidatebtn = false;
-                model.enableResendbtn = true;
-
-            }
-
-            Session["transaction"] = model;
-
             return View("Index", model);
         }
     }

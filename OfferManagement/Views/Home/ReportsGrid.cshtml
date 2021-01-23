@@ -1,5 +1,7 @@
 ﻿@model IQueryable<OfferManagement.Models.DiscountTransaction>
 
+
+
 @* Should only include grid declaration *@
 
 @(Html
@@ -22,8 +24,8 @@
     .Id("my-ajax-grid")
     .Pageable(pager =>
     {
-        pager.PagesToDisplay = 2;
-        pager.RowsPerPage = 5;
+        //pager.PagesToDisplay = 2;
+        pager.RowsPerPage = 10;
     })
     .Filterable()
     .Sortable()
