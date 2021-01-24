@@ -484,11 +484,15 @@ namespace OfferManagement.Controllers
         {
             IList<UserModel> UsersList = GetRegisteredUsers();
 
-            //return UsersEmail.Contains(userEmail);
-
-            Session["UserModel"] = UsersList.FirstOrDefault(x => x.UserEmail.Equals(userEmail, StringComparison.InvariantCulture));
-
-            return UsersList.First(x => x.UserEmail.Equals(userEmail, StringComparison.InvariantCulture)) != null; 
+            if (UsersList.Any(x => x.UserEmail.Equals(userEmail, StringComparison.InvariantCulture)))
+            {
+                Session["UserModel"] = UsersList.FirstOrDefault(x => x.UserEmail.Equals(userEmail, StringComparison.InvariantCulture));
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         private IList<UserModel> GetRegisteredUsers()

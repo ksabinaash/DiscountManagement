@@ -70,7 +70,7 @@ namespace OfferManagement.Models
 
         public bool enableValidatebtn { get; set; } = false;
 
-        public bool enableResendbtn { get; set; } = false;
+        //public bool enableResendbtn { get; set; } = false;
 
         public bool enableSubmitbtn { get; set; } = true;
     }

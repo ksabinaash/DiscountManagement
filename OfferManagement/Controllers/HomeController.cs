@@ -30,6 +30,8 @@ namespace OfferManagement.Controllers
 
             Session["names"] = google.ReadPCCNames(true);
 
+            //Session["enabletimer"] = false;
+
             ViewData["SMSTemplates"] = Transform(Session["templates"] as IList<string>);
 
             ViewData["DiscountReasons"] = Transform(Session["reasons"] as IList<string>);
@@ -242,17 +244,19 @@ namespace OfferManagement.Controllers
 
                 google.CreateTransaction(model);
 
-                //var isOTPSent = helper.sendOTP(model.MobileNumber, messageTempalte);
+                var isOTPSent = helper.sendOTP(model.MobileNumber, messageTempalte);
 
-                var isOTPSent = true;
+                //var isOTPSent = true;
 
                 if (isOTPSent)
                 {
                     ViewBag.Message = "OTP Sent Succesfully, Kindly Enter the received OTP for validation";
 
+                    //Session["enabletimer"] = true;
+
                     model.enableValidatebtn = true;
 
-                    model.enableResendbtn = false;
+                    // model.enableResendbtn = true;
 
                     Session["transaction"] = model;
 
@@ -268,7 +272,7 @@ namespace OfferManagement.Controllers
 
                     model.enableValidatebtn = false;
 
-                    model.enableResendbtn = true;
+                    // model.enableResendbtn = true;
 
                     Session["transaction"] = model;
 
@@ -315,9 +319,9 @@ namespace OfferManagement.Controllers
             {
                 MSGWowHelper helper = new MSGWowHelper();
 
-                //var isOTPSent = helper.verifyOTP(otp, model.MobileNumber);
+                var isOTPSent = helper.verifyOTP(otp, model.MobileNumber);
 
-                var isOTPSent = true;
+                //var isOTPSent = true;
 
                 if (isOTPSent)
                 {
@@ -325,7 +329,6 @@ namespace OfferManagement.Controllers
 
                     model.OTP = otp;
 
-                    //update google sheet
                     google.UpdateValidationStatus(model);
 
                     ViewBag.Message = System.Configuration.ConfigurationManager.AppSettings["SuccessfulTransactionMsg"];
@@ -335,6 +338,8 @@ namespace OfferManagement.Controllers
                 else
                 {
                     ViewBag.Message = System.Configuration.ConfigurationManager.AppSettings["InvalidOTPMsg"]; ;
+
+                    //Session["enabletimer"] = true;
 
                     return View("Index", model);
                 }
@@ -349,12 +354,14 @@ namespace OfferManagement.Controllers
             }
         }
 
-
-        public ActionResult ResendOTP(DiscountTransaction model)
+        //[HttpPost]
+        public ActionResult ResendOTP()
         {
             MSGWowHelper helper = new MSGWowHelper();
 
             var google = new GoogleSheetsHelper();
+
+            var model = Session["transaction"] as DiscountTransaction;
 
             if (model != null)
             {
@@ -370,19 +377,21 @@ namespace OfferManagement.Controllers
                        .Replace("#billedvalue", model.BillValue.ToString());
 
                 var isOTPSent = helper.resendOTP(model.MobileNumber, messageTempalte);
+
                 if (isOTPSent)
                 {
                     ViewBag.Message = System.Configuration.ConfigurationManager.AppSettings["SuccessfulOTPMsg"];
 
                     model.enableValidatebtn = true;
-                    model.enableResendbtn = false;
+
+                    // model.enableResendbtn = false;
 
                 }
                 else
                 {
                     ViewBag.Message = System.Configuration.ConfigurationManager.AppSettings["FailureOTPMsg"]; ;
                     model.enableValidatebtn = false;
-                    model.enableResendbtn = true;
+                    // model.enableResendbtn = true;
 
                 }
 
