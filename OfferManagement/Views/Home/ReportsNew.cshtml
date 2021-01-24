@@ -1,6 +1,12 @@
-﻿@{
+﻿@model IGrid<OfferManagement.Models.DiscountTransaction>
+
+@{
     ViewBag.Title = @System.Configuration.ConfigurationManager.AppSettings["ReportPageName"];
 }
 <h2>@ViewBag.Title</h2>
 
-@Html.AjaxGrid(Url.Action("ReportsGrid"))
+@*@Html.AjaxGrid(Url.Action("ReportsGrid"))*@
+
+<a href="@(Url.Action("ExportIndex") + "?" + ViewContext.HttpContext.Request.QueryString)">Export</a>
+
+@(new HtmlGrid<OfferManagement.Models.DiscountTransaction>(Html, Model))

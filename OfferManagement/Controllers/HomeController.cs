@@ -8,6 +8,8 @@ using System.Web.Mvc;
 using ClosedXML.Excel;
 using System.Data;
 using System.IO;
+using OfficeOpenXml;
+using NonFactors.Mvc.Grid;
 
 namespace OfferManagement.Controllers
 {
@@ -60,9 +62,11 @@ namespace OfferManagement.Controllers
             //    return View();
             //}
 
+            ViewBag.ExportPermission = (bool)((UserModel)Session["UserModel"]).Role.ToString().Equals("ADMINUSER", StringComparison.InvariantCultureIgnoreCase);
+
             Session["ReportsList"] = (transactions != null && transactions.Count >= 0) ? transactions as List<DiscountTransaction> : new List<DiscountTransaction>();
-            
-            return View("ReportsNew");
+
+            return View(CreateExportableGrid());
         }
 
         [HttpGet]
@@ -70,7 +74,74 @@ namespace OfferManagement.Controllers
         {
             var reports = Session["ReportsList"] as List<DiscountTransaction>;
             // Only grid query values will be available here.
-            return PartialView("ReportsGrid", reports.AsQueryable());
+            return PartialView("ReportsGrid", reports.AsQueryable());            
+        }
+
+        private IGrid<DiscountTransaction> CreateExportableGrid()
+        {
+            var reports = Session["ReportsList"] as List<DiscountTransaction>;
+            IGrid<DiscountTransaction> grid = new Grid<DiscountTransaction>(reports);
+            grid.ViewContext = new ViewContext { HttpContext = HttpContext };
+            grid.Query = Request.QueryString;
+
+            grid.Columns.Add(model => model.CustomerName).Titled("Customer Name");
+            grid.Columns.Add(model => model.CustomerEmail).Titled("Customer Email");
+            grid.Columns.Add(model => model.UserEmail).Titled("User Email");
+            grid.Columns.Add(model => model.PCCName).Titled("PCC Name");
+            grid.Columns.Add(model => model.DiscountReason).Titled("Discount Reason");
+            grid.Columns.Add(model => model.BillValue).Titled("Bill Value");
+            grid.Columns.Add(model => model.Discount).Titled("Discount");
+            grid.Columns.Add(model => model.BilledValue).Titled("Billed Value");
+            grid.Columns.Add(model => model.MessageTemplate).Titled("Template");
+            grid.Columns.Add(model => model.BilledDateTime).Titled("Billed Date").Formatted("{0:d}");
+            grid.Columns.Add(model => model.ValidationStatus).Titled("Status");
+
+            grid.Pager = new GridPager<DiscountTransaction>(grid);
+            grid.Processors.Add(grid.Pager);
+            grid.Pager.RowsPerPage = 10;
+
+            foreach (IGridColumn column in grid.Columns)
+            {
+                column.Filter.IsEnabled = true;
+                column.Sort.IsEnabled = true;
+            }
+
+            return grid;
+        }
+
+
+        [HttpGet]
+        public ActionResult ExportIndex()
+        {
+            // Using EPPlus from nuget
+            using (ExcelPackage package = new ExcelPackage())
+            {
+                Int32 row = 2;
+                Int32 col = 1;
+
+                package.Workbook.Worksheets.Add("Data");
+                IGrid<DiscountTransaction> grid = CreateExportableGrid();
+                ExcelWorksheet sheet = package.Workbook.Worksheets["Data"];
+
+                foreach (IGridColumn column in grid.Columns)
+                {
+                    sheet.Cells[1, col].Value = column.Title;
+                    sheet.Column(col++).Width = 18;
+
+                    column.IsEncoded = false;
+                }
+
+                foreach (IGridRow<DiscountTransaction> gridRow in grid.Rows)
+                {
+                    col = 1;
+                    foreach (IGridColumn column in grid.Columns)
+                        sheet.Cells[row, col++].Value = column.ValueFor(gridRow);
+
+                    row++;
+                }
+
+                return File(package.GetAsByteArray(), "application/unknown", "Elixir.xlsx");
+            }
         }
 
         public IList<string> getValidationStatus()
@@ -285,7 +356,7 @@ namespace OfferManagement.Controllers
 
             var google = new GoogleSheetsHelper();
 
-            if(model!=null)
+            if (model != null)
             {
                 ViewData["SMSTemplates"] = Transform(Session["templates"] as IList<string>);
 

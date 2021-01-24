@@ -1,8 +1,26 @@
-﻿@{
+﻿@model IGrid<OfferManagement.Models.DiscountTransaction>
+
+@{
     ViewBag.Title = @System.Configuration.ConfigurationManager.AppSettings["ReportPageName"];
 }
-<h2>@ViewBag.Title.</h2>
-<hr />
-<h3>@ViewBag.Message</h3>
+<h2>@ViewBag.Title</h2>
 
-<p>Use this area to provide additional information.</p>
+@*@Html.AjaxGrid(Url.Action("ReportsGrid"))*@
+
+<script>
+    $(document).ready(function () {
+
+        if ('@ViewBag.ExportPermission' == 'True') {
+            $("a").show();
+        }
+        else {
+            $("a").hide();
+        }
+    });
+</script>
+
+<div id="divExport">
+    <a href="@(Url.Action("ExportIndex") + "?" + ViewContext.HttpContext.Request.QueryString)">Export</a>
+</div>
+
+@(new HtmlGrid<OfferManagement.Models.DiscountTransaction>(Html, Model))
