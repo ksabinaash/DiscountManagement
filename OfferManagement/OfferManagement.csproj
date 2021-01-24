@@ -348,11 +348,8 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Home\Transaction.cshtml" />
-    <Content Include="Views\Home\Reports.cshtml" />
     <Content Include="Views\Shared\MvcGrid\_Pager.cshtml" />
     <Content Include="Views\Shared\MvcGrid\_Grid.cshtml" />
-    <Content Include="Views\Home\ReportsGrid.cshtml" />
-    <Content Include="Views\Home\ReportsNew.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

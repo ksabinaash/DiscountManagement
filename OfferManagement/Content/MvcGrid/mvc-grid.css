@@ -18,6 +18,9 @@
     position: relative;
     overflow-x: auto;
     font-size: 1rem;
+    overflow-y:auto;
+    height:600px;
+   
 }
 
 .mvc-grid table {

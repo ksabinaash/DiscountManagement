@@ -93,8 +93,8 @@ namespace OfferManagement.Controllers
             grid.Columns.Add(model => model.Discount).Titled("Discount");
             grid.Columns.Add(model => model.BilledValue).Titled("Billed Value");
             grid.Columns.Add(model => model.MessageTemplate).Titled("Template");
-            grid.Columns.Add(model => model.BilledDateTime).Titled("Billed Date").Formatted("{0:d}");
-            grid.Columns.Add(model => model.ValidationStatus).Titled("Status");
+            grid.Columns.Add(model => model.BilledDateTime).Titled("Billed Date").Filterable(GridFilterType.Double);
+                grid.Columns.Add(model => model.ValidationStatus).Titled("Status");
 
             grid.Pager = new GridPager<DiscountTransaction>(grid);
             grid.Processors.Add(grid.Pager);
@@ -140,7 +140,7 @@ namespace OfferManagement.Controllers
                     row++;
                 }
 
-                return File(package.GetAsByteArray(), "application/unknown", "Elixir.xlsx");
+                return File(package.GetAsByteArray(), "application/unknown", "Elixir"+ DateTime.Now.ToString() +".xlsx");
             }
         }
 

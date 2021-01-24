@@ -19,8 +19,16 @@
     });
 </script>
 
-<div id="divExport">
-    <a href="@(Url.Action("ExportIndex") + "?" + ViewContext.HttpContext.Request.QueryString)">Export</a>
+<style>
+
+
+</style>
+
+<div class="container" id="divExport">
+    <a style="float: right;" href="@(Url.Action("ExportIndex") + "?" + ViewContext.HttpContext.Request.QueryString)">Export</a>
+</div>
+<br />
+<div class="myNewDivHeig">
+    @(new HtmlGrid<OfferManagement.Models.DiscountTransaction>(Html, Model))
 </div>
 
-@(new HtmlGrid<OfferManagement.Models.DiscountTransaction>(Html, Model))
