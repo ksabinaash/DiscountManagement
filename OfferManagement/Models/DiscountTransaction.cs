@@ -9,7 +9,7 @@ namespace OfferManagement.Models
     public class DiscountTransaction
     {
         [Required]
-        [Display(Name = "Customer Name")]
+        [Display(Name = "Customer Name *")]
         [StringLength(50, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 3)]
         public string CustomerName { get; set; }
 
@@ -22,21 +22,21 @@ namespace OfferManagement.Models
         public string CustomerEmail { get; set; }
 
         [Required]
-        [Display(Name = "Mobile Number")]
+        [Display(Name = "Mobile Number *")]
         [RegularExpression(@"^(\d{10})$", ErrorMessage = "Not a valid 10 digit mobile number")]
         public string MobileNumber { get; set; }
 
         [Required]
-        [Display(Name = "PCC Name")]
+        [Display(Name = "PCC Name *")]
         public string PCCName { get; set; }
 
         [Required]
         [Range(1, double.MaxValue, ErrorMessage = "Only positive number allowed")]
-        [Display(Name = "Bill Value")]
+        [Display(Name = "Bill Value *")]
         public double BillValue { get; set; }
 
         [Required]
-        [Display(Name = "Discount Amount")]
+        [Display(Name = "Discount Amount *")]
         [Range(1, double.MaxValue, ErrorMessage = "Only positive number allowed")]
         public double Discount { get; set; }
 
@@ -51,7 +51,7 @@ namespace OfferManagement.Models
         }
 
         [Required]
-        [Display(Name = "Reason for Discount")]
+        [Display(Name = "Reason for Discount *")]
         public string DiscountReason { get; set; }
 
         

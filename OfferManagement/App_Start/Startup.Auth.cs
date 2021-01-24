@@ -60,9 +60,10 @@ namespace OfferManagement
 
             app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             {
-                ClientId = "510409940223-1pclr9uuo53dsuj538gqjuedc62lmmp7.apps.googleusercontent.com",
-                ClientSecret = "Nl1bCBxJCexTpDpp5OUX18yE"
-            });
+                ClientId = System.Configuration.ConfigurationManager.AppSettings["ClientId"],
+
+                ClientSecret = System.Configuration.ConfigurationManager.AppSettings["ClientSecret"]
+        });
         }
     }
 }

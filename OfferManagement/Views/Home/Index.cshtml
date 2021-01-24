@@ -50,7 +50,7 @@
             })
         });
 
-        });
+    });
 
 
 
@@ -209,11 +209,10 @@
         align-items: center;
         justify-content: center;
         font-size: 20px;
-
     }
 </style>
 
-@using (Html.BeginForm("Index", "Home", FormMethod.Post,new { @id = "discountform" }))
+@using (Html.BeginForm("Index", "Home", FormMethod.Post, new { @id = "discountform" }))
 {
     @Html.AntiForgeryToken()
 
@@ -293,7 +292,7 @@
             @Html.LabelFor(model => model.MessageTemplate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownListFor(model => model.MessageTemplate,
-               ((IEnumerable<SelectListItem>)ViewData["SMSTemplates"]),
+               ((IEnumerable<SelectListItem>)ViewData["SMSTemplates"]).Skip(1), ((IEnumerable<SelectListItem>)ViewData["SMSTemplates"]).FirstOrDefault().Text,
                htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.MessageTemplate, "", new { @class = "text-danger" })
             </div>
@@ -343,6 +342,12 @@
                 <span id="base-timer-label" class="base-timer__label">
                     30
                 </span>
+            </div>
+        </div>
+        <br/>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-6 text-info" >
+                Note : Resend will be disabled for 30 Seconds once triggered.
             </div>
         </div>
 

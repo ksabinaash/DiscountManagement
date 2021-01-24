@@ -38,6 +38,8 @@ namespace OfferManagement.Controllers
 
             ViewData["PCCNames"] = Transform(Session["names"] as IList<string>);
 
+            //transaction.MessageTemplate = Transform(Session["SMSTemplates"] as IList<string>).FirstOrDefault().ToString();
+
             return View(transaction);
         }
 
@@ -146,16 +148,16 @@ namespace OfferManagement.Controllers
             }
         }
 
-        public IList<string> getValidationStatus()
-        {
-            IList<string> ValidationStatus = new List<String>();
+        //public IList<string> getValidationStatus()
+        //{
+        //    IList<string> ValidationStatus = new List<String>();
 
-            ValidationStatus.Add("OTP Verification Pending");
+        //    ValidationStatus.Add("OTP Verification Pending");
 
-            ValidationStatus.Add("OTP Verified");
+        //    ValidationStatus.Add("OTP Verified");
 
-            return ValidationStatus;
-        }
+        //    return ValidationStatus;
+        //}
 
         public IList<DiscountTransaction> readGooglesheetvalues()
         {
@@ -223,22 +225,22 @@ namespace OfferManagement.Controllers
 
             ViewData["PCCNames"] = Transform(Session["names"] as IList<string>);
 
-            if (ModelState.IsValid && Session["UserEmail"] != null)  //check useremail session failure case
-            {
+            if (ModelState.IsValid && Session["UserEmail"] != null)  {
                 var google = new GoogleSheetsHelper();
 
                 model.UserEmail = Session["UserEmail"].ToString();
 
-                model.ValidationStatus = "OTP Verification Pending";
+                model.ValidationStatus = System.Configuration.ConfigurationManager.AppSettings["OTPVerificationPendingMsg"];
 
                 model.enableSubmitbtn = false;
 
                 MSGWowHelper helper = new MSGWowHelper();
 
-                var messageTempalte = model.MessageTemplate.Replace("#Customername", model.CustomerName)
-                    .Replace("#discount ", model.Discount.ToString() + " ")
-                    .Replace("#discountreason", model.DiscountReason)
-                    .Replace("#billedvalue", model.BillValue.ToString());
+                var messageTempalte = model.MessageTemplate.
+                    Replace(System.Configuration.ConfigurationManager.AppSettings["Customername"], model.CustomerName)
+                    .Replace(System.Configuration.ConfigurationManager.AppSettings["Discount"], model.Discount.ToString() + " ")
+                    .Replace(System.Configuration.ConfigurationManager.AppSettings["Discountreason"], model.DiscountReason)
+                    .Replace(System.Configuration.ConfigurationManager.AppSettings["Billvalue"], model.BillValue.ToString());
 
                 model.MessageTemplate = messageTempalte;
 
@@ -250,7 +252,7 @@ namespace OfferManagement.Controllers
 
                 if (isOTPSent)
                 {
-                    ViewBag.Message = "OTP Sent Succesfully, Kindly Enter the received OTP for validation";
+                    ViewBag.Message = System.Configuration.ConfigurationManager.AppSettings["SuccessfulTransactionMsg"];
 
                     //Session["enabletimer"] = true;
 
@@ -268,7 +270,7 @@ namespace OfferManagement.Controllers
                 }
                 else
                 {
-                    ViewBag.Message = "OTP failure,Try Resend Option";
+                    ViewBag.Message = System.Configuration.ConfigurationManager.AppSettings["FailureOTPMsg"];
 
                     model.enableValidatebtn = false;
 
@@ -281,7 +283,7 @@ namespace OfferManagement.Controllers
                 }
             }
 
-            return View();
+            return View(model);
 
         }
 
@@ -325,7 +327,7 @@ namespace OfferManagement.Controllers
 
                 if (isOTPSent)
                 {
-                    model.ValidationStatus = "OTP Verified";
+                    model.ValidationStatus = System.Configuration.ConfigurationManager.AppSettings["OTPVerifiedMsg"];
 
                     model.OTP = otp;
 
@@ -348,7 +350,7 @@ namespace OfferManagement.Controllers
             }
             else
             {
-                ViewBag.Message = "Please provide OTP";
+                ViewBag.Message = System.Configuration.ConfigurationManager.AppSettings["ProvideOTPMsg"];
 
                 return View("Index", model);
             }
@@ -371,10 +373,12 @@ namespace OfferManagement.Controllers
 
                 ViewData["PCCNames"] = Transform(Session["names"] as IList<string>);
 
-                var messageTempalte = model.MessageTemplate.Replace("#Customername", model.CustomerName)
-                       .Replace("#discount ", model.Discount.ToString() + " ")
-                       .Replace("#discountreason", model.DiscountReason)
-                       .Replace("#billedvalue", model.BillValue.ToString());
+               var messageTempalte = model.MessageTemplate.
+                   Replace(System.Configuration.ConfigurationManager.AppSettings["Customername"], model.CustomerName)
+                   .Replace(System.Configuration.ConfigurationManager.AppSettings["Discount"], model.Discount.ToString() + " ")
+                   .Replace(System.Configuration.ConfigurationManager.AppSettings["Discountreason"], model.DiscountReason)
+                   .Replace(System.Configuration.ConfigurationManager.AppSettings["Billvalue"], model.BillValue.ToString());
+
 
                 var isOTPSent = helper.resendOTP(model.MobileNumber, messageTempalte);
 
