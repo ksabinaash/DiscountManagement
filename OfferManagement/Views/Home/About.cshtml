@@ -5,30 +5,25 @@
 }
 <h2>@ViewBag.Title</h2>
 
-@*@Html.AjaxGrid(Url.Action("ReportsGrid"))*@
-
 <script>
     $(document).ready(function () {
 
         if ('@ViewBag.ExportPermission' == 'True') {
-            $("a").show();
+            $("#divExport").show();
         }
         else {
-            $("a").hide();
+            $("#divExport").hide();
         }
     });
 </script>
 
-<style>
 
-
-</style>
 
 <div class="container" id="divExport">
     <a style="float: right;" href="@(Url.Action("ExportIndex") + "?" + ViewContext.HttpContext.Request.QueryString)">Export</a>
 </div>
 <br />
-<div class="myNewDivHeig">
+<div>
     @(new HtmlGrid<OfferManagement.Models.DiscountTransaction>(Html, Model))
 </div>
 
