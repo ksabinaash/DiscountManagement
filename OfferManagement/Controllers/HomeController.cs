@@ -14,6 +14,7 @@ using NonFactors.Mvc.Grid;
 namespace OfferManagement.Controllers
 {
     [Authorize]
+    [HandleError]
     public class HomeController : Controller
     {
         public ActionResult Index()
@@ -49,23 +50,6 @@ namespace OfferManagement.Controllers
 
             var transactions = google.ReadTransactions(true);
 
-            //if (transactions.Count >= 0)
-            //{
-            //    ViewBag.ExportPermission = (bool)((UserModel)Session["UserModel"]).Role.ToString().Equals("ADMINUSER", StringComparison.InvariantCultureIgnoreCase);
-
-            //    ViewBag.Message = "No Data Available";
-
-            //    ViewBag.PCCNames = Transform(Session["names"] as IList<string>);
-
-            //    ViewBag.ValidationStatus = Transform(getValidationStatus() as IList<string>);
-
-            //    return View("Reports", transactions);
-            //}
-            //else
-            //{
-            //    return View();
-            //}
-
             ViewBag.ExportPermission = (bool)((UserModel)Session["UserModel"]).Role.ToString().Equals("ADMINUSER", StringComparison.InvariantCultureIgnoreCase);
 
             Session["ReportsList"] = (transactions != null && transactions.Count >= 0) ? transactions as List<DiscountTransaction> : new List<DiscountTransaction>();
@@ -78,7 +62,7 @@ namespace OfferManagement.Controllers
         {
             var reports = Session["ReportsList"] as List<DiscountTransaction>;
             // Only grid query values will be available here.
-            return PartialView("ReportsGrid", reports.AsQueryable());            
+            return PartialView("ReportsGrid", reports.AsQueryable());
         }
 
         private IGrid<DiscountTransaction> CreateExportableGrid()
@@ -98,7 +82,7 @@ namespace OfferManagement.Controllers
             grid.Columns.Add(model => model.BilledValue).Titled("Billed Value");
             grid.Columns.Add(model => model.MessageTemplate).Titled("Template");
             grid.Columns.Add(model => model.BilledDateTime).Titled("Billed Date").Filterable(GridFilterType.Double);
-                grid.Columns.Add(model => model.ValidationStatus).Titled("Status");
+            grid.Columns.Add(model => model.ValidationStatus).Titled("Status");
 
             grid.Pager = new GridPager<DiscountTransaction>(grid);
             grid.Processors.Add(grid.Pager);
@@ -144,20 +128,9 @@ namespace OfferManagement.Controllers
                     row++;
                 }
 
-                return File(package.GetAsByteArray(), "application/unknown", "Elixir"+ DateTime.Now.ToString() +".xlsx");
+                return File(package.GetAsByteArray(), "application/unknown", "Elixir" + DateTime.Now.ToString() + ".xlsx");
             }
         }
-
-        //public IList<string> getValidationStatus()
-        //{
-        //    IList<string> ValidationStatus = new List<String>();
-
-        //    ValidationStatus.Add("OTP Verification Pending");
-
-        //    ValidationStatus.Add("OTP Verified");
-
-        //    return ValidationStatus;
-        //}
 
         public IList<DiscountTransaction> readGooglesheetvalues()
         {
@@ -225,7 +198,8 @@ namespace OfferManagement.Controllers
 
             ViewData["PCCNames"] = Transform(Session["names"] as IList<string>);
 
-            if (ModelState.IsValid && Session["UserEmail"] != null)  {
+            if (ModelState.IsValid && Session["UserEmail"] != null)
+            {
                 var google = new GoogleSheetsHelper();
 
                 model.UserEmail = Session["UserEmail"].ToString();
@@ -304,8 +278,6 @@ namespace OfferManagement.Controllers
         }
 
         public ActionResult ValidateOTP(string otp)
-        //public ActionResult ValidateOTP(DiscountTransaction model)
-        //public ActionResult ValidateOTP( DiscountTransaction modelval)
         {
             var google = new GoogleSheetsHelper();
 
@@ -373,11 +345,11 @@ namespace OfferManagement.Controllers
 
                 ViewData["PCCNames"] = Transform(Session["names"] as IList<string>);
 
-               var messageTempalte = model.MessageTemplate.
-                   Replace(System.Configuration.ConfigurationManager.AppSettings["Customername"], model.CustomerName)
-                   .Replace(System.Configuration.ConfigurationManager.AppSettings["Discount"], model.Discount.ToString() + " ")
-                   .Replace(System.Configuration.ConfigurationManager.AppSettings["Discountreason"], model.DiscountReason)
-                   .Replace(System.Configuration.ConfigurationManager.AppSettings["Billvalue"], model.BillValue.ToString());
+                var messageTempalte = model.MessageTemplate.
+                    Replace(System.Configuration.ConfigurationManager.AppSettings["Customername"], model.CustomerName)
+                    .Replace(System.Configuration.ConfigurationManager.AppSettings["Discount"], model.Discount.ToString() + " ")
+                    .Replace(System.Configuration.ConfigurationManager.AppSettings["Discountreason"], model.DiscountReason)
+                    .Replace(System.Configuration.ConfigurationManager.AppSettings["Billvalue"], model.BillValue.ToString());
 
 
                 var isOTPSent = helper.resendOTP(model.MobileNumber, messageTempalte);
