@@ -39,7 +39,7 @@ namespace OfferManagement.Controllers
 
             ViewData["PCCNames"] = Transform(Session["names"] as IList<string>);
 
-            //transaction.MessageTemplate = Transform(Session["SMSTemplates"] as IList<string>).FirstOrDefault().ToString();
+            transaction.MessageTemplate = Transform(Session["templates"] as IList<string>).FirstOrDefault().Text;
 
             return View(transaction);
         }
@@ -50,7 +50,7 @@ namespace OfferManagement.Controllers
 
             var transactions = google.ReadTransactions(true);
 
-            ViewBag.ExportPermission = (bool)((UserModel)Session["UserModel"]).Role.ToString().Equals("ADMINUSER", StringComparison.InvariantCultureIgnoreCase);
+            ViewBag.ExportPermission = ((UserModel)Session["UserModel"])!=null?(bool)((UserModel)Session["UserModel"]).Role.ToString().Equals("ADMINUSER", StringComparison.InvariantCultureIgnoreCase):false;
 
             Session["ReportsList"] = (transactions != null && transactions.Count >= 0) ? transactions as List<DiscountTransaction> : new List<DiscountTransaction>();
 
@@ -375,5 +375,14 @@ namespace OfferManagement.Controllers
             }
             return View("Index", model);
         }
+
+        public ActionResult UserDetails()
+        {
+            UserModel us = ((UserModel)Session["UserModel"]);
+            return View("UserDetails", us);
+        }
     }
+
+
+   
 }

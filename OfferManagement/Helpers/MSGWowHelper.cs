@@ -8,9 +8,9 @@ namespace OfferManagement.Helpers
 {
     public class MSGWowHelper
     {
-        string senderid = "ELIXIR";
-        string authKey = "156632AfcQbHHTG0594552e4";
-        string messageApiURL = "http://my.msgwow.com/api";
+        string senderid = System.Configuration.ConfigurationManager.AppSettings["MsgSenderId"]; //"ELIXIR";
+        string authKey = System.Configuration.ConfigurationManager.AppSettings["MsgAuthKey"];//"156632AfcQbHHTG0594552e4";
+        string messageApiURL = System.Configuration.ConfigurationManager.AppSettings["MsgApiUrl"];//"http://my.msgwow.com/api";
 
 
         public bool sendOTP(string mobileNumber,string messageTemplate)

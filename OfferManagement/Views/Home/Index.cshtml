@@ -292,7 +292,7 @@
             @Html.LabelFor(model => model.MessageTemplate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownListFor(model => model.MessageTemplate,
-               ((IEnumerable<SelectListItem>)ViewData["SMSTemplates"]).Skip(1), ((IEnumerable<SelectListItem>)ViewData["SMSTemplates"]).FirstOrDefault().Text,
+               ((IEnumerable<SelectListItem>)ViewData["SMSTemplates"]), "Select a Template",
                htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.MessageTemplate, "", new { @class = "text-danger" })
             </div>
