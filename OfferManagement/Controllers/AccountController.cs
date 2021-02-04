@@ -96,7 +96,7 @@ namespace OfferManagement.Controllers
 
 
 
-               //
+        //
         // POST: /Account/ExternalLogin
         [HttpPost]
         [AllowAnonymous]
@@ -107,7 +107,7 @@ namespace OfferManagement.Controllers
             return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
         }
 
-            // GET: /Account/ExternalLoginCallback
+        // GET: /Account/ExternalLoginCallback
         [AllowAnonymous]
         public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
         {
@@ -127,10 +127,7 @@ namespace OfferManagement.Controllers
                 switch (response)
                 {
                     case SignInStatus.Success:
-                        return RedirectToAction("Index", "Home");
-                    case SignInStatus.LockedOut:
-                    case SignInStatus.RequiresVerification:
-                    case SignInStatus.Failure:
+                        return RedirectToLocal(returnUrl);
                     default:
                         // If the user does not have an account, then prompt the user to create an account
                         // Get the information about the user from the external login provider
@@ -142,11 +139,11 @@ namespace OfferManagement.Controllers
                             if (result.Succeeded)
                             {
                                 await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                                return RedirectToAction("Index", "Home");
+                                return RedirectToLocal(returnUrl);
                             }
                         }
                         AddErrors(result);
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Login");
                 }
             }
             else
@@ -167,7 +164,7 @@ namespace OfferManagement.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToLocal(returnUrl);
             }
 
             ViewBag.ReturnUrl = returnUrl;
