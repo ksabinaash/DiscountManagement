@@ -1,7 +1,7 @@
 ﻿@using OfferManagement.Models
 @model LoginViewModel
 @{
-    ViewBag.Title = "Log in";
+    ViewBag.Title = "Log in with Google";
 }
 @{
     Layout = null;
@@ -18,22 +18,23 @@
 </head>
 <body>
     <div class="container">
-        <div class="jumbotron">
-            <h1>@System.Configuration.ConfigurationManager.AppSettings["ApplicationName"]</h1>
+        <div>
+            <h1 class="text-center">
+                <img src="~/Content/Logo.jpg" style="height:250px;width:250px" alt=@System.Configuration.ConfigurationManager.AppSettings["ApplicationName"]>
+                @*@System.Configuration.ConfigurationManager.AppSettings["ApplicationName"]*@
+            </h1>
         </div>
 
         <div class="row">
-            <div class="col-md-10">
-                <h2>@ViewBag.Title.</h2>
+            <div class="col-md-12 col-xs-12 col-sm-12 text-center">
+                <h2>@ViewBag.Title</h2>
             </div>
         </div>
         <div class="row">
 
-            <div class="col-md-10">
-                <section id="socialLoginForm">
-                    @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
-                </section>
-            </div>
+            <section id="socialLoginForm">
+                @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+            </section>
         </div>
     </div>
     @section Scripts {

@@ -27,7 +27,7 @@ namespace OfferManagement.Models
         //{
         //}
         public ApplicationDbContext()
-            : base("SomeeConnection", throwIfV1Schema: false)
+            : base(System.Configuration.ConfigurationManager.AppSettings["ConnectionName"], throwIfV1Schema: false)
         {
         }
 

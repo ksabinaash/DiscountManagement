@@ -66,6 +66,22 @@ namespace OfferManagement.Controllers
             return View();
         }
 
+
+        [AllowAnonymous]
+        public ActionResult LoginError()
+        {
+
+            return View();
+        }
+
+
+        [AllowAnonymous]
+        public ActionResult LoginInfoError()
+        {
+
+            return View();
+        }
+
         //
         // POST: /Account/Login
         [HttpPost]
@@ -103,6 +119,7 @@ namespace OfferManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ExternalLogin(string provider, string returnUrl)
         {
+            ControllerContext.HttpContext.Session.RemoveAll();
             // Request a redirect to the external login provider
             return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
         }
@@ -114,7 +131,7 @@ namespace OfferManagement.Controllers
             var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
             if (loginInfo == null)
             {
-                return RedirectToAction("Login");
+                return RedirectToAction("LoginInfoError");
             }
 
             // Sign in the user with this external login provider if the user already has a login
@@ -143,7 +160,7 @@ namespace OfferManagement.Controllers
                             }
                         }
                         AddErrors(result);
-                        return RedirectToAction("Login");
+                        return RedirectToAction("LoginError");
                 }
             }
             else

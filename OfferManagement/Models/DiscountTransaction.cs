@@ -31,6 +31,10 @@ namespace OfferManagement.Models
         public string PCCName { get; set; }
 
         [Required]
+        [Display(Name = "Bill No *")]
+        public string BillNo { get; set; }
+
+        [Required]
         [Range(1, double.MaxValue, ErrorMessage = "Only positive number allowed")]
         [Display(Name = "Bill Value *")]
         public double BillValue { get; set; }
@@ -64,8 +68,9 @@ namespace OfferManagement.Models
         public string MessageTemplate { get; set; }
 
         [Required]
-        public DateTime BilledDateTime { get; set; } = DateTime.Now.ToLocalTime();
-        
+        public DateTime BilledDateTime { get; set; } = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("India Standard Time"));
+
+
         public string ValidationStatus { get; set; }
 
         public bool enableValidatebtn { get; set; } = false;

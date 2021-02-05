@@ -152,7 +152,7 @@ namespace OfferManagement.Controllers
         {
 
             DataTable dt = new DataTable("ElixerTransactions");
-            dt.Columns.AddRange(new DataColumn[13] {
+            dt.Columns.AddRange(new DataColumn[14] {
                                             new DataColumn("CustomerName"),
                                             new DataColumn("UserEmail"),
                                             new DataColumn("CustomerEmail"),
@@ -160,6 +160,7 @@ namespace OfferManagement.Controllers
                                             new DataColumn("PCC Name"),
                                             new DataColumn("OTP"),
                                             new DataColumn("OTP Mesage Template"),
+                                            new DataColumn("Bill No"),
                                             new DataColumn("BillValue"),
                                             new DataColumn("Discount"),
                                             new DataColumn("BilledValue"),
@@ -174,7 +175,7 @@ namespace OfferManagement.Controllers
                 dt.Rows.Add(modelval.CustomerName, modelval.UserEmail, modelval.CustomerEmail, modelval.MobileNumber,
                     modelval.PCCName,
                     modelval.OTP,
-                    modelval.MessageTemplate,
+                    modelval.MessageTemplate,modelval.BillNo,
                     modelval.BillValue, modelval.Discount, modelval.BilledValue, modelval.DiscountReason, modelval.BilledDateTime, modelval.ValidationStatus);
             }
 

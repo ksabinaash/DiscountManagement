@@ -45,11 +45,11 @@ namespace OfferManagement.Helpers
             {
                 string sheetName = System.Configuration.ConfigurationManager.AppSettings["TransactionsSheetName"];
 
-                var range = $"{sheetName}!A:M";
+                var range = $"{sheetName}!A:N";
 
                 var valueRange = new ValueRange();
 
-                var oblist = new List<object>() { transaction.CustomerName, transaction.CustomerEmail, transaction.MobileNumber, transaction.UserEmail, transaction.PCCName, transaction.BillValue, transaction.Discount, transaction.BilledValue, transaction.DiscountReason, transaction.OTP, transaction.MessageTemplate, transaction.BilledDateTime, transaction.ValidationStatus };
+                var oblist = new List<object>() { transaction.CustomerName, transaction.CustomerEmail, transaction.MobileNumber, transaction.UserEmail, transaction.PCCName, transaction.BillNo, transaction.BillValue, transaction.Discount, transaction.BilledValue, transaction.DiscountReason, transaction.OTP, transaction.MessageTemplate, transaction.BilledDateTime, transaction.ValidationStatus };
 
                 valueRange.Values = new List<IList<object>> { oblist };
 
@@ -72,7 +72,7 @@ namespace OfferManagement.Helpers
             IList<DiscountTransaction> transactions = new List<DiscountTransaction>();
             string sheetName = System.Configuration.ConfigurationManager.AppSettings["TransactionsSheetName"];
 
-                var range = $"{sheetName}!A:M";
+                var range = $"{sheetName}!A:N";
 
                 SpreadsheetsResource.ValuesResource.GetRequest request = _sheetsService.Spreadsheets.Values.Get(_spreadsheetId, range);
 
@@ -87,7 +87,8 @@ namespace OfferManagement.Helpers
         {
             try
             {
-                UpdateTransaction("M",transaction.ValidationStatus);
+                UpdateTransaction("N",transaction.ValidationStatus);
+                UpdateTransaction("K", transaction.OTP);
             }
             catch (AggregateException err)
             {
@@ -102,7 +103,7 @@ namespace OfferManagement.Helpers
         {
             try
             {
-                UpdateTransaction("K", transaction.MessageTemplate);
+                UpdateTransaction("L", transaction.MessageTemplate);
             }
             catch (AggregateException err)
             {
@@ -153,7 +154,7 @@ namespace OfferManagement.Helpers
 
                 string sheetName = System.Configuration.ConfigurationManager.AppSettings["TransactionsSheetName"];
 
-                var range = $"{sheetName}!M" + lastrow;
+                var range = $"{sheetName}!N" + lastrow;
 
                 var valueRange = new ValueRange();
 
@@ -183,7 +184,7 @@ namespace OfferManagement.Helpers
             {
                 string sheetName = System.Configuration.ConfigurationManager.AppSettings["TransactionsSheetName"];
 
-                var range = $"{sheetName}!A:M";
+                var range = $"{sheetName}!A:N";
 
                 SpreadsheetsResource.ValuesResource.GetRequest request = _sheetsService.Spreadsheets.Values.Get(_spreadsheetId, range);
 
@@ -208,13 +209,14 @@ namespace OfferManagement.Helpers
                         transaction.MobileNumber = row[2].ToString();
                         transaction.UserEmail = row[3].ToString();
                         transaction.PCCName = row[4].ToString();
-                        transaction.BillValue = Convert.ToDouble(row[5].ToString());
-                        transaction.Discount = Convert.ToDouble(row[6].ToString());
-                        transaction.DiscountReason = row[8].ToString();
-                        transaction.OTP = row[9].ToString();
-                        transaction.MessageTemplate = row[10].ToString();
-                        transaction.BilledDateTime = Convert.ToDateTime(row[11].ToString());
-                        transaction.ValidationStatus = row[12].ToString();
+                        transaction.BillNo = row[5].ToString();
+                        transaction.BillValue = Convert.ToDouble(row[6].ToString());
+                        transaction.Discount = Convert.ToDouble(row[7].ToString());
+                        transaction.DiscountReason = row[9].ToString();
+                        transaction.OTP = row[10].ToString();
+                        transaction.MessageTemplate = row[11].ToString();
+                        transaction.BilledDateTime = Convert.ToDateTime(row[12].ToString());
+                        transaction.ValidationStatus = row[13].ToString();
 
                         transactions.Add(transaction);
 
@@ -231,7 +233,7 @@ namespace OfferManagement.Helpers
                     Console.WriteLine(errInner); //this will call ToString() on the inner execption and get you message, stacktrace and you could perhaps drill down further into the inner exception of it if necessary 
                 }
             }
-            return transactions;
+            return transactions.OrderByDescending(x => x.BilledDateTime).ToList();
         }
 
         public IList<string> ReadPCCNames(bool IsFirstRowHeader)
