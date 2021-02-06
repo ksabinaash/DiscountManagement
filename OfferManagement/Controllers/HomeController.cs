@@ -228,7 +228,7 @@ namespace OfferManagement.Controllers
 
                 if (isOTPSent)
                 {
-                    ViewBag.Message = System.Configuration.ConfigurationManager.AppSettings["SuccessfulTransactionMsg"];
+                    ViewBag.Message = System.Configuration.ConfigurationManager.AppSettings["SuccessfulOTPMsg"];
 
                     //Session["enabletimer"] = true;
 
