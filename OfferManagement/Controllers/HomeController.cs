@@ -54,7 +54,7 @@ namespace OfferManagement.Controllers
 
             Session["ReportsList"] = (transactions != null && transactions.Count >= 0) ? transactions as List<DiscountTransaction> : new List<DiscountTransaction>();
 
-            return View(CreateExportableGrid());
+            return View(CreateExportableGrid(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["GridPageCount"])));
         }
 
         [HttpGet]
@@ -64,8 +64,8 @@ namespace OfferManagement.Controllers
             // Only grid query values will be available here.
             return PartialView("ReportsGrid", reports.AsQueryable());
         }
-
-        private IGrid<DiscountTransaction> CreateExportableGrid()
+        
+        private IGrid<DiscountTransaction> CreateExportableGrid(int PageCount)
         {
             var reports = Session["ReportsList"] as List<DiscountTransaction>;
             IGrid<DiscountTransaction> grid = new Grid<DiscountTransaction>(reports);
@@ -86,7 +86,7 @@ namespace OfferManagement.Controllers
 
             grid.Pager = new GridPager<DiscountTransaction>(grid);
             grid.Processors.Add(grid.Pager);
-            grid.Pager.RowsPerPage = 10;
+            grid.Pager.RowsPerPage = PageCount;
 
             foreach (IGridColumn column in grid.Columns)
             {
@@ -108,7 +108,7 @@ namespace OfferManagement.Controllers
                 Int32 col = 1;
 
                 package.Workbook.Worksheets.Add("Data");
-                IGrid<DiscountTransaction> grid = CreateExportableGrid();
+                IGrid<DiscountTransaction> grid = CreateExportableGrid(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["ExportPageCount"]));
                 ExcelWorksheet sheet = package.Workbook.Worksheets["Data"];
 
                 foreach (IGridColumn column in grid.Columns)
