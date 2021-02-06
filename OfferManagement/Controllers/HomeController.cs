@@ -77,6 +77,7 @@ namespace OfferManagement.Controllers
             grid.Columns.Add(model => model.UserEmail).Titled("User Email");
             grid.Columns.Add(model => model.PCCName).Titled("PCC Name");
             grid.Columns.Add(model => model.DiscountReason).Titled("Discount Reason");
+            grid.Columns.Add(model => model.BillNo).Titled("Bill No");
             grid.Columns.Add(model => model.BillValue).Titled("Bill Value");
             grid.Columns.Add(model => model.Discount).Titled("Discount");
             grid.Columns.Add(model => model.BilledValue).Titled("Billed Value");
@@ -128,7 +129,7 @@ namespace OfferManagement.Controllers
                     row++;
                 }
 
-                return File(package.GetAsByteArray(), "application/unknown", "Elixir" + DateTime.Now.ToString() + ".xlsx");
+                return File(package.GetAsByteArray(), "application/unknown", @System.Configuration.ConfigurationManager.AppSettings["ApplicationName"] + DateTime.UtcNow.AddHours(5).AddMinutes(30).ToString() + ".xlsx");
             }
         }
 
@@ -148,47 +149,47 @@ namespace OfferManagement.Controllers
             }
         }
 
-        public FileResult Export(IList<DiscountTransaction> lst)
-        {
+        //public FileResult Export(IList<DiscountTransaction> lst)
+        //{
 
-            DataTable dt = new DataTable("ElixerTransactions");
-            dt.Columns.AddRange(new DataColumn[14] {
-                                            new DataColumn("CustomerName"),
-                                            new DataColumn("UserEmail"),
-                                            new DataColumn("CustomerEmail"),
-                                            new DataColumn("MobileNumber"),
-                                            new DataColumn("PCC Name"),
-                                            new DataColumn("OTP"),
-                                            new DataColumn("OTP Mesage Template"),
-                                            new DataColumn("Bill No"),
-                                            new DataColumn("BillValue"),
-                                            new DataColumn("Discount"),
-                                            new DataColumn("BilledValue"),
-                                            new DataColumn("DiscountReason"),
-                                            new DataColumn("BilledDateTime"),
-                                            new DataColumn("ValidationStatus")});
+        //    DataTable dt = new DataTable("ElixerTransactions");
+        //    dt.Columns.AddRange(new DataColumn[14] {
+        //                                    new DataColumn("CustomerName"),
+        //                                    new DataColumn("UserEmail"),
+        //                                    new DataColumn("CustomerEmail"),
+        //                                    new DataColumn("MobileNumber"),
+        //                                    new DataColumn("PCC Name"),
+        //                                    new DataColumn("OTP"),
+        //                                    new DataColumn("OTP Mesage Template"),
+        //                                    new DataColumn("Bill No"),
+        //                                    new DataColumn("BillValue"),
+        //                                    new DataColumn("Discount"),
+        //                                    new DataColumn("BilledValue"),
+        //                                    new DataColumn("DiscountReason"),
+        //                                    new DataColumn("BilledDateTime"),
+        //                                    new DataColumn("ValidationStatus")});
 
-            IList<DiscountTransaction> list = readGooglesheetvalues();
+        //    IList<DiscountTransaction> list = readGooglesheetvalues();
 
-            foreach (var modelval in list)
-            {
-                dt.Rows.Add(modelval.CustomerName, modelval.UserEmail, modelval.CustomerEmail, modelval.MobileNumber,
-                    modelval.PCCName,
-                    modelval.OTP,
-                    modelval.MessageTemplate,modelval.BillNo,
-                    modelval.BillValue, modelval.Discount, modelval.BilledValue, modelval.DiscountReason, modelval.BilledDateTime, modelval.ValidationStatus);
-            }
+        //    foreach (var modelval in list)
+        //    {
+        //        dt.Rows.Add(modelval.CustomerName, modelval.UserEmail, modelval.CustomerEmail, modelval.MobileNumber,
+        //            modelval.PCCName,
+        //            modelval.OTP,
+        //            modelval.MessageTemplate,modelval.BillNo,
+        //            modelval.BillValue, modelval.Discount, modelval.BilledValue, modelval.DiscountReason, modelval.BilledDateTime, modelval.ValidationStatus);
+        //    }
 
-            using (XLWorkbook wb = new XLWorkbook())
-            {
-                wb.Worksheets.Add(dt);
-                using (MemoryStream stream = new MemoryStream())
-                {
-                    wb.SaveAs(stream);
-                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ElixerTransactions" + DateTime.Now + ".xlsx");
-                }
-            }
-        }
+        //    using (XLWorkbook wb = new XLWorkbook())
+        //    {
+        //        wb.Worksheets.Add(dt);
+        //        using (MemoryStream stream = new MemoryStream())
+        //        {
+        //            wb.SaveAs(stream);
+        //            return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ElixerTransactions" + DateTime.Now + ".xlsx");
+        //        }
+        //    }
+        //}
 
         [HttpPost]
         public ActionResult Index(DiscountTransaction model)
@@ -247,7 +248,7 @@ namespace OfferManagement.Controllers
                 {
                     ViewBag.Message = System.Configuration.ConfigurationManager.AppSettings["FailureOTPMsg"];
 
-                    model.enableValidatebtn = false;
+                    model.enableValidatebtn = true;  // Final fix
 
                     // model.enableResendbtn = true;
 

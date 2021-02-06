@@ -35,6 +35,8 @@
 
     $(document).ready(function () {
 
+        hideresend();
+
         $('#discount').change(function () {
             $('#BilledValue').val($('#BillValue').val() - $('#discount').val());
         });
@@ -45,10 +47,22 @@
                 type: "GET",
                 success: function (result) {
                     startTimer();
-                    disableresend();
+                    hideresend();
                 }
             })
         });
+
+        //$(document).on("click", "#btnsavensendOTP", function (e){
+        //    startTimer();
+        //});
+
+        //$(document).on("click", "#btnValidateOTP", function (e) {
+           
+        //});
+
+        if (!document.getElementById("btnValidateOTP").disabled) {
+            startTimer();
+        }
 
     });
 
@@ -83,16 +97,15 @@
 
     function onTimesUp() {
         clearInterval(timerInterval);
-        enableResend();
+        showResend();
     }
 
-    function enableResend() {
+    function showResend() {
         //document.getElementById('btnResendOTP').removeAttribute('disabled');
-
         document.getElementById('btnResendOTP').style.visibility = "visible";
     }
 
-    function disableresend() {
+    function hideresend() {
         //$("#btnResendOTP").attr("disabled", true);
 
         //$("#btnResendOTP").attr("disabled", true);
@@ -225,7 +238,7 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
         <div>
-            <h4 class="text-info"><b> @ViewBag.Message</b></h4>
+            <h4 class="text-info text-center"><b> @ViewBag.Message</b></h4>
         </div>
 
         <br />
@@ -313,7 +326,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-6 col-md-6">
-                <input type="submit" disabled="@(Model.enableSubmitbtn == false)" value="Save & Send OTP" class="btn btn-primary" />
+                <input type="submit" id="btnsavensendOTP" disabled="@(Model.enableSubmitbtn == false)" value="Save & Send OTP" class="btn btn-primary" />
             </div>
         </div>
 
@@ -329,16 +342,9 @@
         </div>
 
         <div class="form-group">
-            <div class="col-md-offset-6 col-md-6">
+            <div class="col-md-offset-6 col-md-2">
                 <input type="button" disabled="@(Model.enableValidatebtn == false)" value="Validate OTP" id="btnValidateOTP" class="btn btn-success"
                        onclick="location.href='@Url.Action("ValidateOTP","Home")?otp=' + $('#txtOtp').val()" />
-            </div>
-        </div>
-
-        <div class="form-group">
-
-            <div class="col-md-offset-6 col-md-2">
-                <input type="button" value="Resend OTP" hidden="@(Model.enableValidatebtn == false)" disabled="@(Model.enableValidatebtn == false)" id="btnResendOTP" class="btn btn-success" />
             </div>
 
             <div class="col-md-2 base-timer">
@@ -355,13 +361,23 @@
                     30
                 </span>
             </div>
+
         </div>
-        <br />
+
         <div class="form-group">
+
+            <div class="col-md-offset-6 col-md-2">
+                <input type="button" value="Resend OTP" hidden="@(Model.enableValidatebtn == false)" disabled="@(Model.enableValidatebtn == false)" id="btnResendOTP" class="btn btn-success" />
+            </div>
+
+            
+        </div>
+        @*<br />*@
+        @*<div class="form-group">
             <div class="col-md-offset-6 col-md-6 text-info">
                 Note : Resend will be disabled for 30 Seconds once triggered.
             </div>
-        </div>
+        </div>*@
 
     </div>
 
