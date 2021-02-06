@@ -220,154 +220,150 @@
 {
     @Html.AntiForgeryToken()
 
-<div class="form-horizontal">
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-    <br />
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.CustomerName, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.CustomerName, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.CustomerName, "", new { @class = "text-danger" })
+        <div>
+            <h4 class="text-info"><b> @ViewBag.Message</b></h4>
         </div>
+
+        <br />
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CustomerName, htmlAttributes: new { @class = "control-label col-md-6" })
+            <div class="col-md-6">
+                @Html.EditorFor(model => model.CustomerName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CustomerName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CustomerEmail, htmlAttributes: new { @class = "control-label col-md-6" })
+            <div class="col-md-6">
+                @Html.EditorFor(model => model.CustomerEmail, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CustomerEmail, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.MobileNumber, htmlAttributes: new { @class = "control-label col-md-6" })
+            <div class="col-md-6">
+                @Html.EditorFor(model => model.MobileNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.MobileNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PCCName, htmlAttributes: new { @class = "control-label col-md-6" })
+            <div class="col-md-6">
+                @Html.DropDownListFor(model => model.PCCName, (IEnumerable<SelectListItem>)ViewData["PCCNames"], "Select a PCC Name", htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.PCCName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.BillNo, htmlAttributes: new { @class = "control-label col-md-6" })
+            <div class="col-md-6">
+                @Html.EditorFor(model => model.BillNo, new { htmlAttributes = new { @class = "form-control", @id = "BillNo" } })
+                @Html.ValidationMessageFor(model => model.BillNo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.BillValue, htmlAttributes: new { @class = "control-label col-md-6" })
+            <div class="col-md-6">
+                @Html.EditorFor(model => model.BillValue, new { htmlAttributes = new { @class = "form-control", @id = "BillValue" } })
+                @Html.ValidationMessageFor(model => model.BillValue, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Discount, htmlAttributes: new { @class = "control-label col-md-6" })
+            <div class="col-md-6">
+                @Html.EditorFor(model => model.Discount, new { htmlAttributes = new { @class = "form-control", @id = "discount" } })
+                @Html.ValidationMessageFor(model => model.Discount, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.BilledValue, htmlAttributes: new { @class = "control-label col-md-6" })
+            <div class="col-md-6">
+                @Html.EditorFor(model => model.BilledValue, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled", @id = "BilledValue" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DiscountReason, htmlAttributes: new { @class = "control-label col-md-6" })
+            <div class="col-md-6">
+                @Html.DropDownListFor(model => model.DiscountReason, (IEnumerable<SelectListItem>)ViewData["DiscountReasons"], "Select a Reason", htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.DiscountReason, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.MessageTemplate, htmlAttributes: new { @class = "control-label col-md-6" })
+            <div class="col-md-6">
+                @Html.DropDownListFor(model => model.MessageTemplate,
+               ((IEnumerable<SelectListItem>)ViewData["SMSTemplates"]), "Select a Template",
+               htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.MessageTemplate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-6 col-md-6">
+                <input type="submit" disabled="@(Model.enableSubmitbtn == false)" value="Save & Send OTP" class="btn btn-primary" />
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.OTP, htmlAttributes: new { @class = "control-label col-md-6" })
+            <div class="col-md-6">
+                <input type="text" id="txtOtp" disabled="@(Model.enableSubmitbtn == true)" min="4" name="OTPfield" maxlength="4" placeholder="Please Enter OTP" class="form-control" />
+                @*@Html.EditorFor(model => model.OTP, new { htmlAttributes = new { @class = "form-control" } })*@
+                @*@Html.ValidationMessageFor(model => model.OTP, "", new { @class = "text-danger" })*@
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-6 col-md-6">
+                <input type="button" disabled="@(Model.enableValidatebtn == false)" value="Validate OTP" id="btnValidateOTP" class="btn btn-success"
+                       onclick="location.href='@Url.Action("ValidateOTP","Home")?otp=' + $('#txtOtp').val()" />
+            </div>
+        </div>
+
+        <div class="form-group">
+
+            <div class="col-md-offset-6 col-md-2">
+                <input type="button" value="Resend OTP" hidden="@(Model.enableValidatebtn == false)" disabled="@(Model.enableValidatebtn == false)" id="btnResendOTP" class="btn btn-success" />
+            </div>
+
+            <div class="col-md-2 base-timer">
+                <svg class="base-timer__svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <g class="base-timer__circle">
+                        <circle class="base-timer__path-elapsed" cx="50" cy="50" r="45"></circle>
+                        <path id="base-timer-path-remaining"
+                              @*stroke-dasharray="283"*@
+                              class="base-timer__path-remaining ${remainingPathColor}"
+                              d="M 50, 50 m -45, 0 a 45,45 0 1,0 90,0 a 45,45 0 1,0 -90,0 "></path>
+                    </g>
+                </svg>
+                <span id="base-timer-label" class="base-timer__label">
+                    30
+                </span>
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <div class="col-md-offset-6 col-md-6 text-info">
+                Note : Resend will be disabled for 30 Seconds once triggered.
+            </div>
+        </div>
+
     </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.CustomerEmail, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.CustomerEmail, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.CustomerEmail, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.MobileNumber, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.MobileNumber, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.MobileNumber, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.PCCName, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DropDownListFor(model => model.PCCName, (IEnumerable<SelectListItem>)ViewData["PCCNames"], "Select a PCC Name", htmlAttributes: new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.PCCName, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.BillNo, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.BillNo, new { htmlAttributes = new { @class = "form-control", @id = "BillNo" } })
-            @Html.ValidationMessageFor(model => model.BillNo, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.BillValue, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.BillValue, new { htmlAttributes = new { @class = "form-control", @id = "BillValue" } })
-            @Html.ValidationMessageFor(model => model.BillValue, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Discount, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Discount, new { htmlAttributes = new { @class = "form-control", @id = "discount" } })
-            @Html.ValidationMessageFor(model => model.Discount, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.BilledValue, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.BilledValue, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled", @id = "BilledValue" } })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.DiscountReason, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DropDownListFor(model => model.DiscountReason, (IEnumerable<SelectListItem>)ViewData["DiscountReasons"], "Select a Reason", htmlAttributes: new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.DiscountReason, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-
-
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.MessageTemplate, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DropDownListFor(model => model.MessageTemplate,
-           ((IEnumerable<SelectListItem>)ViewData["SMSTemplates"]), "Select a Template",
-           htmlAttributes: new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.MessageTemplate, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" disabled="@(Model.enableSubmitbtn == false)" value="Save & Send OTP" class="btn btn-primary" />
-        </div>
-    </div>
-
-    <div>
-        <h4 class="text-info"><b> @ViewBag.Message</b></h4>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.OTP, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-4">
-            <input type="text" id="txtOtp" disabled="@(Model.enableSubmitbtn == true)" min="4" name="OTPfield" maxlength="4" placeholder="Please Enter OTP" class="form-control" />
-            @*@Html.EditorFor(model => model.OTP, new { htmlAttributes = new { @class = "form-control" } })*@
-            @*@Html.ValidationMessageFor(model => model.OTP, "", new { @class = "text-danger" })*@
-        </div>
-
-    </div>
-
-    <div class="form-group">
-        <div class="col-md-2">
-            <input type="button" disabled="@(Model.enableValidatebtn == false)" value="Validate OTP" id="btnValidateOTP" class="btn btn-success"
-                   onclick="location.href='@Url.Action("ValidateOTP","Home")?otp=' + $('#txtOtp').val()" />
-        </div>
-        @*<div class="col-md-2">
-            <input type="button" disabled="@(Model.enableValidatebtn == false)"
-                   value="Resend OTP" id="btnResendOTP" class="btn btn-success"
-                   onclick="location.href='@Url.Action("ResendOTP","Home",Model)'" />
-             <div>*@
-
-        <div class="col-md-2">
-            <input type="button" value="Resend OTP" hidden="@(Model.enableValidatebtn == true)" disabled="@(Model.enableValidatebtn == false)" id="btnResendOTP" class="btn btn-success" />
-        </div>
-
-        <div class="col-md-2 base-timer">
-            <svg class="base-timer__svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <g class="base-timer__circle">
-                    <circle class="base-timer__path-elapsed" cx="50" cy="50" r="45"></circle>
-                    <path id="base-timer-path-remaining"
-                          @*stroke-dasharray="283"*@
-                          class="base-timer__path-remaining ${remainingPathColor}"
-                          d="M 50, 50 m -45, 0 a 45,45 0 1,0 90,0 a 45,45 0 1,0 -90,0 "></path>
-                </g>
-            </svg>
-            <span id="base-timer-label" class="base-timer__label">
-                30
-            </span>
-        </div>
-    </div>
-    <br />
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-6 text-info">
-            Note : Resend will be disabled for 30 Seconds once triggered.
-        </div>
-    </div>
-
-</div>
 
 
 }
