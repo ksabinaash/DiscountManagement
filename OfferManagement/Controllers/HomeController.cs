@@ -74,6 +74,7 @@ namespace OfferManagement.Controllers
 
             grid.Columns.Add(model => model.CustomerName).Titled("Customer Name");
             grid.Columns.Add(model => model.CustomerEmail).Titled("Customer Email");
+            grid.Columns.Add(model => model.MobileNumber).Titled("MobileNumber");
             grid.Columns.Add(model => model.UserEmail).Titled("User Email");
             grid.Columns.Add(model => model.PCCName).Titled("PCC Name");
             grid.Columns.Add(model => model.DiscountReason).Titled("Discount Reason");
