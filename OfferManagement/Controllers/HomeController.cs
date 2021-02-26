@@ -10,6 +10,7 @@ using System.Data;
 using System.IO;
 using OfficeOpenXml;
 using NonFactors.Mvc.Grid;
+using OfferManagement.ApiLayer;
 
 namespace OfferManagement.Controllers
 {
@@ -46,7 +47,7 @@ namespace OfferManagement.Controllers
 
         public ActionResult About()
         {
-            var google = new GoogleSheetsHelper();
+            var google = new GoogleSheetsHelper(); 
 
             var transactions = google.ReadTransactions(true);
 
@@ -56,6 +57,11 @@ namespace OfferManagement.Controllers
 
             return View(CreateExportableGrid(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["GridPageCount"])));
         }
+
+
+
+        
+
 
         [HttpGet]
         public PartialViewResult ReportsGrid()

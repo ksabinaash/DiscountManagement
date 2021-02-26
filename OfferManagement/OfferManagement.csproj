@@ -216,6 +216,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiLayer\APIResults.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
@@ -223,6 +224,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CRMCallsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\StatusController.cs" />
     <Compile Include="Global.asax.cs">
@@ -234,8 +236,11 @@
     <Compile Include="Models\DiscountTransaction.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\MissedCall.cs" />
+    <Compile Include="Models\MissedCallGrid.cs" />
     <Compile Include="Models\MsgWowApiResponse.cs" />
     <Compile Include="Models\UserModel.cs" />
+    <Compile Include="Models\ValidCall.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -341,9 +346,11 @@
     <Content Include="Views\Status\InternalServerError.cshtml" />
     <Content Include="Views\Account\LoginError.cshtml" />
     <Content Include="Views\Account\LoginInfoError.cshtml" />
+    <Content Include="Views\Home\CallsInformation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\CRMCalls\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
