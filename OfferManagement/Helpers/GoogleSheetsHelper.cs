@@ -49,7 +49,7 @@ namespace OfferManagement.Helpers
 
                 var valueRange = new ValueRange();
 
-                var oblist = new List<object>() { transaction.CustomerName, transaction.CustomerEmail, transaction.MobileNumber, transaction.UserEmail, transaction.PCCName, transaction.BillNo, transaction.BillValue, transaction.Discount, transaction.BilledValue, transaction.DiscountReason, transaction.OTP, transaction.MessageTemplate, transaction.BilledDateTime.ToString("dd/MM/yyyy HH:mm:ss"), transaction.ValidationStatus };
+                var oblist = new List<object>() { transaction.CustomerName, transaction.CustomerEmail, transaction.MobileNumber, transaction.UserEmail, transaction.PCCName, transaction.BillNo, transaction.BillValue, transaction.Discount, transaction.BilledValue, transaction.DiscountReason, transaction.OTP, transaction.MessageTemplate, transaction.BilledDateTime.ToString("yyyy/MM/dd HH:mm:ss"), transaction.ValidationStatus };
 
                 valueRange.Values = new List<IList<object>> { oblist };
 
