@@ -1,0 +1,31 @@
+﻿@model IGrid<OfferManagement.Models.MissedCallGrid>
+
+@{
+    ViewBag.Title = @System.Configuration.ConfigurationManager.AppSettings["MissedCallsInformation"];
+}
+<div class="text-center"><h2>@ViewBag.Title</h2></div>
+
+<script>
+    $(document).ready(function () {
+
+        if ('@ViewBag.ExportPermission' == 'True') {
+            $("#divExport").show();
+        }
+        else {
+            $("#divExport").hide();
+        }
+    });
+</script>
+
+
+
+<div class="container" id="divExport">
+    <a style="float: right;" href="@(Url.Action("ExportIndex") + "?" + ViewContext.HttpContext.Request.QueryString)">Export</a>
+</div>
+<br />
+<div>
+    @(new HtmlGrid<OfferManagement.Models.MissedCallGrid>(Html, Model))
+</div>
+
+
+

@@ -29,7 +29,7 @@
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["TransactionsPageName"], "Index", "Home")</li>
                     <li>@Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["ReportPageName"], "About", "Home")</li>
-                    <li>@Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["CallsInformationPage"], "MissedCallsInformation", "CRMCalls")</li>
+                    <li>@Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["MissedCallsInformation"], "MissedCallsInformation", "CRMCalls")</li>
                     <li>@Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["ValidCallsInformation"], "ValidCallsInformation", "CRMCalls")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")

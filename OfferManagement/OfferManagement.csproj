@@ -346,11 +346,11 @@
     <Content Include="Views\Status\InternalServerError.cshtml" />
     <Content Include="Views\Account\LoginError.cshtml" />
     <Content Include="Views\Account\LoginInfoError.cshtml" />
-    <Content Include="Views\Home\CallsInformation.cshtml" />
+    <Content Include="Views\CRMCalls\MissedCallsInformation.cshtml" />
+    <Content Include="Views\CRMCalls\ValidCallsInformation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\CRMCalls\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
