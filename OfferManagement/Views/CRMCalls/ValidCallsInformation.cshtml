@@ -1,7 +1,7 @@
-﻿@model IGrid<OfferManagement.Models.MissedCallGrid>
+﻿@model IGrid<OfferManagement.Models.ValidCall>
 
 @{
-    ViewBag.Title = @System.Configuration.ConfigurationManager.AppSettings["MissedCallsInformation"];
+    ViewBag.Title = @System.Configuration.ConfigurationManager.AppSettings["ValidCallsInformation"];
 }
 <div class="text-center"><h2>@ViewBag.Title</h2></div>
 
@@ -15,6 +15,14 @@
             $("#divExport").hide();
         }
     });
+
+    document.addEventListener('rowclick', function (e) {
+        console.log('data: ', e.detail.data);
+        console.log('grid: ', e.detail.grid);
+        console.log('original event: ', e.detail.originalEvent);
+    });
+
+
 </script>
 
 
@@ -24,7 +32,7 @@
 </div>
 <br />
 <div>
-    @(new HtmlGrid<OfferManagement.Models.MissedCallGrid>(Html, Model))
+    @(new HtmlGrid<OfferManagement.Models.ValidCall>(Html, Model))
 </div>
 
 

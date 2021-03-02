@@ -14,6 +14,36 @@
         else {
             $("#divExport").hide();
         }
+
+
+        var grid = new MvcGrid(document.querySelector('.mvc-grid'));
+        console.log(grid);
+
+
+        setTimeout(function () {
+            new MvcGrid(document.querySelector('.mvc-grid')).reload();
+           
+        }, 50000);
+
+    });
+
+   
+
+
+
+    document.addEventListener('reloadstart', function (e) {
+        console.log('grid: ', e.detail.grid);
+        console.log('grid: ', e.detail.grid.);
+
+    });
+
+    document.addEventListener('reloadend', function (e) {
+        console.log('grid: ', e.detail.grid);
+    });
+
+    document.addEventListener('reloadfail', function (e) {
+        console.log('grid: ', e.detail.grid);
+        console.log('failed ajax response result: ', e.detail.result);
     });
 </script>
 

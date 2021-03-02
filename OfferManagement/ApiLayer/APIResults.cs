@@ -11,7 +11,11 @@ namespace OfferManagement.ApiLayer
 {
     public class APIResults
     {
-        public static List<MissedCallGrid> GetMissedCallGrids()
+        readonly string crmApiURL = System.Configuration.ConfigurationManager.AppSettings["CRMApiUrl"];
+        readonly string  MissedCallEndPoint = System.Configuration.ConfigurationManager.AppSettings["MissedCallEndPoint"];
+        readonly string ValidCallEndPoint = System.Configuration.ConfigurationManager.AppSettings["ValidCallEndPoint"];
+
+        public List<MissedCallGrid> GetMissedCallGrids()
         {
             List<MissedCallGrid> missedCallGrid = null;
 
@@ -19,7 +23,7 @@ namespace OfferManagement.ApiLayer
             {
                 client.BaseAddress = new Uri("http://crmapi.somee.com/");
                 //HTTP GET
-                var responseTask = client.GetAsync("api/MissedCalls/GetMissedCallsForGrid");
+                var responseTask = client.GetAsync(MissedCallEndPoint);
                 
                 responseTask.Wait();
 
@@ -39,5 +43,35 @@ namespace OfferManagement.ApiLayer
             }
             return missedCallGrid;
         }
+
+        public List<ValidCall> GeValidCallGrid()
+        {
+            List<ValidCall> missedCallGrid = null;
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(crmApiURL);
+                //HTTP GET
+                var responseTask = client.GetAsync(ValidCallEndPoint);
+
+                responseTask.Wait();
+
+                var result = responseTask.Result;
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<List<ValidCall>>();
+                    readTask.Wait();
+
+                    missedCallGrid = readTask.Result;
+                }
+                else //web api sent error response 
+                {
+                    missedCallGrid = new List<ValidCall>();
+
+                }
+            }
+            return missedCallGrid;
+        }
+
     }
 }
