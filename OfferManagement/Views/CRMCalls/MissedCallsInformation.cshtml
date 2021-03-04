@@ -23,7 +23,13 @@
         setTimeout(function () {
             new MvcGrid(document.querySelector('.mvc-grid')).reload();
            
-        }, 50000);
+        }, 5000);
+
+        document.addEventListener('rowclick', function (e) {
+            console.log('data: ', e.detail.data);
+            console.log('grid: ', e.detail.grid);
+            console.log('original event: ', e.detail.originalEvent);
+        });
 
     });
 
@@ -33,7 +39,7 @@
 
     document.addEventListener('reloadstart', function (e) {
         console.log('grid: ', e.detail.grid);
-        console.log('grid: ', e.detail.grid.);
+        console.log('grid: ', e.detail.grid);
 
     });
 
