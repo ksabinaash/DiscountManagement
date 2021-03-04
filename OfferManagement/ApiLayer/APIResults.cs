@@ -21,7 +21,7 @@ namespace OfferManagement.ApiLayer
 
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("http://crmapi.somee.com/");
+                client.BaseAddress = new Uri(crmApiURL);
                 //HTTP GET
                 var responseTask = client.GetAsync(MissedCallEndPoint);
                 
