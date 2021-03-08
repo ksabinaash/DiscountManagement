@@ -31,7 +31,7 @@ namespace OfferManagement.Controllers
         private IGrid<MissedCallGrid> CreateExportableMissedCallsGrid(int PageCount)
         {
             var reports = Session["MissedCallsList"] as List<MissedCallGrid>;
-            
+
             IGrid<MissedCallGrid> grid = new Grid<MissedCallGrid>(reports);
 
             grid.ViewContext = new ViewContext { HttpContext = HttpContext };
@@ -71,7 +71,7 @@ namespace OfferManagement.Controllers
         public ActionResult ValidCallsInformation()
         {
             var google = new GoogleSheetsHelper();
-            
+
             var apiResults = new APIResults();
 
             var callActions = apiResults.GetCallActions();
@@ -90,7 +90,7 @@ namespace OfferManagement.Controllers
 
             Session["ValidCallsEdit"] = validCall;
 
-            ViewBag.ExportPermission = ((UserModel)Session["UserModel"]) != null ? 
+            ViewBag.ExportPermission = ((UserModel)Session["UserModel"]) != null ?
                                         (bool)((UserModel)Session["UserModel"]).Role.ToString().Equals("ADMINUSER", StringComparison.InvariantCultureIgnoreCase) : false;
 
             return View(CreateExportablecValidCallsGrid(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["GridPageCount"])));
@@ -101,14 +101,15 @@ namespace OfferManagement.Controllers
         {
             var reports = Session["ValidCallList"] as List<ValidCall>;
 
-            Session["ValidCallsEdit"] = reports.First();
-
             IGrid<ValidCall> grid = new Grid<ValidCall>(reports);
 
             grid.ViewContext = new ViewContext { HttpContext = HttpContext };
+
             grid.Query = Request.QueryString;
 
-            grid.Columns.Add(model => "<button type = \"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#validCallsModal\">Edit</button>").Encoded(false);
+            //grid.Columns.Add(model => "<button type = \"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#validCallsModal\" id=\"btnModalPopup\">Edit</button>").Encoded(false);
+            grid.Columns.Add(model => "<button type = \"button\" class=\"btn btn-primary\" data-toggle=\"modal\" id=\"btnModalPopup\">Edit</button>").Encoded(false);
+            grid.Columns.Add(model => model.ValidCallId).Titled("Id");
             grid.Columns.Add(model => model.LabName).Titled("LabName");
             grid.Columns.Add(model => model.LabPhoneNumber).Titled("LabPhoneNumber");
             grid.Columns.Add(model => model.CustomerMobileNumber).Titled("CustomerMobileNumber");
@@ -137,6 +138,21 @@ namespace OfferManagement.Controllers
             return grid;
         }
 
+        [HttpGet]
+        public ValidCall PrepareModalPopup(int id)
+        {
+            var validCalls = Session["ValidCallList"] as List<ValidCall>;
 
+            var validCall = validCalls.Where(m => m.ValidCallId == id).ToList().FirstOrDefault();
+
+            if (validCall != null)
+            {
+                Session["ValidCallsEdit"] = validCall;
+
+                return validCall;
+            }
+
+            return new ValidCall();
+        }
     }
 }

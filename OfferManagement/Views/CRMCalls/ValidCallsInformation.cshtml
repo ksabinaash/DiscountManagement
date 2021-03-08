@@ -14,14 +14,39 @@
         else {
             $("#divExport").hide();
         }
+
+
+        $(document).on("click", "#btnModalPopup", function (e) {
+            console.log(e);
+            setTimeout(function () {
+                $('#validCallsModal').modal('show');
+            }, 5000);
     });
 
-    document.addEventListener('rowclick', function (e) {
 
-        console.log('data: ', e.detail.data);
-        console.log('grid: ', e.detail.grid);
-        console.log('original event: ', e.detail.originalEvent);
-    });
+        function PrepareModalPopup(id) {
+
+            $.ajax({
+                url: "/CRMCalls/PrepareModalPopup?id=" + id,
+                type: "GET",
+                success: function (result) {
+                },
+                error: function (xhr) {
+                    console.log("An error occured: " + xhr.status + " " + xhr.statusText);
+                }
+            });
+        }
+
+        document.addEventListener('rowclick', function (e) {
+
+            console.log('data: ', e.detail.data);
+
+            var id = e.detail.data["valid-call-id"];
+
+            PrepareModalPopup(id);
+        });
+
+        });
 
 
 </script>
