@@ -4,6 +4,7 @@ using OfferManagement.Helpers;
 using OfferManagement.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 
 
@@ -70,15 +71,27 @@ namespace OfferManagement.Controllers
         public ActionResult ValidCallsInformation()
         {
             var google = new GoogleSheetsHelper();
+            
             var apiResults = new APIResults();
 
-            List<ValidCall> validdcallsList = apiResults.GeValidCallGrid() as List<ValidCall>;
+            var callActions = apiResults.GetCallActions();
+
+            var callPurpose = apiResults.GetCallPurpose();
+
+            var validCalls = apiResults.GetValidCallGrid();
+
+            Session["CallActions"] = (callActions != null && callActions.Count > 0) ? callActions.Select(x => x.Actions).ToList() as List<string> : new List<string>();
+
+            Session["CallPurpose"] = (callPurpose != null && callPurpose.Count > 0) ? callPurpose.Select(x => x.PurposeoftheCall).ToList() as List<string> : new List<string>();
+
+            Session["ValidCallList"] = (validCalls != null && validCalls.Count > 0) ? validCalls as List<ValidCall> : new List<ValidCall>();
+
+            var validCall = new OfferManagement.Models.ValidCall();
+
+            Session["ValidCallsEdit"] = validCall;
 
             ViewBag.ExportPermission = ((UserModel)Session["UserModel"]) != null ? 
                                         (bool)((UserModel)Session["UserModel"]).Role.ToString().Equals("ADMINUSER", StringComparison.InvariantCultureIgnoreCase) : false;
-
-            Session["ValidCallList"] = (validdcallsList != null && validdcallsList.Count >= 0) ?
-                                        validdcallsList as List<ValidCall> : new List<ValidCall>();
 
             return View(CreateExportablecValidCallsGrid(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["GridPageCount"])));
         }
@@ -87,12 +100,15 @@ namespace OfferManagement.Controllers
         private IGrid<ValidCall> CreateExportablecValidCallsGrid(int PageCount)
         {
             var reports = Session["ValidCallList"] as List<ValidCall>;
-            
+
+            Session["ValidCallsEdit"] = reports.First();
+
             IGrid<ValidCall> grid = new Grid<ValidCall>(reports);
 
             grid.ViewContext = new ViewContext { HttpContext = HttpContext };
             grid.Query = Request.QueryString;
 
+            grid.Columns.Add(model => "<button type = \"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#validCallsModal\">Edit</button>").Encoded(false);
             grid.Columns.Add(model => model.LabName).Titled("LabName");
             grid.Columns.Add(model => model.LabPhoneNumber).Titled("LabPhoneNumber");
             grid.Columns.Add(model => model.CustomerMobileNumber).Titled("CustomerMobileNumber");

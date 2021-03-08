@@ -1,77 +1,72 @@
 ﻿using OfferManagement.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Web.Http;
-using System.Web.Mvc;
 
 namespace OfferManagement.ApiLayer
 {
     public class APIResults
     {
         readonly string crmApiURL = System.Configuration.ConfigurationManager.AppSettings["CRMApiUrl"];
-        readonly string  MissedCallEndPoint = System.Configuration.ConfigurationManager.AppSettings["MissedCallEndPoint"];
+
+        readonly string MissedCallEndPoint = System.Configuration.ConfigurationManager.AppSettings["MissedCallEndPoint"];
+
         readonly string ValidCallEndPoint = System.Configuration.ConfigurationManager.AppSettings["ValidCallEndPoint"];
+
+        readonly string ActionsEndPoint = System.Configuration.ConfigurationManager.AppSettings["ActionsEndPoint"];
+
+        readonly string PurposeEndPoint = System.Configuration.ConfigurationManager.AppSettings["PurposeEndPoint"];
 
         public List<MissedCallGrid> GetMissedCallGrids()
         {
-            List<MissedCallGrid> missedCallGrid = null;
-
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri(crmApiURL);
-                //HTTP GET
-                var responseTask = client.GetAsync(MissedCallEndPoint);
-                
-                responseTask.Wait();
-
-                var result = responseTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    var readTask = result.Content.ReadAsAsync<List<MissedCallGrid>>();
-                    readTask.Wait();
-
-                    missedCallGrid = readTask.Result;
-                }
-                else //web api sent error response 
-                {
-                    missedCallGrid = new List<MissedCallGrid>();
-
-                }
-            }
-            return missedCallGrid;
+            return APIHttpGet<MissedCallGrid>(MissedCallEndPoint);
         }
 
-        public List<ValidCall> GeValidCallGrid()
+        public List<ValidCall> GetValidCallGrid()
         {
-            List<ValidCall> missedCallGrid = null;
+            return APIHttpGet<ValidCall>(ValidCallEndPoint);
+        }
+
+        public List<CallAction> GetCallActions()
+        {
+            return APIHttpGet<CallAction>(ActionsEndPoint);
+        }
+
+        public List<CallPurpose> GetCallPurpose()
+        {
+            return APIHttpGet<CallPurpose>(PurposeEndPoint);
+        }
+
+        private List<T> APIHttpGet<T>(string endpoint)
+        {
+            List<T> response = null;
+
+            var baseAddress = crmApiURL;
 
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri(crmApiURL);
-                //HTTP GET
-                var responseTask = client.GetAsync(ValidCallEndPoint);
+                client.BaseAddress = new Uri(baseAddress);
+
+                var responseTask = client.GetAsync(endpoint);
 
                 responseTask.Wait();
 
                 var result = responseTask.Result;
+
                 if (result.IsSuccessStatusCode)
                 {
-                    var readTask = result.Content.ReadAsAsync<List<ValidCall>>();
+                    var readTask = result.Content.ReadAsAsync<List<T>>();
+
                     readTask.Wait();
 
-                    missedCallGrid = readTask.Result;
+                    response = readTask.Result;
                 }
                 else //web api sent error response 
                 {
-                    missedCallGrid = new List<ValidCall>();
-
+                    response = new List<T>();
                 }
             }
-            return missedCallGrid;
+            return response;
         }
-
     }
 }

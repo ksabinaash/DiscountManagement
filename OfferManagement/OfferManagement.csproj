@@ -233,6 +233,8 @@
     <Compile Include="Helpers\GoogleSheetsHelper.cs" />
     <Compile Include="Helpers\MSGWowHelper.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\CallAction.cs" />
+    <Compile Include="Models\CallPurpose.cs" />
     <Compile Include="Models\DiscountTransaction.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -348,6 +350,7 @@
     <Content Include="Views\Account\LoginInfoError.cshtml" />
     <Content Include="Views\CRMCalls\MissedCallsInformation.cshtml" />
     <Content Include="Views\CRMCalls\ValidCallsInformation.cshtml" />
+    <Content Include="Views\CRMCalls\ValidCallsInformationEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
