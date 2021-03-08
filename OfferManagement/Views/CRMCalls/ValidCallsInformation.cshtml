@@ -17,34 +17,46 @@
 
 
         $(document).on("click", "#btnModalPopup", function (e) {
-            console.log(e);
-            setTimeout(function () {
-                $('#validCallsModal').modal('show');
-            }, 5000);
-    });
 
+            //var productId1 = $(this).closest("tr").find("td").eq(1).text()
 
-        function PrepareModalPopup(id) {
+            //console.log("from close row value" + productId1);
 
-            $.ajax({
-                url: "/CRMCalls/PrepareModalPopup?id=" + id,
-                type: "GET",
-                success: function (result) {
-                },
-                error: function (xhr) {
-                    console.log("An error occured: " + xhr.status + " " + xhr.statusText);
-                }
-            });
-        }
+            var callId = $(this).data('id');
 
-        document.addEventListener('rowclick', function (e) {
+            console.log("from btn value : "+ callId);
 
-            console.log('data: ', e.detail.data);
+            //PrepareModalPopup(callId);
 
-            var id = e.detail.data["valid-call-id"];
+            var route = '@Url.Action("PrepareModalPopup", "CRMCalls")?id=' + callId;
 
-            PrepareModalPopup(id);
+            $('#partial').load(route);
+
+            $('#validCallsModal').modal('show');
         });
+
+
+        //function PrepareModalPopup(id) {
+        //        $.ajax({
+        //        url: "/CRMCalls/PrepareModalPopup?id=" + id,
+        //        type: "GET",
+        //        success: function (result) {
+                       
+        //        },
+        //        error: function (xhr) {
+        //            console.log("An error occured: " + xhr.status + " " + xhr.statusText);
+        //        }
+        //    });
+        //}
+
+        //document.addEventListener('rowclick', function (e) {
+
+        //    console.log('data: ', e.detail.data);
+
+        //    var id = e.detail.data["valid-call-id"];
+
+        //    PrepareModalPopup(id);
+        //});
 
         });
 
@@ -57,7 +69,7 @@
     <a style="float: right;" href="@(Url.Action("ExportIndex") + "?" + ViewContext.HttpContext.Request.QueryString)">Export</a>
 </div>
 <br />
-<div>
+<div class="table-responsive">
     @(new HtmlGrid<OfferManagement.Models.ValidCall>(Html, Model))
 </div>
 
@@ -72,8 +84,8 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="container">
-                    @Html.Partial("ValidCallsInformationEdit", Session["ValidCallsEdit"] as OfferManagement.Models.ValidCall)
+                <div class="container" id="partial">
+                    @*@Html.Partial("ValidCallsInformationEdit", Session["ValidCallsEdit"])*@
                 </div>
             </div>
             <div class="modal-footer">

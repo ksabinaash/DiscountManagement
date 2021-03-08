@@ -108,7 +108,7 @@ namespace OfferManagement.Controllers
             grid.Query = Request.QueryString;
 
             //grid.Columns.Add(model => "<button type = \"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#validCallsModal\" id=\"btnModalPopup\">Edit</button>").Encoded(false);
-            grid.Columns.Add(model => "<button type = \"button\" class=\"btn btn-primary\" data-toggle=\"modal\" id=\"btnModalPopup\">Edit</button>").Encoded(false);
+            grid.Columns.Add(model => "<button type = \"button\" class=\"btn btn-primary\" data-id=\""+ model.ValidCallId+ "\" data-toggle=\"modal\" id=\"btnModalPopup\">Edit</button>").Encoded(false);
             grid.Columns.Add(model => model.ValidCallId).Titled("Id");
             grid.Columns.Add(model => model.LabName).Titled("LabName");
             grid.Columns.Add(model => model.LabPhoneNumber).Titled("LabPhoneNumber");
@@ -139,20 +139,18 @@ namespace OfferManagement.Controllers
         }
 
         [HttpGet]
-        public ValidCall PrepareModalPopup(int id)
+        public ActionResult PrepareModalPopup(int id)
         {
             var validCalls = Session["ValidCallList"] as List<ValidCall>;
 
             var validCall = validCalls.Where(m => m.ValidCallId == id).ToList().FirstOrDefault();
 
-            if (validCall != null)
+            if (validCall == null)
             {
-                Session["ValidCallsEdit"] = validCall;
-
-                return validCall;
+                validCall = new OfferManagement.Models.ValidCall();
             }
 
-            return new ValidCall();
+            return PartialView("ValidCallsInformationEdit", validCall);
         }
     }
 }
