@@ -1,7 +1,10 @@
-﻿using OfferManagement.Models;
+﻿using Newtonsoft.Json;
+using OfferManagement.Models;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text;
+using System.Web.Script.Serialization;
 
 namespace OfferManagement.ApiLayer
 {
@@ -37,6 +40,11 @@ namespace OfferManagement.ApiLayer
             return APIHttpGet<CallPurpose>(PurposeEndPoint);
         }
 
+        public void UpdateValidCall(ValidCall validcall)
+        {
+            APIHttpPut<ValidCall>(ValidCallEndPoint,validcall);
+        }
+
         private List<T> APIHttpGet<T>(string endpoint)
         {
             List<T> response = null;
@@ -63,10 +71,45 @@ namespace OfferManagement.ApiLayer
                 }
                 else //web api sent error response 
                 {
+                  
                     response = new List<T>();
                 }
             }
             return response;
+        }
+
+        private void APIHttpPut<T>(string endpoint, ValidCall validCall )
+        {
+            var response = string.Empty;
+
+            var payload = new JavaScriptSerializer().Serialize(validCall);
+
+            HttpContent content = new StringContent(payload, Encoding.UTF8, "application/json");
+
+
+            var baseAddress = crmApiURL;
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(baseAddress);
+
+                var responseTask = client.PutAsync(endpoint, content);
+
+                responseTask.Wait();
+
+                var result = responseTask.Result;
+
+                if (result.IsSuccessStatusCode)
+                {
+                    var statusCode = result.StatusCode.ToString();
+                   
+                }
+                else //web api sent error response 
+                {
+                    var statusCode = result.StatusCode;
+                }
+            }
+         
         }
     }
 }
