@@ -20,7 +20,7 @@
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>      
+                    <span class="icon-bar"></span>
                 </button>
                 <img src="~/Content/Logo.jpg" style="height:50px;width:60px" alt=@System.Configuration.ConfigurationManager.AppSettings["ApplicationName"]>
 
@@ -28,10 +28,23 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["TransactionsPageName"], "Index", "Home")</li>
-                    <li>@Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["ReportPageName"], "About", "Home")</li>
-                    <li>@Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["MissedCallsInformation"], "MissedCallsInformation", "CRMCalls")</li>
-                    <li>@Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["ValidCallsInformation"], "ValidCallsInformation", "CRMCalls")</li>
+                    <li class="nav-item">@Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["TransactionsPageName"], "Index", "Home")</li>
+                    <li class="nav-item">@Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["ReportPageName"], "About", "Home")</li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="true">  Reports  </a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["MissedCallsInformation"], "MissedCallsInformation", "CRMCalls")</li>
+                            <li>@Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["ValidCallsInformation"], "ValidCallsInformation", "CRMCalls")</li>
+                            <li>
+                            <li>
+                                <a class="dropdown-item" href="#"> Charts </a>
+                                <ul class="submenu dropdown-menu">
+                                    <li>@Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["ValidCallsInformation"], "ValidCallsInformation", "CRMCalls")</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
