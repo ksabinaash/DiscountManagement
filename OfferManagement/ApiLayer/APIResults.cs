@@ -20,6 +20,8 @@ namespace OfferManagement.ApiLayer
 
         readonly string PurposeEndPoint = System.Configuration.ConfigurationManager.AppSettings["PurposeEndPoint"];
 
+        readonly string ValidCallPutEndPoint = System.Configuration.ConfigurationManager.AppSettings["ValidCallPutEndPoint"];
+
         public List<MissedCallGrid> GetMissedCallGrids()
         {
             return APIHttpGet<MissedCallGrid>(MissedCallEndPoint);
@@ -42,7 +44,9 @@ namespace OfferManagement.ApiLayer
 
         public void UpdateValidCall(ValidCall validcall)
         {
-            APIHttpPut<ValidCall>(ValidCallEndPoint,validcall);
+            var endpoint = ValidCallPutEndPoint + validcall.ValidCallId;
+
+            APIHttpPut<ValidCall>(endpoint, validcall);
         }
 
         private List<T> APIHttpGet<T>(string endpoint)
@@ -71,21 +75,20 @@ namespace OfferManagement.ApiLayer
                 }
                 else //web api sent error response 
                 {
-                  
+
                     response = new List<T>();
                 }
             }
             return response;
         }
 
-        private void APIHttpPut<T>(string endpoint, ValidCall validCall )
+        private void APIHttpPut<T>(string endpoint, T dataObject)
         {
             var response = string.Empty;
 
-            var payload = new JavaScriptSerializer().Serialize(validCall);
+            var payload = new JavaScriptSerializer().Serialize(dataObject);
 
             HttpContent content = new StringContent(payload, Encoding.UTF8, "application/json");
-
 
             var baseAddress = crmApiURL;
 
@@ -102,14 +105,14 @@ namespace OfferManagement.ApiLayer
                 if (result.IsSuccessStatusCode)
                 {
                     var statusCode = result.StatusCode.ToString();
-                   
+
                 }
                 else //web api sent error response 
                 {
                     var statusCode = result.StatusCode;
                 }
             }
-         
+
         }
     }
 }

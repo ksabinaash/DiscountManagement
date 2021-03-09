@@ -20,41 +20,32 @@
 
     <div class="form-horizontal">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @*@Html.HiddenFor(model => model.ValidCallId)*@
-
+        
         <div class="form-group">
             @Html.LabelFor(model => model.ValidCallId, htmlAttributes: new { @class = "control-label col-md-2 col-sm-6" })
             <div class="col-md-3 col-sm-6">
-                @Html.DisplayFor(model => model.ValidCallId, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.ValidCallId, new { htmlAttributes = new { @class = "form-control" , @readonly="readonly"} })
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.EventTime, htmlAttributes: new { @class = "control-label col-md-2 col-sm-6" })
             <div class="col-md-3 col-sm-6">
-                @Html.DisplayFor(model => model.EventTime, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.EventTime, new { htmlAttributes = new { @class = "form-control", @readonly="readonly" } })
             </div>
         </div>
-
 
         <div class="form-group">
             @Html.LabelFor(model => model.LabName, htmlAttributes: new { @class = "control-label col-md-2 col-sm-6" })
             <div class="col-md-3 col-sm-6">
-                @Html.DisplayFor(model => model.LabName, new { htmlAttributes = new { @class = "form-control" } })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.LabPhoneNumber, htmlAttributes: new { @class = "control-label col-md-2 col-sm-6" })
-            <div class="col-md-3 col-sm-6">
-                @Html.DisplayFor(model => model.LabPhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.LabName, new { htmlAttributes = new { @class = "form-control", @readonly="readonly" } })
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.CustomerMobileNumber, htmlAttributes: new { @class = "control-label col-md-2 col-sm-6" })
             <div class="col-md-3 col-sm-6">
-                @Html.DisplayFor(model => model.CustomerMobileNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.CustomerMobileNumber, new { htmlAttributes = new { @class = "form-control", @readonly="readonly" } })
             </div>
         </div>
 
@@ -98,7 +89,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-3 col-sm-6">
-                <input type="submit" id="btnSave" value="Save" onclick="" class="btn btn-default" />
+                <input type="submit" id="btnSave" value="Save" onclick="" class="btn btn-primary" />
             </div>
         </div>
     </div>

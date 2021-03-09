@@ -359,6 +359,7 @@
     <Content Include="Views\CRMCalls\MissedCallsInformation.cshtml" />
     <Content Include="Views\CRMCalls\ValidCallsInformation.cshtml" />
     <Content Include="Views\CRMCalls\ValidCallsInformationEdit.cshtml" />
+    <Content Include="Views\CRMCalls\UpdateValidCallModel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -10,6 +10,8 @@ using System.Web.Mvc;
 
 namespace OfferManagement.Controllers
 {
+    [Authorize]
+    [HandleError]
     public class CRMCallsController : Controller
     {
         public ActionResult MissedCallsInformation()
@@ -108,7 +110,7 @@ namespace OfferManagement.Controllers
             grid.Query = Request.QueryString;
 
             //grid.Columns.Add(model => "<button type = \"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#validCallsModal\" id=\"btnModalPopup\">Edit</button>").Encoded(false);
-            grid.Columns.Add(model => "<button type = \"button\" class=\"btn btn-primary glyphicon glyphicon-pencil\" data-id=\"" + model.ValidCallId+ "\" data-toggle=\"modal\" id=\"btnModalPopup\"></button>").Encoded(false);
+            grid.Columns.Add(model => "<button type = \"button\" class=\"btn btn-primary glyphicon glyphicon-pencil\" data-id=\"" + model.ValidCallId + "\" data-toggle=\"modal\" id=\"btnModalPopup\"></button>").Encoded(false);
             grid.Columns.Add(model => model.ValidCallId).Titled("Id");
             grid.Columns.Add(model => model.LabName).Titled("LabName");
             grid.Columns.Add(model => model.LabPhoneNumber).Titled("LabPhoneNumber");
@@ -153,15 +155,33 @@ namespace OfferManagement.Controllers
             return PartialView("ValidCallsInformationEdit", validCall);
         }
 
-        
+
         [HttpPost]
-        public void UpdateValidCallModel(ValidCall validcall)
+        public ActionResult UpdateValidCallModel(ValidCall currentValidCall)
         {
+            var validCalls = Session["ValidCallList"] as List<ValidCall>;
+
+            var existingValidCall = validCalls.Where(m => m.ValidCallId == currentValidCall.ValidCallId).ToList().FirstOrDefault();
+
+            var user = (UserModel)Session["UserModel"];
+
+            existingValidCall.UpdatedUser = user?.UserName;
+
+            existingValidCall.UpdatedDateTime = DateTime.Now;
+
+            existingValidCall.Comment = currentValidCall.Comment;
+
+            existingValidCall.CallPurpose = currentValidCall.CallPurpose;
+
+            existingValidCall.Action = currentValidCall.Action;
+
+            existingValidCall.FollowUpTime = currentValidCall.FollowUpTime;
 
             var apiResults = new APIResults();
 
-            apiResults.UpdateValidCall(validcall);
+            apiResults.UpdateValidCall(existingValidCall);
 
+            return View();
         }
     }
 }
