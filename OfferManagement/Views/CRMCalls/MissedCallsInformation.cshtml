@@ -8,6 +8,11 @@
 <script>
     $(document).ready(function () {
 
+
+        var callVolumeData;
+
+        LoadCallVolume();
+
         if ('@ViewBag.ExportPermission' == 'True') {
             $("#divExport").show();
         }
@@ -15,42 +20,87 @@
             $("#divExport").hide();
         }
 
+        function LoadCallVolume()
+        {
+                 $.ajax({
+            type: 'GET',
+            url: '@Url.Action("GetCallVolume", "CRMCalls")',
+            success: function (data) {
+                console.log(data);
+                LoadCallVolumeData(data);
+                return data;
+            },
+            error: function (ex) {
+                console.log(ex);
+            }
+        });
+        };
 
-        //var grid = new MvcGrid(document.querySelector('.mvc-grid'));
-        //console.log(grid);
+        function LoadCallVolumeData(data)
+        {
+            callVolumeData = data;
 
 
-        //setTimeout(function () {
-        //    new MvcGrid(document.querySelector('.mvc-grid')).reload();
+            var ctx = document.getElementById('stackChart');
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: callVolumeData.Labs,
+                    datasets: [
+                        {
+                            label: 'Missed Call',
+                            data: callVolumeData.MissedCallsCount,
+                            backgroundColor: 'rgba(118, 93, 105, 1)'
+                        },
+                        {
+                            label: 'Incoming Call',
+                            data: callVolumeData.IncomingCallsCount,
+                            backgroundColor: 'rgba(41, 241, 195, 1)'
+                        },
+                        {
+                            label: 'OutGoing Call',
+                            data: callVolumeData.OutgoingCallsCount,
+                            backgroundColor: 'rgba(44, 130, 201, 1)'
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            },
+                            stacked: true
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            },
+                            stacked: true
+                        }]
+                    }
+                }
+            });
 
-        //}, 5000);
+            console.log(callVolumeData);
+        }
 
 
         var ctx = document.getElementById('linechart');
-
         var xLabels = ['Lab1', 'Lab2', 'Lab3', 'Lab4', 'Lab5'];
-
         var barMissedCalls = [1, 2, 3, 4, 5];
-
         var barIncomingCalls = [5, 4, 3, 2, 1];
-
         var barOutgoingCalls = [3, 7, 2, 1, 0];
-
-
         var myChart = new Chart(ctx, {
             type: 'line',
-
             data: {
-
                 labels: xLabels,
-
                 datasets: [
                     {
                         label: 'Missed Call',
                         data: barMissedCalls,
                         borderColor: 'rgba(118, 93, 105, 1)'
                     },
-
                     {
                         label: 'Incoming Call',
                         data: barIncomingCalls,
@@ -81,32 +131,21 @@
             }
         });
 
-
         var ctx = document.getElementById('piechart');
-
         var xLabels = ['Lab1', 'Lab2', 'Lab3', 'Lab4', 'Lab5'];
-
         var barMissedCalls = [1, 2, 3, 4, 5];
-
         var barIncomingCalls = [5, 4, 3, 2, 1];
-
         var barOutgoingCalls = [3, 7, 2, 1, 0];
-
-
         var myChart = new Chart(ctx, {
             type: 'pie',
-
             data: {
-
                 labels: xLabels,
-
                 datasets: [
                     {
                         label: 'Missed Call',
                         data: barMissedCalls,
                         backgroundColor: 'rgba(118, 93, 105, 1)'
                     },
-
                     {
                         label: 'Incoming Call',
                         data: barIncomingCalls,
@@ -132,68 +171,14 @@
                             beginAtZero: true
                         },
                         stacked: true
-                    }]
-                }
-            }
-        });
-
-
-        var ctx = document.getElementById('stackChart');
-
-        var xLabels = ['Lab1', 'Lab2', 'Lab3', 'Lab4', 'Lab5'];
-
-        var barMissedCalls = [1, 2, 3, 4, 5];
-
-        var barIncomingCalls = [5, 4, 3, 2, 1];
-
-        var barOutgoingCalls = [3, 7, 2, 1, 0];
-
-
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-
-            data: {
-
-                labels: xLabels,
-
-                datasets: [
-                    {
-                        label: 'Missed Call',
-                        data: barMissedCalls,
-                        backgroundColor: 'rgba(118, 93, 105, 1)'
-                    },
-
-                    {
-                        label: 'Incoming Call',
-                        data: barIncomingCalls,
-                        backgroundColor: 'rgba(41, 241, 195, 1)'
-                    },
-                    {
-                        label: 'OutGoing Call',
-                        data: barOutgoingCalls,
-                        backgroundColor: 'rgba(44, 130, 201, 1)'
-                    }
-                ]
-            },
-            options: {
-                scales: {
-                    xAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        },
-                        stacked: true
-                    }],
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        },
-                         stacked: true
                     }]
                 }
             }
         });
 
     });
+
+
 </script>
 
 

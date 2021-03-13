@@ -2,6 +2,7 @@
 using OfferManagement.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Web.Script.Serialization;
@@ -22,6 +23,8 @@ namespace OfferManagement.ApiLayer
 
         readonly string ValidCallPutEndPoint = System.Configuration.ConfigurationManager.AppSettings["ValidCallPutEndPoint"];
 
+        readonly string CallVolumeChartEndpoint = System.Configuration.ConfigurationManager.AppSettings["CallVolumeChartEndpoint"];
+
         public List<MissedCallGrid> GetMissedCallGrids()
         {
             return APIHttpGet<MissedCallGrid>(MissedCallEndPoint);
@@ -40,6 +43,13 @@ namespace OfferManagement.ApiLayer
         public List<CallPurpose> GetCallPurpose()
         {
             return APIHttpGet<CallPurpose>(PurposeEndPoint);
+        }
+
+        public CallVolumeChart GetCallVolume(DateTime? fromDate, DateTime? toDate)
+        {
+            var endpoint = Path.Combine(CallVolumeChartEndpoint, fromDate.ToString(), toDate.ToString());
+
+            return APIHttpGet(endpoint);
         }
 
         public void UpdateValidCall(ValidCall validcall)
@@ -77,6 +87,39 @@ namespace OfferManagement.ApiLayer
                 {
 
                     response = new List<T>();
+                }
+            }
+            return response;
+        }
+
+        private CallVolumeChart APIHttpGet(string endpoint)
+        {
+            CallVolumeChart response = null;
+
+            var baseAddress = crmApiURL;
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(baseAddress);
+
+                var responseTask = client.GetAsync(endpoint);
+
+                responseTask.Wait();
+
+                var result = responseTask.Result;
+
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<CallVolumeChart>();
+
+                    readTask.Wait();
+
+                    response = readTask.Result;
+                }
+                else //web api sent error response 
+                {
+
+                    response = new CallVolumeChart();
                 }
             }
             return response;

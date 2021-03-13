@@ -1,4 +1,5 @@
-﻿using NonFactors.Mvc.Grid;
+﻿using Newtonsoft.Json;
+using NonFactors.Mvc.Grid;
 using OfferManagement.ApiLayer;
 using OfferManagement.Helpers;
 using OfferManagement.Models;
@@ -182,6 +183,15 @@ namespace OfferManagement.Controllers
             apiResults.UpdateValidCall(existingValidCall);
 
             return View();
+        }
+
+        public JsonResult GetCallVolume(DateTime? fromDate = null, DateTime? toDate = null)
+        {
+            var apiResults = new APIResults();
+
+            var CallVolume = apiResults.GetCallVolume(fromDate, toDate);
+
+            return Json(CallVolume, JsonRequestBehavior.AllowGet);
         }
     }
 }
