@@ -25,6 +25,10 @@ namespace OfferManagement.ApiLayer
 
         readonly string CallVolumeChartEndpoint = System.Configuration.ConfigurationManager.AppSettings["CallVolumeChartEndpoint"];
 
+        readonly string CallPurposeChartEndpoint = System.Configuration.ConfigurationManager.AppSettings["CallPurposeChartEndpoint"];
+
+        readonly string CallTrendChartEndpoint = System.Configuration.ConfigurationManager.AppSettings["CallTrendChartEndpoint"];
+
         public List<MissedCallGrid> GetMissedCallGrids()
         {
             return APIHttpGet<MissedCallGrid>(MissedCallEndPoint);
@@ -51,6 +55,22 @@ namespace OfferManagement.ApiLayer
 
             return APIHttpGet(endpoint);
         }
+
+        public CallPurposeChart GetCallPurposeChartValues(DateTime? fromDate, DateTime? toDate)
+        {
+            var endpoint = Path.Combine(CallPurposeChartEndpoint, fromDate.ToString(), toDate.ToString());
+
+            return APIHttpGetPurposeChartValues(endpoint);
+        }
+
+        public CallTrendChart GetCallTrendsChartValues(String labName, DateTime? fromDate, DateTime? toDate)
+        {
+            labName = "RJKPM";
+            var endpoint = Path.Combine(CallTrendChartEndpoint, labName,fromDate.ToString(), toDate.ToString());
+
+            return APIHttpGetTrendsChartValues(endpoint);
+        }
+
 
         public void UpdateValidCall(ValidCall validcall)
         {
@@ -120,6 +140,72 @@ namespace OfferManagement.ApiLayer
                 {
 
                     response = new CallVolumeChart();
+                }
+            }
+            return response;
+        }
+
+        private CallPurposeChart APIHttpGetPurposeChartValues(string endpoint)
+        {
+            CallPurposeChart response = null;
+
+            var baseAddress = crmApiURL;
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(baseAddress);
+
+                var responseTask = client.GetAsync(endpoint);
+
+                responseTask.Wait();
+
+                var result = responseTask.Result;
+
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<CallPurposeChart>();
+
+                    readTask.Wait();
+
+                    response = readTask.Result;
+                }
+                else //web api sent error response 
+                {
+
+                    response = new CallPurposeChart();
+                }
+            }
+            return response;
+        }
+
+        private CallTrendChart APIHttpGetTrendsChartValues(string endpoint)
+        {
+            CallTrendChart response = null;
+
+            var baseAddress = crmApiURL;
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(baseAddress);
+
+                var responseTask = client.GetAsync(endpoint);
+
+                responseTask.Wait();
+
+                var result = responseTask.Result;
+
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<CallTrendChart>();
+
+                    readTask.Wait();
+
+                    response = readTask.Result;
+                }
+                else //web api sent error response 
+                {
+
+                    response = new CallTrendChart();
                 }
             }
             return response;

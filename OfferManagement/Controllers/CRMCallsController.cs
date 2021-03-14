@@ -193,5 +193,23 @@ namespace OfferManagement.Controllers
 
             return Json(CallVolume, JsonRequestBehavior.AllowGet);
         }
+
+        public JsonResult GetCallPurpose(DateTime? fromDate = null, DateTime? toDate = null)
+        {
+            var apiResults = new APIResults();
+
+            var CallPurpose = apiResults.GetCallPurposeChartValues(fromDate, toDate);
+
+            return Json(CallPurpose, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetCallTrends(string labName, DateTime? fromDate = null, DateTime? toDate = null)
+        {
+            var apiResults = new APIResults();
+
+            var CallTrends = apiResults.GetCallTrendsChartValues(labName,fromDate, toDate);
+
+            return Json(CallTrends, JsonRequestBehavior.AllowGet);
+        }
     }
 }
