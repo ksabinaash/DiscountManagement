@@ -67,7 +67,9 @@ namespace OfferManagement.ApiLayer
         {
             labName = "RJKPM";//Todo: Remove this
 
-            var endpoint = Path.Combine(CallTrendChartEndpoint, labName,fromDate.ToString(), toDate.ToString());
+            //var endpoint = Path.Combine(CallTrendChartEndpoint,labName,fromDate.ToString(), toDate.ToString());
+
+            var endpoint = CallTrendChartEndpoint + "?labName=" + labName;
 
             return APIHttpGetChartData<CallTrendChart>(endpoint);
         }

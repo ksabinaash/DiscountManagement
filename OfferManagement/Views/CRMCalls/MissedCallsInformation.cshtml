@@ -80,20 +80,20 @@
             var myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: callVolumeData.callTypes,
+                    labels: callVolumeData.labs,
                     datasets: [
                         {
-                            label: callVolumeData.labs[0],
+                            label: callVolumeData.callTypes[0],
                             data: callVolumeData.countData[0],
                             backgroundColor: `rgb(${r()}, ${r()}, ${r()})`
                         },
                         {
-                            label: callVolumeData.labs[1],
+                            label: callVolumeData.callTypes[1],
                             data: callVolumeData.countData[1],
                             backgroundColor: `rgb(${r()}, ${r()}, ${r()})`
                         },
                         {
-                            label: callVolumeData.labs[2],
+                            label: callVolumeData.callTypes[2],
                             data: callVolumeData.countData[2],
                             backgroundColor: `rgb(${r()}, ${r()}, ${r()})`
                         }
@@ -172,29 +172,24 @@
                 }
             });
 
-
-            console.log(CallPurposeData.countData[0]);
-            console.log(CallPurposeData.countData[1]);
-            console.log(CallPurposeData.countData[2]);
-
             var ctx = document.getElementById('stackChartpurpose');
             var myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: CallPurposeData.purposes,
+                    labels: CallPurposeData.labs,
                     datasets: [
                         {
-                            label: CallPurposeData.labs[0],
+                            label: CallPurposeData.purposes[0],
                             data: CallPurposeData.countData[0],
                             backgroundColor: `rgb(${r()}, ${r()}, ${r()})`
                         },
                         {
-                            label: CallPurposeData.labs[1],
+                            label: CallPurposeData.purposes[1],
                             data: CallPurposeData.countData[1],
                             backgroundColor: `rgb(${r()}, ${r()}, ${r()})`
                         },
                         {
-                            label: CallPurposeData.labs[2],
+                            label: CallPurposeData.purposes[2],
                             data: CallPurposeData.countData[2],
                             backgroundColor: `rgb(${r()}, ${r()}, ${r()})`
                         }
@@ -224,9 +219,6 @@
 
         function LoadCallTrendData(data) {
             callTrendData = data;
-
-            console.log("callTrendData");
-
             console.log(callTrendData);
 
             var r = () => Math.random() * 256 >> 0;
@@ -235,23 +227,23 @@
             var myChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: callTrendData.labs,
+                    labels: period,
                     datasets: [
                         {
-                            label: callTrendData.labs[0],
-                            data: callTrendData.countData[0],
+                            label: callTrendData.callTypes[0],
+                            data: callTrendData.countData,
                             backgroundColor: `rgb(${r()}, ${r()}, ${r()})`,
                             fill: false,
                         },
                         {
-                            label: callTrendData.labs[1],
-                            data: callTrendData.countData[1],
+                            label: callTrendData.callTypes[1],
+                            data: callTrendData.countData,
                             backgroundColor: `rgb(${r()}, ${r()}, ${r()})`,
                             fill: false,
                         },
                         {
-                            label: callTrendData.labs[2],
-                            data: callTrendData.countData[2],
+                            label: callTrendData.callTypes[2],
+                            data: callTrendData.countData,
                             backgroundColor: `rgb(${r()}, ${r()}, ${r()})`,
                             fill: false,
                         }
@@ -270,8 +262,7 @@
                         yAxes: [{
                             display: true,
                             scaleLabel: {
-                                display: true,
-                                labelString: 'period'
+                                display: true
                             }
                         }]
                     },
