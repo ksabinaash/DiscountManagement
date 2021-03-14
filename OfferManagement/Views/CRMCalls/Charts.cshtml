@@ -1,0 +1,296 @@
+﻿
+@{
+    ViewBag.Title = @System.Configuration.ConfigurationManager.AppSettings["Charts"];
+}
+<div class="text-center"><h2>@ViewBag.Title</h2></div>
+
+<script>
+    $(document).ready(function () {
+
+        var chartColors = {
+            red: 'rgb(255, 99, 132)',
+            orange: 'rgb(255, 159, 64)',
+            yellow: 'rgb(255, 205, 86)',
+            green: 'rgb(75, 192, 192)',
+            blue: 'rgb(54, 162, 235)',
+            purple: 'rgb(153, 102, 255)',
+            grey: 'rgb(231,233,237)'
+        };
+
+        var callVolumeData;
+
+        var CallPurposeData;
+
+        var callTrendData;
+
+        LoadCallVolume();
+
+        LoadCallPurpose();
+
+        LoadCallTrend();
+
+        function LoadCallVolume()
+        {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("GetCallVolume", "CRMCalls")',
+            success: function (data) {
+                LoadCallVolumeData(data);
+            },
+            error: function (ex) {
+                console.log(ex);
+            }
+        });
+        };
+
+        function LoadCallPurpose()
+        {
+                 $.ajax({
+            type: 'GET',
+            url: '@Url.Action("GetCallPurpose", "CRMCalls")',
+            success: function (data) {
+                LoadCallPurposeData(data);
+            },
+            error: function (ex) {
+                console.log(ex);
+            }
+        });
+        };
+
+        function LoadCallTrend()
+        {
+                 $.ajax({
+            type: 'GET',
+            url: '@Url.Action("GetCallTrends", "CRMCalls")',
+            success: function (data) {
+                LoadCallTrendData(data);
+                return data;
+            },
+            error: function (ex) {
+                console.log(ex);
+            }
+        });
+        };
+
+        function LoadCallVolumeData(data)
+        {
+            callVolumeData = data;
+
+            var r = () => Math.random() * 256 >> 0;
+            var ctx = document.getElementById('stackChartVolume');
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: callVolumeData.labs,
+                    datasets: [
+                        {
+                            label: callVolumeData.callTypes[0],
+                            data: callVolumeData.countData[0],
+                            backgroundColor: chartColors.red
+                        },
+                        {
+                            label: callVolumeData.callTypes[1],
+                            data: callVolumeData.countData[1],
+                            backgroundColor: chartColors.blue
+                        },
+                        {
+                            label: callVolumeData.callTypes[2],
+                            data: callVolumeData.countData[2],
+                            backgroundColor: chartColors.green
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            },
+                            stacked: true,
+                            offset: true
+
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            },
+                            stacked: true,
+                            offset: true
+                        }]
+                    },
+                        tooltips: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    ticks: {
+                        beginAtZero: true,   // minimum value will be 0.,
+                        stepSize: 1
+                    }
+                }
+            });
+ }
+
+        function LoadCallPurposeData(data) {
+            CallPurposeData = data;
+            var ctx = document.getElementById('piechartpurpose');
+            var myChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    datasets: [{
+                        data: CallPurposeData.sumData,
+                        backgroundColor: [
+                            chartColors.red,
+                            chartColors.blue,
+                            chartColors.green,
+                        ]
+                        //label: 'Dataset 1'
+                    }],
+                    labels: [CallPurposeData.purposes[0], CallPurposeData.purposes[1], CallPurposeData.purposes[2]],
+                },
+                options: {
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    responsive: true,
+                }
+            });
+
+            var ctx = document.getElementById('stackChartpurpose');
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: CallPurposeData.labs,
+                    datasets: [
+                        {
+                            label: CallPurposeData.purposes[0],
+                            data: CallPurposeData.countData[0],
+                            backgroundColor: chartColors.red,
+                        },
+                        {
+                            label: CallPurposeData.purposes[1],
+                            data: CallPurposeData.countData[1],
+                            backgroundColor: chartColors.blue,
+                        },
+                        {
+                            label: CallPurposeData.purposes[2],
+                            data: CallPurposeData.countData[2],
+                            backgroundColor: chartColors.green,
+                        }
+                    ]
+                },
+                options: {
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    responsive: true,
+                    scales: {
+                        xAxes: [{
+                            stacked: true,
+                        }],
+                        yAxes: [{
+                            stacked: true
+                        }]
+                    }
+                }
+            });
+        }
+
+        function LoadCallTrendData(data) {
+            callTrendData = data;
+            var ctx = document.getElementById('lineChartTrend');
+            var period = callTrendData.period;
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: period,
+                    datasets: [
+                        {
+                            label: callTrendData.callTypes[0],
+                            data: callTrendData.countData[0],
+                            backgroundColor: chartColors.red,
+                            borderColor: chartColors.red,
+                            fill: false
+                        },
+                        {
+                            label: callTrendData.callTypes[1],
+                            data: callTrendData.countData[1],
+                            backgroundColor: chartColors.blue,
+                            borderColor: chartColors.blue,
+                            fill: false
+                        },
+                        {
+                            label: callTrendData.callTypes[2],
+                            data: callTrendData.countData[2],
+                            backgroundColor: chartColors.green,
+                            borderColor: chartColors.green,
+                            fill: false
+                        }
+
+                    ]
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true
+                           }
+                        }],
+                        yAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true
+                            }
+                        }]
+                    },
+                   tooltips: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    ticks: {
+                        beginAtZero: true,   // minimum value will be 0.,
+                        stepSize: 1
+                    }
+                }
+            });
+
+        }
+    });
+</script>
+
+<div class="container">
+    <div class="card-deck">
+        <div class="card col-xs-12 col-md-6 col-lg-6">
+            <div class="card-header text-center">Call Purpose Chart - Pie</div>
+            <div class="card-body">
+                <canvas id="piechartpurpose"></canvas>
+            </div>
+        </div>
+        <div class="card col-xs-12 col-md-6 col-lg-6">
+            <div class="card-header text-center">Call Purpose Chart - Stack</div>
+            <div class="card-body">
+                <canvas id="stackChartpurpose"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="card-deck">
+        <div class="card col-xs-12 col-md-6 col-lg-6">
+            <div class="card-header text-center">Call Volume Chart - Stack</div>
+            <div class="card-body">
+                <canvas id="stackChartVolume"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="card-deck">
+        <div class="card col-xs-12 col-md-6 col-lg-6">
+            <div class="card-header text-center">Call Trend Chart - Line</div>
+            <div class="card-body">
+                <canvas id="lineChartTrend"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -30,6 +30,11 @@ namespace OfferManagement.Controllers
             return View(CreateExportableMissedCallsGrid(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["GridPageCount"])));
         }
 
+        public ActionResult Charts()
+        {
+          return View();
+        }
+
 
         private IGrid<MissedCallGrid> CreateExportableMissedCallsGrid(int PageCount)
         {
