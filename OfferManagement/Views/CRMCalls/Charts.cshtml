@@ -195,7 +195,6 @@
                             chartColors.blue,
                             chartColors.green,
                         ]
-                        //label: 'Dataset 1'
                     }],
                     labels: [CallPurposeData.purposes[0], CallPurposeData.purposes[1], CallPurposeData.purposes[2]],
                 },
@@ -287,8 +286,9 @@
                         xAxes: [{
                             display: true,
                             scaleLabel: {
-                                display: true
-                           }
+                                display: true,
+                                labelString: 'LabName:' + callTrendData.labName
+                            }
                         }],
                         yAxes: [{
                             display: true,
@@ -302,9 +302,8 @@
                         intersect: false
                     },
                     ticks: {
-                        beginAtZero: true,   // minimum value will be 0.,
-                        stepSize: 1
-                    }
+                        beginAtZero: true
+                   }
                 }
             });
 
