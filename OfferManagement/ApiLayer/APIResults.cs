@@ -51,25 +51,30 @@ namespace OfferManagement.ApiLayer
 
         public CallVolumeChart GetCallVolume(DateTime? fromDate, DateTime? toDate)
         {
-            var endpoint = Path.Combine(CallVolumeChartEndpoint, fromDate.ToString(), toDate.ToString());
+            //var endpoint = Path.Combine(CallVolumeChartEndpoint, fromDate.ToString(), toDate.ToString());
+
+            var endpoint = CallVolumeChartEndpoint + "?fromDate=" + fromDate + "&toDate = " + toDate;
+
 
             return APIHttpGetChartData<CallVolumeChart>(endpoint);
         }
 
         public CallPurposeChart GetCallPurposeChartValues(DateTime? fromDate, DateTime? toDate)
         {
-            var endpoint = Path.Combine(CallPurposeChartEndpoint, fromDate.ToString(), toDate.ToString());
+            //var endpoint = Path.Combine(CallPurposeChartEndpoint, fromDate.ToString(), toDate.ToString());
+
+            var endpoint = CallPurposeChartEndpoint + "?fromDate=" + fromDate + "&toDate = " + toDate;
 
             return APIHttpGetChartData<CallPurposeChart>(endpoint);
         }
 
         public CallTrendChart GetCallTrendsChartValues(String labName, DateTime? fromDate, DateTime? toDate)
         {
-            labName = "RJKPM";//Todo: Remove this
+            //labName = "RJKPM";//Todo: Remove this
 
             //var endpoint = Path.Combine(CallTrendChartEndpoint, labName, fromDate.ToString(), toDate.ToString());
 
-            var endpoint = CallTrendChartEndpoint + "?labName=" + labName;
+            var endpoint = CallTrendChartEndpoint + "?labName=" + labName + "&fromDate=" + fromDate + "&toDate = " + toDate;
 
             return APIHttpGetChartData<CallTrendChart>(endpoint);
         }

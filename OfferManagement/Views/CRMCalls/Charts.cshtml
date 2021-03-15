@@ -10,7 +10,7 @@
 
         $('#fromDateicker').datetimepicker({
 
-            format: 'DD/MM/YYYY',
+            //format: 'DD/MM/YYYY',
             sideBySide: false,
             showTodayButton: true,
             showClear: true,
@@ -18,7 +18,7 @@
         });
 
         $('#toDatepicker').datetimepicker({
-            format: 'DD/MM/YYYY',
+            //format: 'DD/MM/YYYY',
             sideBySide: false,
             showTodayButton: true,
             showClear: true,
@@ -42,14 +42,16 @@
             console.log(fromDate);
             var toDate = $('#toDatepicker').val();
             console.log(toDate);
-            var labName = $("#ddlLabName option:selected").text();
+            var labNamefull = $("#ddlLabName option:selected").text();
+
+            var labName = labNamefull.slice(3);
             console.log(labName);
             
-            var params = JSON.stringify({
+            var params = {
                 'fromDate': fromDate,
                 'toDate': toDate,
                 'labName': labName,
-            });
+            };
 
 
             console.log(params);
