@@ -9,6 +9,7 @@ using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace OfferManagement.Helpers
 {
@@ -594,6 +595,21 @@ namespace OfferManagement.Helpers
             var sheet = spreadsheet.Sheets.FirstOrDefault(s => s.Properties.Title == spreadSheetName);
             int sheetId = (int)sheet.Properties.SheetId;
             return sheetId;
+        }
+
+        public List<SelectListItem> Transform(IList<string> values)
+        {
+            List<SelectListItem> items = new List<SelectListItem>();
+
+            if (values != null && values.Count > 0)
+            {
+                foreach (var item in values)
+                {
+                    items.Add(new SelectListItem { Text = item, Value = item });
+                }
+            }
+
+            return items;
         }
 
         //protected static string GetRange(SheetsService service, string SheetId)

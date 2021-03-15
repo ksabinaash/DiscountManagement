@@ -236,6 +236,7 @@
     <Compile Include="Models\CallAction.cs" />
     <Compile Include="Models\CallPurpose.cs" />
     <Compile Include="Models\ChartModel.cs" />
+    <Compile Include="Models\ChartsFilterModel.cs" />
     <Compile Include="Models\DiscountTransaction.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />

@@ -1,11 +1,30 @@
-﻿
+﻿@model OfferManagement.Models.ChartsFilterModel
 @{
     ViewBag.Title = @System.Configuration.ConfigurationManager.AppSettings["Charts"];
 }
 <div class="text-center"><h2>@ViewBag.Title</h2></div>
 
 <script>
+
     $(document).ready(function () {
+
+        $('#fromDateicker').datetimepicker({
+
+            format: 'DD/MM/YYYY',
+            sideBySide: false,
+            showTodayButton: true,
+            showClear: true,
+            showClose: true
+        });
+
+        $('#toDatepicker').datetimepicker({
+            format: 'DD/MM/YYYY',
+            sideBySide: false,
+            showTodayButton: true,
+            showClear: true,
+            showClose: true
+        });
+
 
         var chartColors = {
             red: 'rgb(255, 99, 132)',
@@ -17,56 +36,89 @@
             grey: 'rgb(231,233,237)'
         };
 
+        $(document).on("click", "#btnsubmit", function (e) {
+
+            var fromDate = $('#fromDateicker').val();
+            console.log(fromDate);
+            var toDate = $('#toDatepicker').val();
+            console.log(toDate);
+            var labName = $("#ddlLabName option:selected").text();
+            console.log(labName);
+            
+            var params = JSON.stringify({
+                'fromDate': fromDate,
+                'toDate': toDate,
+                'labName': labName,
+            });
+
+
+            console.log(params);
+
+
+            LoadCallVolume(params);
+
+            LoadCallPurpose(params);
+
+            LoadCallTrend(params);
+
+        });
+
+
         var callVolumeData;
 
         var CallPurposeData;
 
         var callTrendData;
 
-        LoadCallVolume();
+       
 
-        LoadCallPurpose();
-
-        LoadCallTrend();
-
-        function LoadCallVolume()
+        function LoadCallVolume(chartFilter)
         {
-        $.ajax({
-            type: 'GET',
-            url: '@Url.Action("GetCallVolume", "CRMCalls")',
-            success: function (data) {
-                LoadCallVolumeData(data);
-            },
-            error: function (ex) {
-                console.log(ex);
-            }
-        });
+
+            console.log(chartFilter);
+
+            $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetCallVolume", "CRMCalls")',
+                    data: chartFilter,
+                    success: function (data) {
+                        LoadCallVolumeData(data);
+                    },
+                    error: function (ex) {
+                        console.log(ex);
+                    }
+                 });
         };
 
-        function LoadCallPurpose()
+        function LoadCallPurpose(chartFilter)
         {
-                 $.ajax({
-            type: 'GET',
-            url: '@Url.Action("GetCallPurpose", "CRMCalls")',
-            success: function (data) {
-                LoadCallPurposeData(data);
-            },
-            error: function (ex) {
-                console.log(ex);
-            }
-        });
+            console.log(chartFilter);
+
+            $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetCallPurpose", "CRMCalls")',
+                    data: chartFilter,
+                    success: function (data) {
+                        LoadCallPurposeData(data);
+                    },
+                    error: function (ex) {
+                        console.log(ex);
+                    }
+                });
         };
 
-        function LoadCallTrend()
+        function LoadCallTrend(chartFilter)
         {
+            console.log(chartFilter);
                  $.ajax({
             type: 'GET',
-            url: '@Url.Action("GetCallTrends", "CRMCalls")',
-            success: function (data) {
-                LoadCallTrendData(data);
-                return data;
-            },
-            error: function (ex) {
+                     url: '@Url.Action("GetCallTrends", "CRMCalls")',
+                     data: chartFilter,
+                     success: function (data) {
+                        LoadCallTrendData(data);
+                        return data;
+                    },
+                    error: function (ex) {
                 console.log(ex);
             }
         });
@@ -258,7 +310,54 @@
 
         }
     });
+
+
+
 </script>
+
+<style>
+    .spacing {
+        padding-bottom: 10px;
+    }
+</style>
+
+
+<div class="container">
+    <div>
+        <div class="col-sm-6 col-md-6 col-md-4 col-lg-4 spacing">
+            @Html.LabelFor(model => model.LabName)
+        </div>
+        <div class="col-sm-6 col-md-6 col-md-8 col-lg-8 spacing">
+            @Html.DropDownListFor(model => model.LabName, (IEnumerable<SelectListItem>)ViewData["PCCNames"],
+           "Select a PCC Name", htmlAttributes: new { @class = "form-control", @id = "ddlLabName" })
+            @Html.ValidationMessageFor(model => model.LabName, "", new { @class = "text-danger" })
+
+        </div>
+    </div>
+    <div>
+        <div class="col-sm-6 col-md-6 col-md-4 col-lg-4 spacing">
+            @Html.LabelFor(model => model.FromDate)
+        </div>
+        <div class="col-sm-6 col-md-6 col-md-8 col-lg-8 spacing">
+            @Html.EditorFor(model => model.FromDate, new { htmlAttributes = new { @class = "form-control", @id = "fromDateicker" } })
+        </div>
+    </div>
+    <div>
+        <div class="col-sm-6 col-md-6 col-md-4 col-lg-4 spacing">
+            @Html.LabelFor(model => model.ToDate)
+        </div>
+        <div class="col-sm-6 col-md-6 col-md-8 col-lg-8 spacing">
+            @Html.EditorFor(model => model.ToDate, new { htmlAttributes = new { @class = "form-control", @id = "toDatepicker" } })
+        </div>
+    </div>
+
+    <div>
+        <div class="col-sm-offset-6 col-md-offset-6 col-md-offset-4 col-lg-offset-4 spacing">
+            <button type="button" class="btn btn-success" id="btnsubmit">Submit</button>
+        </div>
+
+    </div>
+</div>
 
 <div class="container">
     <div class="card-deck">

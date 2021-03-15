@@ -32,7 +32,13 @@ namespace OfferManagement.Controllers
 
         public ActionResult Charts()
         {
-          return View();
+            var google = new GoogleSheetsHelper();
+
+            ChartsFilterModel chartsFilterModel = new ChartsFilterModel();
+
+            ViewData["PCCNames"] = google.Transform(google.ReadPCCNames(true));
+
+            return View(chartsFilterModel);
         }
 
 

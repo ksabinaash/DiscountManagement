@@ -201,7 +201,7 @@ namespace OfferManagement.Controllers
         [HttpPost]
         public ActionResult Index(DiscountTransaction model)
         {
-            ViewData["SMSTemplates"] = Transform(Session["templates"] as IList<string>);
+            ViewData["SMSTemplates"] =  Transform(Session["templates"] as IList<string>);
 
             ViewData["DiscountReasons"] = Transform(Session["reasons"] as IList<string>);
 
@@ -271,7 +271,7 @@ namespace OfferManagement.Controllers
         }
 
 
-        private List<SelectListItem> Transform(IList<string> values)
+        protected List<SelectListItem> Transform(IList<string> values)
         {
             List<SelectListItem> items = new List<SelectListItem>();
 
