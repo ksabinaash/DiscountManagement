@@ -30,7 +30,8 @@ namespace OfferManagement
 
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js", "~/scripts/bootstrap-datetimepicker.js"));
+                      "~/Scripts/bootstrap.js", "~/scripts/bootstrap-datetimepicker.js",
+                      "~/scripts/bootstrap-datepicker.js"));
 
 
             bundles.Add(new StyleBundle("~/Content/css").Include(

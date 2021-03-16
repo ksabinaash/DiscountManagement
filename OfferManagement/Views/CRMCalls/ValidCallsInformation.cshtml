@@ -16,6 +16,15 @@
         }
 
 
+        $(document).on("click", "#chkResponded", function (e) {
+            if (document.getElementById("chkResponded").checked) {
+                document.getElementById('lblResponded').innerHTML = 'Responded';
+            }
+            else {
+                document.getElementById('lblResponded').innerHTML = 'Not Responded';
+            }
+        });
+
         $(document).on("click", "#btnModalPopup", function (e) {
 
             //var productId1 = $(this).closest("tr").find("td").eq(1).text()
@@ -36,34 +45,16 @@
         });
 
 
-        //function PrepareModalPopup(id) {
-        //        $.ajax({
-        //        url: "/CRMCalls/PrepareModalPopup?id=" + id,
-        //        type: "GET",
-        //        success: function (result) {
-                       
-        //        },
-        //        error: function (xhr) {
-        //            console.log("An error occured: " + xhr.status + " " + xhr.statusText);
-        //        }
-        //    });
-        //}
-
-        //document.addEventListener('rowclick', function (e) {
-
-        //    console.log('data: ', e.detail.data);
-
-        //    var id = e.detail.data["valid-call-id"];
-
-        //    PrepareModalPopup(id);
-        //});
-
         });
 
 
 </script>
 
 
+<div class="container">
+    <input type="checkbox" id="chkResponded" value="Responded">
+    <label id="lblResponded">Not Responded</label>
+</div>
 
 <div class="container" id="divExport">
     <a style="float: right;" href="@(Url.Action("ExportIndex") + "?" + ViewContext.HttpContext.Request.QueryString)">Export</a>

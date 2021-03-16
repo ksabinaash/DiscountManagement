@@ -9,6 +9,40 @@
             showClear: true,
             showClose: true
         });
+
+        var followUpDate = $('#datetimepicker').val()
+
+        console.log(followUpDate);
+
+        var val = !followUpDate;
+
+        var enableForm = @ViewData["enableForm"].ToString();
+
+        console.log(enableForm);
+
+        if (enableForm == true) {
+            $('#validCallsEditForm *').prop('disabled', false);
+        }
+        else {
+            $('#validCallsEditForm *').prop('disabled', true);
+        }
+
+        $("#ddlAction").change(function () {
+
+           var actionName = $("#ddlAction option:selected").text();
+
+            if (actionName === 'FollowUp' && ! followUpDate ) {
+
+                $('#datetimepicker').prop('disabled', false)
+            }
+            else {
+                $('#datetimepicker').prop('disabled', true)
+
+            }
+        });
+
+
+
     });
 
 </script>
@@ -64,7 +98,7 @@
             <div class="col-md-3 col-sm-6">
                 @Html.DropDownListFor(model => model.Action,
                      ((List<string>)Session["CallActions"]).Select(m => new SelectListItem { Text = m, Value = m }), "Select a Action",
-                          htmlAttributes: new { @class = "form-control" })
+                          htmlAttributes: new { @class = "form-control", @id = "ddlAction" })
                 @Html.ValidationMessageFor(model => model.Action, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -80,7 +114,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.FollowUpTime, htmlAttributes: new { @class = "control-label col-md-2 col-sm-6" })
             <div class="col-md-3 col-sm-6">
-                @Html.EditorFor(model => model.FollowUpTime, new { htmlAttributes = new { @class = "form-control", @id = "datetimepicker" } })
+                @Html.EditorFor(model => model.FollowUpTime, new { htmlAttributes = new { @class = "form-control", @id = "datetimepicker"  } })
                 @Html.ValidationMessageFor(model => model.FollowUpTime, "", new { @class = "text-danger" })
             </div>
         </div>

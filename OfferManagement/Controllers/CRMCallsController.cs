@@ -122,7 +122,7 @@ namespace OfferManagement.Controllers
             grid.Query = Request.QueryString;
 
             //grid.Columns.Add(model => "<button type = \"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#validCallsModal\" id=\"btnModalPopup\">Edit</button>").Encoded(false);
-            grid.Columns.Add(model => "<button type = \"button\" class=\"btn btn-primary glyphicon glyphicon-pencil\" data-id=\"" + model.ValidCallId + "\" data-toggle=\"modal\" id=\"btnModalPopup\"></button>").Encoded(false);
+            grid.Columns.Add(model => "<button type = \"button\" class=\"btn btn-primary glyphicon glyphicon-pencil\" data-id=\"" + model.ValidCallId + "\" data-toggle=\"modal\" id=\"btnModalPopup\"></button>").Encoded(false).Titled("Edit").Filter.IsEnabled = false;
             grid.Columns.Add(model => model.ValidCallId).Titled("Id");
             grid.Columns.Add(model => model.LabName).Titled("LabName");
             grid.Columns.Add(model => model.LabPhoneNumber).Titled("LabPhoneNumber");
@@ -163,6 +163,9 @@ namespace OfferManagement.Controllers
             {
                 validCall = new OfferManagement.Models.ValidCall();
             }
+
+            ViewData["enableForm"] = "false";
+
 
             return PartialView("ValidCallsInformationEdit", validCall);
         }

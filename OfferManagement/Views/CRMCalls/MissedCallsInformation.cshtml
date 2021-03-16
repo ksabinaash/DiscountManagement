@@ -7,14 +7,31 @@
 
 <script>
     $(document).ready(function () {
-if ('@ViewBag.ExportPermission' == 'True') {
+        if ('@ViewBag.ExportPermission' == 'True') {
             $("#divExport").show();
         }
         else {
             $("#divExport").hide();
         }
+
+
+        $(document).on("click", "#chkResponded", function (e) {
+            if (document.getElementById("chkResponded").checked) {
+                    document.getElementById('lblResponded').innerHTML = 'Responded';
+            }
+            else
+            {
+                document.getElementById('lblResponded').innerHTML = 'Not Responded';
+            }
+        });
+
     });
 </script>
+
+<div class="container">
+    <input type="checkbox" id="chkResponded" value="Responded">
+    <label id="lblResponded">Not Responded</label>
+</div>
 
 <div class="container" id="divExport">
     <a style="float: right;" href="@(Url.Action("ExportIndex") + "?" + ViewContext.HttpContext.Request.QueryString)">Export</a>
