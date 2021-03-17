@@ -49,32 +49,23 @@ namespace OfferManagement.ApiLayer
             return APIHttpGet<CallPurpose>(PurposeEndPoint);
         }
 
-        public CallVolumeChart GetCallVolume(DateTime? fromDate, DateTime? toDate)
+        public CallVolumeChart GetCallVolume(DateTime fromDate, DateTime toDate)
         {
-            //var endpoint = Path.Combine(CallVolumeChartEndpoint, fromDate.ToString(), toDate.ToString());
-
-            var endpoint = CallVolumeChartEndpoint + "?fromDate=" + fromDate + "&toDate = " + toDate;
-
+            var endpoint = CallVolumeChartEndpoint + "?fromDate=" + fromDate.ToString("MM-dd-yyyy") + "&toDate=" + toDate.ToString("MM-dd-yyyy");
 
             return APIHttpGetChartData<CallVolumeChart>(endpoint);
         }
 
-        public CallPurposeChart GetCallPurposeChartValues(DateTime? fromDate, DateTime? toDate)
+        public CallPurposeChart GetCallPurposeChartValues(DateTime fromDate, DateTime toDate)
         {
-            //var endpoint = Path.Combine(CallPurposeChartEndpoint, fromDate.ToString(), toDate.ToString());
-
-            var endpoint = CallPurposeChartEndpoint + "?fromDate=" + fromDate + "&toDate = " + toDate;
+            var endpoint = CallPurposeChartEndpoint + "?fromDate=" + fromDate.ToString("MM-dd-yyyy") + "&toDate=" + toDate.ToString("MM-dd-yyyy");
 
             return APIHttpGetChartData<CallPurposeChart>(endpoint);
         }
 
-        public CallTrendChart GetCallTrendsChartValues(String labName, DateTime? fromDate, DateTime? toDate)
+        public CallTrendChart GetCallTrendsChartValues(String labName, DateTime fromDate, DateTime toDate)
         {
-            //labName = "RJKPM";//Todo: Remove this
-
-            //var endpoint = Path.Combine(CallTrendChartEndpoint, labName, fromDate.ToString(), toDate.ToString());
-
-            var endpoint = CallTrendChartEndpoint + "?labName=" + labName + "&fromDate=" + fromDate + "&toDate = " + toDate;
+            var endpoint = CallTrendChartEndpoint + "?labName=" + labName + "&fromDate=" + fromDate.ToString("MM-dd-yyyy") + "&toDate=" + toDate.ToString("MM-dd-yyyy");
 
             return APIHttpGetChartData<CallTrendChart>(endpoint);
         }

@@ -199,7 +199,7 @@ namespace OfferManagement.Controllers
             return View();
         }
 
-        public JsonResult GetCallVolume(DateTime? fromDate = null, DateTime? toDate = null)
+        public JsonResult GetCallVolume(DateTime fromDate, DateTime toDate)
         {
             var apiResults = new APIResults();
 
@@ -208,7 +208,7 @@ namespace OfferManagement.Controllers
             return Json(CallVolume, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult GetCallPurpose(DateTime? fromDate = null, DateTime? toDate = null)
+        public JsonResult GetCallPurpose(DateTime fromDate, DateTime toDate)
         {
             var apiResults = new APIResults();
 
@@ -217,7 +217,7 @@ namespace OfferManagement.Controllers
             return Json(CallPurpose, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult GetCallTrends(string labName, DateTime? fromDate = null, DateTime? toDate = null)
+        public JsonResult GetCallTrends(string labName, DateTime fromDate, DateTime toDate)
         {
             var apiResults = new APIResults();
 

@@ -9,9 +9,9 @@ namespace OfferManagement.Models
     public class ChartsFilterModel
     {
 
-        public DateTime FromDate { get; set; } = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("India Standard Time"));
+        public DateTime FromDate { get; set; } = DateTime.Now.AddDays(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["ChartsDaysRange"]));
 
-        public DateTime ToDate { get; set; } = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("India Standard Time"));
+        public DateTime ToDate { get; set; } = DateTime.Now;
 
         [Required]
         [Display(Name = "LabName")]
