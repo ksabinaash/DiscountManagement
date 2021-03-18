@@ -4,7 +4,7 @@
     $(document).ready(function () {
         //https://getdatepicker.com/4/
         $('#datetimepicker').datetimepicker({
-            sideBySide: false,
+            sideBySide: false,       
             showTodayButton: true,
             showClear: true,
             showClose: true
@@ -14,11 +14,7 @@
 
         console.log(followUpDate);
 
-        var val = !followUpDate;
-
         var enableForm = @ViewData["enableForm"].ToString();
-
-        console.log(enableForm);
 
         if (enableForm == true) {
             $('#validCallsEditForm *').prop('disabled', false);

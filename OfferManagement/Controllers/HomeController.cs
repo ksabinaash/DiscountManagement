@@ -60,9 +60,6 @@ namespace OfferManagement.Controllers
 
 
 
-        
-
-
         [HttpGet]
         public PartialViewResult ReportsGrid()
         {

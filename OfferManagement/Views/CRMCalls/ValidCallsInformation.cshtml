@@ -27,15 +27,7 @@
 
         $(document).on("click", "#btnModalPopup", function (e) {
 
-            //var productId1 = $(this).closest("tr").find("td").eq(1).text()
-
-            //console.log("from close row value" + productId1);
-
             var callId = $(this).data('id');
-
-            console.log("from btn value : "+ callId);
-
-            //PrepareModalPopup(callId);
 
             var route = '@Url.Action("PrepareModalPopup", "CRMCalls")?id=' + callId;
 
