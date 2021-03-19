@@ -167,7 +167,7 @@ namespace OfferManagement.Controllers
             grid.Columns.Add(model => model.CallPurpose).Titled("CallPurpose");
             grid.Columns.Add(model => model.Action).Titled("Action");
             grid.Columns.Add(model => model.Comment).Titled("Comment");
-            grid.Columns.Add(model => model.CallStatus).Titled("CallStatus");
+            //grid.Columns.Add(model => model.CallStatus).Titled("CallStatus");
             grid.Columns.Add(model => model.EventTime).Titled("Missedcall EventTime").Filterable(GridFilterType.Double);
             grid.Columns.Add(model => model.UpdatedUser).Titled("UpdatedUser");
             grid.Columns.Add(model => model.UpdatedDateTime).Titled("UpdatedDateTime").Filterable(GridFilterType.Double);
@@ -201,14 +201,14 @@ namespace OfferManagement.Controllers
             }
 
 
-            if (validCall.Comment?.Length > 0 && validCall.Action?.Length > 0 && validCall.Comment?.Length > 0)
-            {
-                ViewData["enableForm"] = "false";
-            }
-            else
-            {
-                ViewData["enableForm"] = "true";
-            }
+            //if (validCall.Comment?.Length > 0 && validCall.Action?.Length > 0 && validCall.Comment?.Length > 0)
+            //{
+            //    ViewData["enableForm"] = "false";
+            //}
+            //else
+            //{
+            //    ViewData["enableForm"] = "true";
+            //}
 
 
             return PartialView("ValidCallsInformationEdit", validCall);

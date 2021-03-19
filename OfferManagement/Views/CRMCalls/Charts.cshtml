@@ -192,71 +192,82 @@
         function LoadCallPurposeData(data) {
             CallPurposeData = data;
 
-            
-            chrtlbls = CallPurposeData.purposes;
-            var ctx = document.getElementById('piechartpurpose');
-            var myChart = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    datasets: [{
-                        data: CallPurposeData.sumData,
-                        backgroundColor: [
-                            chartColors.red,
-                            chartColors.blue,
-                            chartColors.green,
-                        ]
-                    }],
-                    labels: chrtlbls,
-                },
-                options: {
-                    tooltips: {
-                        mode: 'index',
-                        intersect: false
-                    },
-                    responsive: true,
-                }
-            });
+            var sum = CallPurposeData.sumData.reduce(function (a, b) {
+                return parseInt(a) + parseInt(b);
+            }, 0);
 
-            var ctx = document.getElementById('stackChartpurpose');
+            console.log(sum);
 
-            var barpurposes=[];
-            var bardata=[];
-            var mybarChart = new Chart(ctx, {
-                type: 'bar',
+            if (sum > 0) {
 
-                data: {
-                    labels: CallPurposeData.labs
-                },
-                options: {
-                    tooltips: {
-                        mode: 'index',
-                        intersect: false
-                    },
-                    responsive: true,
-                    scales: {
-                        xAxes: [{
-                            stacked: true,
+                chrtlbls = CallPurposeData.purposes;
+                var ctx = document.getElementById('piechartpurpose');
+                var myChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        datasets: [{
+                            data: CallPurposeData.sumData,
+                            backgroundColor: [
+                                chartColors.red,
+                                chartColors.blue,
+                                chartColors.green,
+                            ]
                         }],
-                        yAxes: [{
-                            stacked: true
-                        }]
+                        labels: chrtlbls,
+                    },
+                    options: {
+                        tooltips: {
+                            mode: 'index',
+                            intersect: false
+                        },
+                        responsive: true,
                     }
-                }
-            });
-
-            var i;
-
-            for (i = 0; i < CallPurposeData.purposes.length; i++) {
-               
-                mybarChart.data.datasets.push({
-                    label: CallPurposeData.purposes[i],
-                    backgroundColor: getRandomColor(),
-                    data: CallPurposeData.countData[i]
                 });
 
-            }
-            mybarChart.update();
+                var ctx = document.getElementById('stackChartpurpose');
 
+                var barpurposes = [];
+                var bardata = [];
+                var mybarChart = new Chart(ctx, {
+                    type: 'bar',
+
+                    data: {
+                        labels: CallPurposeData.labs
+                    },
+                    options: {
+                        tooltips: {
+                            mode: 'index',
+                            intersect: false
+                        },
+                        responsive: true,
+                        scales: {
+                            xAxes: [{
+                                stacked: true,
+                            }],
+                            yAxes: [{
+                                stacked: true
+                            }]
+                        }
+                    }
+                });
+
+                for (i = 0; i < CallPurposeData.purposes.length; i++) {
+
+                    mybarChart.data.datasets.push({
+                        label: CallPurposeData.purposes[i],
+                        backgroundColor: getRandomColor(),
+                        data: CallPurposeData.countData[i]
+                    });
+
+                }
+                mybarChart.update();
+            }
+            else {
+                var ctx = document.getElementById('piechartpurpose');
+                document.getElementById('piechartpurpose').replaceWith("No Data to Prepare Chart");
+                document.getElementById('stackChartpurpose').replaceWith("No Data to Prepare Chart");
+
+            }
 
         }
 

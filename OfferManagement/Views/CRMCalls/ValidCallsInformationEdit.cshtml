@@ -14,25 +14,27 @@
 
         console.log(followUpDate);
 
-        var enableForm = @ViewData["enableForm"].ToString();
+        @*var enableForm = @ViewData["enableForm"].ToString();
 
         if (enableForm == true) {
             $('#validCallsEditForm *').prop('disabled', false);
         }
         else {
             $('#validCallsEditForm *').prop('disabled', true);
-        }
+        }*@
 
         $("#ddlAction").change(function () {
 
            var actionName = $("#ddlAction option:selected").text();
 
-            if (actionName === 'FollowUp' && ! followUpDate ) {
+            if (actionName === 'FollowUp') {
 
-                $('#datetimepicker').prop('disabled', false)
+                $('#datetimepicker').prop('disabled', false);
+                $('#datetimepicker').datepicker('setDate', null);
             }
             else {
-                $('#datetimepicker').prop('disabled', true)
+                $('#datetimepicker').prop('disabled', true);
+                $('#datetimepicker').datepicker('setDate', null);
 
             }
         });
