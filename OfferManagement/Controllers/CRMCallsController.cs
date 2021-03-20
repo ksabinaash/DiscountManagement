@@ -185,7 +185,9 @@ namespace OfferManagement.Controllers
         [HttpGet]
         public ActionResult PrepareModalPopup(int id)
         {
-            var validCalls = Session["ValidCallList"] as List<ValidCall>;
+            var apiResults = new APIResults();
+
+            var validCalls = apiResults.GetValidCallGrid();
 
             var validCall = validCalls.Where(m => m.ValidCallId == id).ToList().FirstOrDefault();
 
