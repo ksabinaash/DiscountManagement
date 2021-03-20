@@ -15,53 +15,38 @@ namespace OfferManagement.Controllers
     [HandleError]
     public class CRMCallsController : Controller
     {
+        [AcceptVerbs(HttpVerbs.Post | HttpVerbs.Get)]
         public ActionResult MissedCallsInformation()
         {
-            var google = new GoogleSheetsHelper();
-
             ViewBag.ExportPermission = ((UserModel)Session["UserModel"]) != null ? (bool)((UserModel)Session["UserModel"]).Role.ToString().Equals("ADMINUSER", StringComparison.InvariantCultureIgnoreCase) : false;
 
-            return PopulateChartData();
-        }
-
-        public ActionResult PopulateChartData()
-        {
             var apiResults = new APIResults();
 
             List<MissedCallGrid> missedcallsList = apiResults.GetMissedCallGrids() as List<MissedCallGrid>;
 
-            Session["MissedCallsList"] = (missedcallsList != null && missedcallsList.Count >= 0) ? missedcallsList as List<MissedCallGrid> : new List<MissedCallGrid>();
+            bool IsChecked = (Session["NotRespondedCheckBox"]!=null) ? (bool)Session["NotRespondedCheckBox"] : false;
 
-            return View(CreateExportableMissedCallsGrid(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["GridPageCount"])));
+            ViewBag.NotRespondedCheckBox = IsChecked;
+
+            if (IsChecked)
+            {
+                missedcallsList = missedcallsList.Where(x => x.CallBackStatus.Equals("Not Called Back Yet", StringComparison.InvariantCultureIgnoreCase)).ToList();
+
+                Session["NotRespondedCheckBox"] = false;
+            }                       
+
+            return View(CreateExportableMissedCallsGrid(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["GridPageCount"]), missedcallsList));
         }
 
-        public ActionResult PopulateNotRespondedChartData()
+        public void GetNonResondedMissedCalls()
         {
-            var apiResults = new APIResults();
-
-            List<MissedCallGrid> missedcallsList = apiResults.GetMissedCallGrids() as List<MissedCallGrid>;
-
-            missedcallsList = missedcallsList.Where(x => x.CallBackStatus.Equals("Not Called Back Yet",StringComparison.InvariantCultureIgnoreCase)).ToList();
-
-            Session["MissedCallsList"] = (missedcallsList != null && missedcallsList.Count >= 0) ? missedcallsList as List<MissedCallGrid> : new List<MissedCallGrid>();
-
-            return View("MissedCallsInformation", CreateExportableMissedCallsGrid(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["GridPageCount"])));
+            Session["NotRespondedCheckBox"] = true;
         }
 
-        public ActionResult PopulateRespondedChartData()
+        public void FilterValidCallsInformation()
         {
-            var apiResults = new APIResults();
-
-            List<MissedCallGrid> missedcallsList = apiResults.GetMissedCallGrids() as List<MissedCallGrid>;
-
-            missedcallsList = missedcallsList.Where(x => x.CallBackStatus.Equals("Already Called Back", StringComparison.InvariantCultureIgnoreCase)).ToList();
-
-            Session["MissedCallsList"] = (missedcallsList != null && missedcallsList.Count >= 0) ? missedcallsList as List<MissedCallGrid> : new List<MissedCallGrid>();
-
-            return View("MissedCallsInformation", CreateExportableMissedCallsGrid(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["GridPageCount"])));
+            Session["IsValidCallsCheckBoxChecked"] = true;
         }
-
-
 
         public ActionResult Charts()
         {
@@ -75,30 +60,28 @@ namespace OfferManagement.Controllers
         }
 
 
-        private IGrid<MissedCallGrid> CreateExportableMissedCallsGrid(int PageCount)
+        private IGrid<MissedCallGrid> CreateExportableMissedCallsGrid(int PageCount, List<MissedCallGrid> missedCalls)
         {
-            var reports = Session["MissedCallsList"] as List<MissedCallGrid>;
+            var reports = missedCalls;
 
             IGrid<MissedCallGrid> grid = new Grid<MissedCallGrid>(reports);
 
             grid.ViewContext = new ViewContext { HttpContext = HttpContext };
+
             grid.Query = Request.QueryString;
-
-
-            //columns.Add(model => Html.CheckBox("Check_" + model.Id)).Titled(Html.CheckBox("CheckAll"));
 
             grid.Columns.Add(model => model.LabName).Titled("LabName");
             grid.Columns.Add(model => model.LabPhoneNumber).Titled("LabPhoneNumber");
             grid.Columns.Add(model => model.CustomerMobileNumber).Titled("CustomerMobileNumber");
             grid.Columns.Add(model => model.CallBackStatus).Titled("CallBackStatus");
+            grid.Columns.Add(model => model.IsWhiteListedCall).Titled("IsWhiteListed");
             grid.Columns.Add(model => model.RespondedTime).Titled("RespondedTime").Filterable(GridFilterType.Double);
             grid.Columns.Add(model => model.RespondedLabName).Titled("RespondedLabName");
             grid.Columns.Add(model => model.RespondedLabPhoneNumber).Titled("RespondedLabPhoneNumber");
-            grid.Columns.Add(model => model.RespondedCallDuration).Titled("RespondedCallDuration");
             grid.Columns.Add(model => model.RespondedCallType).Titled("RespondedCallType");
             grid.Columns.Add(model => model.CallPurpose).Titled("CallPurpose");
             grid.Columns.Add(model => model.Action).Titled("Action");
-            grid.Columns.Add(model => model.EventTime).Titled("Missedcall EventTime").Filterable(GridFilterType.Double);
+            grid.Columns.Add(model => model.EventTime).Titled("Responded EventTime").Filterable(GridFilterType.Double);
             grid.Columns.Add(model => model.Comment).Titled("Comment");
 
             grid.Pager = new GridPager<MissedCallGrid>(grid);
@@ -119,8 +102,6 @@ namespace OfferManagement.Controllers
 
         public ActionResult ValidCallsInformation()
         {
-            var google = new GoogleSheetsHelper();
-
             var apiResults = new APIResults();
 
             var callActions = apiResults.GetCallActions();
@@ -139,16 +120,29 @@ namespace OfferManagement.Controllers
 
             Session["ValidCallsEdit"] = validCall;
 
+            bool IsChecked = (Session["IsValidCallsCheckBoxChecked"] != null) ? (bool)Session["IsValidCallsCheckBoxChecked"] : false;
+
+            ViewBag.IsFilterSelected = IsChecked;
+
+            if (IsChecked)
+            {
+                //Todo: Filter needs to be applied here;
+
+                validCalls = validCalls.Where(x => (x.Action != null && x.Action.ToUpper().Contains("FOLLOW"))).ToList();
+
+                Session["IsValidCallsCheckBoxChecked"] = false;
+            }
+
             ViewBag.ExportPermission = ((UserModel)Session["UserModel"]) != null ?
                                         (bool)((UserModel)Session["UserModel"]).Role.ToString().Equals("ADMINUSER", StringComparison.InvariantCultureIgnoreCase) : false;
 
-            return View(CreateExportablecValidCallsGrid(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["GridPageCount"])));
+            return View(CreateExportablecValidCallsGrid(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["GridPageCount"]), validCalls));
         }
 
 
-        private IGrid<ValidCall> CreateExportablecValidCallsGrid(int PageCount)
+        private IGrid<ValidCall> CreateExportablecValidCallsGrid(int PageCount, List<ValidCall> validCalls)
         {
-            var reports = Session["ValidCallList"] as List<ValidCall>;
+            var reports = validCalls;
 
             IGrid<ValidCall> grid = new Grid<ValidCall>(reports);
 
@@ -162,7 +156,7 @@ namespace OfferManagement.Controllers
             grid.Columns.Add(model => model.LabName).Titled("LabName");
             grid.Columns.Add(model => model.LabPhoneNumber).Titled("LabPhoneNumber");
             grid.Columns.Add(model => model.CustomerMobileNumber).Titled("CustomerMobileNumber");
-            grid.Columns.Add(model => model.CallDuration).Titled("CallDuration");
+            //grid.Columns.Add(model => model.CallDuration).Titled("CallDuration");
             grid.Columns.Add(model => model.CallType).Titled("CallType");
             grid.Columns.Add(model => model.CallPurpose).Titled("CallPurpose");
             grid.Columns.Add(model => model.Action).Titled("Action");
@@ -199,17 +193,6 @@ namespace OfferManagement.Controllers
             {
                 validCall = new OfferManagement.Models.ValidCall();
             }
-
-
-            //if (validCall.Comment?.Length > 0 && validCall.Action?.Length > 0 && validCall.Comment?.Length > 0)
-            //{
-            //    ViewData["enableForm"] = "false";
-            //}
-            //else
-            //{
-            //    ViewData["enableForm"] = "true";
-            //}
-
 
             return PartialView("ValidCallsInformationEdit", validCall);
         }
@@ -265,7 +248,7 @@ namespace OfferManagement.Controllers
         {
             var apiResults = new APIResults();
 
-            var CallTrends = apiResults.GetCallTrendsChartValues(labName,fromDate, toDate);
+            var CallTrends = apiResults.GetCallTrendsChartValues(labName, fromDate, toDate);
 
             return Json(CallTrends, JsonRequestBehavior.AllowGet);
         }

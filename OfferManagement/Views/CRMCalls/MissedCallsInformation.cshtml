@@ -14,22 +14,21 @@
             $("#divExport").hide();
         }
 
+        if ('@ViewBag.NotRespondedCheckBox' == 'True') {
+            $("#chkResponded").attr('checked', true);
+        }
+        else {
+            $("#chkResponded").attr('checked', false);
+        }
+
         setTimeout(function () {
             new MvcGrid(document.querySelector('.mvc-grid')).reload();
-
-        }, 50000);
-
-        $(document).on("click", "#btnResendOTP", function (e) {
-           
-        });
-
+        }, 10000);
 
         $(document).on("click", "#chkResponded", function (e) {
             if (document.getElementById("chkResponded").checked) {
-                document.getElementById('lblResponded').innerHTML = 'Responded';
-
                 $.ajax({
-                    url: "/CRMCalls/PopulateRespondedChartData",
+                    url: "/CRMCalls/GetNonResondedMissedCalls",
                     type: "GET",
                     success: function (result) {
                         new MvcGrid(document.querySelector('.mvc-grid')).reload();
@@ -38,10 +37,8 @@
             }
             else
             {
-                document.getElementById('lblResponded').innerHTML = 'Not Responded';
-
                 $.ajax({
-                    url: "/CRMCalls/PopulateNotRespondedChartData",
+                    url: "/CRMCalls/MissedCallsInformation",
                     type: "GET",
                     success: function (result) {
                         new MvcGrid(document.querySelector('.mvc-grid')).reload();
@@ -62,6 +59,8 @@
     <a style="float: right;" href="@(Url.Action("ExportIndex") + "?" + ViewContext.HttpContext.Request.QueryString)">Export</a>
 </div>
 <br />
-<div>
+
+<div id="divMissedCallsGrid">
     @(new HtmlGrid<OfferManagement.Models.MissedCallGrid>(Html, Model))
 </div>
+

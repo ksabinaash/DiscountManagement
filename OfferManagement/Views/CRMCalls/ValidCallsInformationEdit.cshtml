@@ -27,14 +27,14 @@
 
            var actionName = $("#ddlAction option:selected").text();
 
-            if (actionName === 'FollowUp') {
+            if (actionName.includes('Follow')) {
 
                 $('#datetimepicker').prop('disabled', false);
-                $('#datetimepicker').datepicker('setDate', null);
+                /*$('#datetimepicker').datepicker('setDate', null);*/
             }
             else {
                 $('#datetimepicker').prop('disabled', true);
-                $('#datetimepicker').datepicker('setDate', null);
+                /*$('#datetimepicker').datepicker('setDate', null);*/
 
             }
         });

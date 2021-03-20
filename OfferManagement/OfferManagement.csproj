@@ -458,11 +458,11 @@
     <Content Include="Views\Status\InternalServerError.cshtml" />
     <Content Include="Views\Account\LoginError.cshtml" />
     <Content Include="Views\Account\LoginInfoError.cshtml" />
-    <Content Include="Views\CRMCalls\MissedCallsInformation.cshtml" />
     <Content Include="Views\CRMCalls\ValidCallsInformation.cshtml" />
     <Content Include="Views\CRMCalls\ValidCallsInformationEdit.cshtml" />
     <Content Include="Views\CRMCalls\UpdateValidCallModel.cshtml" />
     <Content Include="Views\CRMCalls\Charts.cshtml" />
+    <Content Include="Views\CRMCalls\MissedCallsInformation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
