@@ -5,38 +5,45 @@
         //https://getdatepicker.com/4/
         $('#datetimepicker').datetimepicker({
             format: 'DD-MM-YYYY HH:mm:ss',
-            sideBySide: false,       
+            sideBySide: false,
             showTodayButton: true,
             showClear: true,
             showClose: true
         });
 
-        var followUpDate = $('#datetimepicker').val()
+        if (@ViewData["enableForm"]!= null) {
+            enableForm = @ViewData["enableForm"].ToString();
+        }
+        else {
+            enableForm = false;
+        }
 
-        console.log(followUpDate);
-
-        @*var enableForm = @ViewData["enableForm"].ToString();
+        console.log("enableForm" + enableForm);
 
         if (enableForm == true) {
             $('#validCallsEditForm *').prop('disabled', false);
         }
         else {
             $('#validCallsEditForm *').prop('disabled', true);
-        }*@
+        }
 
         $("#ddlAction").change(function () {
 
-           var actionName = $("#ddlAction option:selected").text();
+            var followUpDate = $('#datetimepicker').val();
+            var actionName = $("#ddlAction option:selected").text();
+            console.log("followUpDate" + followUpDate);
+            console.log("actionName"+ actionName);
 
-            if (actionName.includes('Follow')) {
-
+            console.log("Case: " + actionName.includes('Follow'));
+            if (actionName.includes('Follow'))
+            {
+                console.log("followUpDate.length" + followUpDate.length);
                 $('#datetimepicker').prop('disabled', false);
-                /*$('#datetimepicker').datepicker('setDate', null);*/
             }
-            else {
+            else
+            {
+                console.log("actionName" + actionName);
                 $('#datetimepicker').prop('disabled', true);
-                /*$('#datetimepicker').datepicker('setDate', null);*/
-
             }
         });
 
@@ -113,8 +120,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.FollowUpTime, htmlAttributes: new { @class = "control-label col-md-2 col-sm-6" })
             <div class="col-md-3 col-sm-6">
-                @Html.TextBoxFor(model => model.FollowUpTime, "{0:MM/dd/yyyy  HH:mm:ss}", new { @class = "form-control", @id = "datetimepicker" })
-                @*@Html.EditorFor(model => model.FollowUpTime, new { htmlAttributes = new { @class = "form-control", @id = "datetimepicker" } })*@
+                @Html.TextBoxFor(model => model.FollowUpTime, "{0:dd/MM/yyyy  HH:mm:ss}", new { @class = "form-control", @id = "datetimepicker" })
                 @Html.ValidationMessageFor(model => model.FollowUpTime, "", new { @class = "text-danger" })
             </div>
         </div>

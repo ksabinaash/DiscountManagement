@@ -76,6 +76,7 @@ namespace OfferManagement.Controllers
             grid.Columns.Add(model => model.CallBackStatus).Titled("CallBackStatus");
             grid.Columns.Add(model => model.IsWhiteListedCall).Titled("IsWhiteListed");
             grid.Columns.Add(model => model.RespondedTime).Titled("RespondedTime").Filterable(GridFilterType.Double);
+            grid.Columns.Add(model => model.ValidCallId).Titled("RespondedCallId");
             grid.Columns.Add(model => model.RespondedLabName).Titled("RespondedLabName");
             grid.Columns.Add(model => model.RespondedLabPhoneNumber).Titled("RespondedLabPhoneNumber");
             grid.Columns.Add(model => model.RespondedCallType).Titled("RespondedCallType");
@@ -149,12 +150,10 @@ namespace OfferManagement.Controllers
             grid.ViewContext = new ViewContext { HttpContext = HttpContext };
 
             grid.Query = Request.QueryString;
-
-            //grid.Columns.Add(model => "<button type = \"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#validCallsModal\" id=\"btnModalPopup\">Edit</button>").Encoded(false);
             grid.Columns.Add(model => "<button type = \"button\" class=\"btn btn-primary glyphicon glyphicon-pencil\" data-id=\"" + model.ValidCallId + "\" data-toggle=\"modal\" id=\"btnModalPopup\"></button>").Encoded(false).Titled("Edit").Filter.IsEnabled = false;
             grid.Columns.Add(model => model.ValidCallId).Titled("Id");
             grid.Columns.Add(model => model.LabName).Titled("LabName");
-            grid.Columns.Add(model => model.LabPhoneNumber).Titled("LabPhoneNumber");
+            //grid.Columns.Add(model => model.LabPhoneNumber).Titled("LabPhoneNumber");
             grid.Columns.Add(model => model.CustomerMobileNumber).Titled("CustomerMobileNumber");
             //grid.Columns.Add(model => model.CallDuration).Titled("CallDuration");
             grid.Columns.Add(model => model.CallType).Titled("CallType");
@@ -162,7 +161,7 @@ namespace OfferManagement.Controllers
             grid.Columns.Add(model => model.Action).Titled("Action");
             grid.Columns.Add(model => model.Comment).Titled("Comment");
             //grid.Columns.Add(model => model.CallStatus).Titled("CallStatus");
-            grid.Columns.Add(model => model.EventTime).Titled("Missedcall EventTime").Filterable(GridFilterType.Double);
+            grid.Columns.Add(model => model.EventTime).Titled("EventTime").Filterable(GridFilterType.Double);
             grid.Columns.Add(model => model.UpdatedUser).Titled("UpdatedUser");
             grid.Columns.Add(model => model.UpdatedDateTime).Titled("UpdatedDateTime").Filterable(GridFilterType.Double);
             grid.Columns.Add(model => model.FollowUpTime).Titled("FollowUpTime").Filterable(GridFilterType.Double);
@@ -194,6 +193,14 @@ namespace OfferManagement.Controllers
             if (validCall == null)
             {
                 validCall = new OfferManagement.Models.ValidCall();
+            }
+            if (validCall.Action != null && validCall.Action.Equals("Closed", StringComparison.InvariantCultureIgnoreCase))
+            {
+                ViewData["enableForm"] = "false";
+            }
+            else
+            {
+                ViewData["enableForm"] = "true";
             }
 
             return PartialView("ValidCallsInformationEdit", validCall);

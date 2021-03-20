@@ -23,7 +23,7 @@
 
         setTimeout(function () {
             new MvcGrid(document.querySelector('.mvc-grid')).reload();
-        }, 60000);
+        }, parseInt(@System.Configuration.ConfigurationManager.AppSettings["ReloadTimeInMs"]));
 
         $(document).on("click", "#chkResponded", function (e) {
             if (document.getElementById("chkResponded").checked) {

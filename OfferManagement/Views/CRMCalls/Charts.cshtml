@@ -263,9 +263,17 @@
                 mybarChart.update();
             }
             else {
-                var ctx = document.getElementById('piechartpurpose');
-                document.getElementById('piechartpurpose').replaceWith("No Data to Prepare Chart");
-                document.getElementById('stackChartpurpose').replaceWith("No Data to Prepare Chart");
+                
+                //document.getElementById('piechartpurpose').replaceWith("No Data to Prepare Chart");
+                //document.getElementById('stackChartpurpose').replaceWith("No Data to Prepare Chart");
+
+
+                document.getElementById('piechartpurpose').remove();
+                document.getElementById('stackChartpurpose').remove();
+
+                document.getElementById('purposepiechrt').hidden = false;
+                document.getElementById('purposestackchrt').hidden = false;
+
 
             }
 
@@ -346,7 +354,7 @@
 <div class="container">
 
     <div class="row">
-        <div class="col-sm-6 col-md-6 col-lg-6 text-right spacing">
+        <div class="col-sm-6 col-md-6 col-lg-6 text-center spacing">
             @Html.LabelFor(model => model.FromDate)
         </div>
         <div class="col-sm-6 col-md-6 col-lg-6 spacing">
@@ -355,7 +363,7 @@
     </div>
 
     <div class="row">
-        <div class="col-sm-6 col-md-6 col-lg-6 text-right spacing">
+        <div class="col-sm-6 col-md-6 col-lg-6 text-center spacing">
             @Html.LabelFor(model => model.ToDate)
         </div>
         <div class="col-sm-6 col-md-6 col-lg-6 spacing">
@@ -364,7 +372,7 @@
     </div>
 
     <div class="row">
-        <div class="col-sm-6 col-md-6 col-lg-6 text-right spacing">
+        <div class="col-sm-6 col-md-6 col-lg-6 text-center spacing">
             @Html.LabelFor(model => model.LabName)
         </div>
         <div class="col-sm-6 col-md-6 col-lg-6 spacing">
@@ -390,27 +398,31 @@
 <div class="container">
     <div class="row">
         <div class="card col-xs-12 col-md-12 col-lg-12">
-            <div class="card-header text-center">Call Purpose Chart - Pie</div>
+            <div class="card-header text-center"><h2><b>Call Purpose Chart - Pie</b></h2></div>
             <div class="card-body">
                 <canvas id="piechartpurpose"></canvas>
+                <div id="purposepiechrt" hidden class="text-center">No Data to Prepare Chart !!!</div>
+            </div>
             </div>
         </div>
-    </div>
+    
     <hr />
     <br />
     <div class="row">
         <div class="card col-xs-12 col-md-12 col-lg-12">
-            <div class="card-header text-center">Call Purpose Chart - Stack</div>
-            <div class="card-body">
-                <canvas id="stackChartpurpose"></canvas>
-            </div>
+            <div class="card-header text-center"> <h2><b>Call Purpose Chart - Stack </b></h2></div>
+        </div>
+        <div class="card-body">
+            <canvas id="stackChartpurpose"></canvas>
+            <div id="purposestackchrt" hidden class="text-center">No Data to Prepare Chart !!!</div>
         </div>
     </div>
+    
     <hr />
     <br />
     <div class="row">
         <div class="card col-xs-12 col-md-12 col-lg-12">
-            <div class="card-header text-center">Call Volume Chart - Stack</div>
+            <div class="card-header text-center"><h2><b>Call Volume Chart - Stack </b></h2></div>
             <div class="card-body">
                 <canvas id="stackChartVolume"></canvas>
             </div>
@@ -420,7 +432,7 @@
     <br />
     <div class="row">
         <div class="card col-xs-12 col-md-12 col-lg-12">
-            <div class="card-header text-center">Call Trend Chart - Line</div>
+            <div class="card-header text-center"><h2><b>Call Trend Chart - Line  </b></h2></div>
             <div class="card-body">
                 <canvas id="lineChartTrend"></canvas>
             </div>

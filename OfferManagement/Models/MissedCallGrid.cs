@@ -43,5 +43,7 @@ namespace OfferManagement.Models
         public string Comment { get; set; }
 
         public bool IsWhiteListedCall { get; set; }
+
+        public int? ValidCallId { get; set; }
     }
 }

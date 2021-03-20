@@ -22,9 +22,13 @@
             $("#chkResponded").attr('checked', false);
         }
 
+
+        //ReloadTimeInMs
+
         setTimeout(function () {
-            new MvcGrid(document.querySelector('.mvc-grid')).reload();
-        }, 60000);
+            if (!$('#validCallsModal').hasClass('in')) {
+                new MvcGrid(document.querySelector('.mvc-grid')).reload();
+            }}, parseInt(@System.Configuration.ConfigurationManager.AppSettings["ReloadTimeInMs"]));
 
         $(document).on("click", "#chkResponded", function (e) {
             if (document.getElementById("chkResponded").checked) {
@@ -56,6 +60,13 @@
             $('#partial').load(route);
 
             $('#validCallsModal').modal('show');
+
+        });
+
+        $(document).on("click", "#btnmdlclose", function (e) {
+
+          new MvcGrid(document.querySelector('.mvc-grid')).reload();
+
         });
 
 
@@ -84,9 +95,6 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="exampleModalLabel"> @System.Configuration.ConfigurationManager.AppSettings["ValidCallsInformationEdit"]</h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
             </div>
             <div class="modal-body">
                 <div class="container" id="partial">
@@ -94,7 +102,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="btnmdlclose" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
