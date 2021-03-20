@@ -42,6 +42,8 @@ namespace OfferManagement.Controllers
 
             transaction.MessageTemplate = Transform(Session["templates"] as IList<string>).FirstOrDefault().Text;
 
+            ViewBag.ExportPermission = ((UserModel)Session["UserModel"]) != null ? (bool)((UserModel)Session["UserModel"]).Role.ToString().Equals("ADMINUSER", StringComparison.InvariantCultureIgnoreCase) : false;
+
             return View(transaction);
         }
 
@@ -58,9 +60,6 @@ namespace OfferManagement.Controllers
             return View(CreateExportableGrid(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["GridPageCount"])));
         }
 
-
-
-        
 
 
         [HttpGet]

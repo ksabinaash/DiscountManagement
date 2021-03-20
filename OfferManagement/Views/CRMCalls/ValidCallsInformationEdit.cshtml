@@ -4,7 +4,7 @@
     $(document).ready(function () {
         //https://getdatepicker.com/4/
         $('#datetimepicker').datetimepicker({
-            sideBySide: false,
+            sideBySide: false,       
             showTodayButton: true,
             showClear: true,
             showClose: true
@@ -14,29 +14,27 @@
 
         console.log(followUpDate);
 
-        var val = !followUpDate;
-
-        var enableForm = @ViewData["enableForm"].ToString();
-
-        console.log(enableForm);
+        @*var enableForm = @ViewData["enableForm"].ToString();
 
         if (enableForm == true) {
             $('#validCallsEditForm *').prop('disabled', false);
         }
         else {
             $('#validCallsEditForm *').prop('disabled', true);
-        }
+        }*@
 
         $("#ddlAction").change(function () {
 
            var actionName = $("#ddlAction option:selected").text();
 
-            if (actionName === 'FollowUp' && ! followUpDate ) {
+            if (actionName === 'FollowUp') {
 
-                $('#datetimepicker').prop('disabled', false)
+                $('#datetimepicker').prop('disabled', false);
+                $('#datetimepicker').datepicker('setDate', null);
             }
             else {
-                $('#datetimepicker').prop('disabled', true)
+                $('#datetimepicker').prop('disabled', true);
+                $('#datetimepicker').datepicker('setDate', null);
 
             }
         });

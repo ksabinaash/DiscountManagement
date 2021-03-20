@@ -19,16 +19,49 @@ namespace OfferManagement.Controllers
         {
             var google = new GoogleSheetsHelper();
 
+            ViewBag.ExportPermission = ((UserModel)Session["UserModel"]) != null ? (bool)((UserModel)Session["UserModel"]).Role.ToString().Equals("ADMINUSER", StringComparison.InvariantCultureIgnoreCase) : false;
+
+            return PopulateChartData();
+        }
+
+        public ActionResult PopulateChartData()
+        {
             var apiResults = new APIResults();
 
             List<MissedCallGrid> missedcallsList = apiResults.GetMissedCallGrids() as List<MissedCallGrid>;
-
-            ViewBag.ExportPermission = ((UserModel)Session["UserModel"]) != null ? (bool)((UserModel)Session["UserModel"]).Role.ToString().Equals("ADMINUSER", StringComparison.InvariantCultureIgnoreCase) : false;
 
             Session["MissedCallsList"] = (missedcallsList != null && missedcallsList.Count >= 0) ? missedcallsList as List<MissedCallGrid> : new List<MissedCallGrid>();
 
             return View(CreateExportableMissedCallsGrid(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["GridPageCount"])));
         }
+
+        public ActionResult PopulateNotRespondedChartData()
+        {
+            var apiResults = new APIResults();
+
+            List<MissedCallGrid> missedcallsList = apiResults.GetMissedCallGrids() as List<MissedCallGrid>;
+
+            missedcallsList = missedcallsList.Where(x => x.CallBackStatus.Equals("Not Called Back Yet",StringComparison.InvariantCultureIgnoreCase)).ToList();
+
+            Session["MissedCallsList"] = (missedcallsList != null && missedcallsList.Count >= 0) ? missedcallsList as List<MissedCallGrid> : new List<MissedCallGrid>();
+
+            return View("MissedCallsInformation", CreateExportableMissedCallsGrid(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["GridPageCount"])));
+        }
+
+        public ActionResult PopulateRespondedChartData()
+        {
+            var apiResults = new APIResults();
+
+            List<MissedCallGrid> missedcallsList = apiResults.GetMissedCallGrids() as List<MissedCallGrid>;
+
+            missedcallsList = missedcallsList.Where(x => x.CallBackStatus.Equals("Already Called Back", StringComparison.InvariantCultureIgnoreCase)).ToList();
+
+            Session["MissedCallsList"] = (missedcallsList != null && missedcallsList.Count >= 0) ? missedcallsList as List<MissedCallGrid> : new List<MissedCallGrid>();
+
+            return View("MissedCallsInformation", CreateExportableMissedCallsGrid(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["GridPageCount"])));
+        }
+
+
 
         public ActionResult Charts()
         {
@@ -77,6 +110,8 @@ namespace OfferManagement.Controllers
                 column.Filter.IsEnabled = true;
                 column.Sort.IsEnabled = true;
             }
+
+            grid.EmptyText = "No data found";
 
             return grid;
         }
@@ -132,7 +167,7 @@ namespace OfferManagement.Controllers
             grid.Columns.Add(model => model.CallPurpose).Titled("CallPurpose");
             grid.Columns.Add(model => model.Action).Titled("Action");
             grid.Columns.Add(model => model.Comment).Titled("Comment");
-            grid.Columns.Add(model => model.CallStatus).Titled("CallStatus");
+            //grid.Columns.Add(model => model.CallStatus).Titled("CallStatus");
             grid.Columns.Add(model => model.EventTime).Titled("Missedcall EventTime").Filterable(GridFilterType.Double);
             grid.Columns.Add(model => model.UpdatedUser).Titled("UpdatedUser");
             grid.Columns.Add(model => model.UpdatedDateTime).Titled("UpdatedDateTime").Filterable(GridFilterType.Double);
@@ -149,6 +184,7 @@ namespace OfferManagement.Controllers
                 column.Sort.IsEnabled = true;
             }
 
+            grid.EmptyText = "No data found";
             return grid;
         }
 
@@ -164,7 +200,15 @@ namespace OfferManagement.Controllers
                 validCall = new OfferManagement.Models.ValidCall();
             }
 
-            ViewData["enableForm"] = "false";
+
+            //if (validCall.Comment?.Length > 0 && validCall.Action?.Length > 0 && validCall.Comment?.Length > 0)
+            //{
+            //    ViewData["enableForm"] = "false";
+            //}
+            //else
+            //{
+            //    ViewData["enableForm"] = "true";
+            //}
 
 
             return PartialView("ValidCallsInformationEdit", validCall);

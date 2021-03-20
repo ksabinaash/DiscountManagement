@@ -14,14 +14,39 @@
             $("#divExport").hide();
         }
 
+        setTimeout(function () {
+            new MvcGrid(document.querySelector('.mvc-grid')).reload();
+
+        }, 50000);
+
+        $(document).on("click", "#btnResendOTP", function (e) {
+           
+        });
+
 
         $(document).on("click", "#chkResponded", function (e) {
             if (document.getElementById("chkResponded").checked) {
-                    document.getElementById('lblResponded').innerHTML = 'Responded';
+                document.getElementById('lblResponded').innerHTML = 'Responded';
+
+                $.ajax({
+                    url: "/CRMCalls/PopulateRespondedChartData",
+                    type: "GET",
+                    success: function (result) {
+                        new MvcGrid(document.querySelector('.mvc-grid')).reload();
+                    }
+                })
             }
             else
             {
                 document.getElementById('lblResponded').innerHTML = 'Not Responded';
+
+                $.ajax({
+                    url: "/CRMCalls/PopulateNotRespondedChartData",
+                    type: "GET",
+                    success: function (result) {
+                        new MvcGrid(document.querySelector('.mvc-grid')).reload();
+                    }
+                })
             }
         });
 

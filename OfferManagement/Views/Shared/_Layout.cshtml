@@ -32,6 +32,8 @@
                     <li class="nav-item">@Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["TransactionsPageName"], "Index", "Home")</li>
                     <li class="nav-item">@Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["ReportPageName"], "About", "Home")</li>
 
+                    @if (ViewBag.ExportPermission)
+                    {
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="true">  Reports  </a>
                         <ul class="dropdown-menu">
@@ -40,6 +42,7 @@
                             <li> @Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["Charts"], "Charts", "CRMCalls") </li>
                         </ul>
                     </li>
+                    }
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
