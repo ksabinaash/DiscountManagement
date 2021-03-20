@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="@Url.Content("~/Content/Logo.jpg")" />
+    <link rel="icon" href="@Url.Content(" ~ /Content/Logo.jpg")" />
     <title>@System.Configuration.ConfigurationManager.AppSettings["ApplicationName"] - @ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/jquery")
@@ -15,6 +15,7 @@
     <link href="~/Content/MvcGrid/mvc-grid.css" rel="stylesheet" />
 </head>
 <body>
+    @using OfferManagement.Models;
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -32,7 +33,7 @@
                     <li class="nav-item">@Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["TransactionsPageName"], "Index", "Home")</li>
                     <li class="nav-item">@Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["ReportPageName"], "About", "Home")</li>
 
-                    @if (ViewBag.ExportPermission)
+                    @if (((UserModel)Session["UserModel"]).Role.ToUpper()=="ADMINUSER")
                     {
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="true">  Reports  </a>
