@@ -8,8 +8,12 @@
             sideBySide: false,
             showTodayButton: true,
             showClear: true,
-            showClose: true
+            showClose: true,
+            minDate: new Date()
+            
         });
+
+        $('#datetimepicker').prop('readonly', true);
 
         if (@ViewData["enableForm"]!= null) {
             enableForm = @ViewData["enableForm"].ToString();
@@ -31,19 +35,14 @@
 
             var followUpDate = $('#datetimepicker').val();
             var actionName = $("#ddlAction option:selected").text();
-            console.log("followUpDate" + followUpDate);
-            console.log("actionName"+ actionName);
-
-            console.log("Case: " + actionName.includes('Follow'));
             if (actionName.includes('Follow'))
             {
-                console.log("followUpDate.length" + followUpDate.length);
-                $('#datetimepicker').prop('disabled', false);
+               $('#datetimepicker').prop('readonly', false);
             }
             else
             {
-                console.log("actionName" + actionName);
-                $('#datetimepicker').prop('disabled', true);
+               var followUpDate = $('#datetimepicker').val();
+               $('#datetimepicker').prop('readonly', true);
             }
         });
 

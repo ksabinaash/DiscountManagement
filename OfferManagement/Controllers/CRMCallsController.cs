@@ -3,6 +3,7 @@ using NonFactors.Mvc.Grid;
 using OfferManagement.ApiLayer;
 using OfferManagement.Helpers;
 using OfferManagement.Models;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,8 +16,7 @@ namespace OfferManagement.Controllers
     [HandleError]
     public class CRMCallsController : Controller
     {
-        [AcceptVerbs(HttpVerbs.Post | HttpVerbs.Get)]
-        public ActionResult MissedCallsInformation()
+       public ActionResult MissedCallsInformation()
         {
             ViewBag.ExportPermission = ((UserModel)Session["UserModel"]) != null ? (bool)((UserModel)Session["UserModel"]).Role.ToString().Equals("ADMINUSER", StringComparison.InvariantCultureIgnoreCase) : false;
 
@@ -33,7 +33,10 @@ namespace OfferManagement.Controllers
                 missedcallsList = missedcallsList.Where(x => x.CallBackStatus.Equals("Not Called Back Yet", StringComparison.InvariantCultureIgnoreCase)).ToList();
 
                 Session["NotRespondedCheckBox"] = false;
-            }                       
+            }
+
+            Session["missedCallsForExport"] = missedcallsList;
+
 
             return View(CreateExportableMissedCallsGrid(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["GridPageCount"]), missedcallsList));
         }
@@ -134,6 +137,8 @@ namespace OfferManagement.Controllers
                 Session["IsValidCallsCheckBoxChecked"] = false;
             }
 
+            Session["validCallsForExport"] = validCalls;
+
             ViewBag.ExportPermission = ((UserModel)Session["UserModel"]) != null ?
                                         (bool)((UserModel)Session["UserModel"]).Role.ToString().Equals("ADMINUSER", StringComparison.InvariantCultureIgnoreCase) : false;
 
@@ -206,7 +211,6 @@ namespace OfferManagement.Controllers
             return PartialView("ValidCallsInformationEdit", validCall);
         }
 
-
         [HttpPost]
         public ActionResult UpdateValidCallModel(ValidCall currentValidCall)
         {
@@ -261,5 +265,79 @@ namespace OfferManagement.Controllers
 
             return Json(CallTrends, JsonRequestBehavior.AllowGet);
         }
+
+
+
+        [HttpGet]
+        public ActionResult ExportValidCalls()
+        {
+            var validCallGridValue = Session["validCallsForExport"] as List<ValidCall>;
+            // Using EPPlus from nuget
+            using (ExcelPackage package = new ExcelPackage())
+            {
+                Int32 row = 2;
+                Int32 col = 1;
+
+                package.Workbook.Worksheets.Add("Data");
+                IGrid<ValidCall> grid = CreateExportablecValidCallsGrid(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["ExportPageCount"]), validCallGridValue);
+                ExcelWorksheet sheet = package.Workbook.Worksheets["Data"];
+
+                foreach (IGridColumn column in grid.Columns.Skip(1))
+                {
+                    sheet.Cells[1, col].Value = column.Title;
+                    sheet.Column(col++).Width = 18;
+
+                    column.IsEncoded = false;
+                }
+
+                foreach (IGridRow<ValidCall> gridRow in grid.Rows)
+                {
+                    col = 1;
+                    foreach (IGridColumn column in grid.Columns.Skip(1))
+                        sheet.Cells[row, col++].Value = column.ValueFor(gridRow);
+
+                    row++;
+                }
+
+                return File(package.GetAsByteArray(), "application/unknown", @System.Configuration.ConfigurationManager.AppSettings["ValidCallsInformation"] + DateTime.UtcNow.AddHours(5).AddMinutes(30).ToString() + ".xlsx");
+            }
+        }
+
+
+        [HttpGet]
+        public ActionResult ExportMissedCalls()
+        {
+            var missedCallGridValue = Session["missedCallsForExport"] as List<MissedCallGrid>;
+            // Using EPPlus from nuget
+            using (ExcelPackage package = new ExcelPackage())
+            {
+                Int32 row = 2;
+                Int32 col = 1;
+
+                package.Workbook.Worksheets.Add("Data");
+                IGrid<MissedCallGrid> grid = CreateExportableMissedCallsGrid(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["ExportPageCount"]), missedCallGridValue);
+                ExcelWorksheet sheet = package.Workbook.Worksheets["Data"];
+
+                foreach (IGridColumn column in grid.Columns)
+                {
+                    sheet.Cells[1, col].Value = column.Title;
+                    sheet.Column(col++).Width = 18;
+
+                    column.IsEncoded = false;
+                }
+
+                foreach (IGridRow<MissedCallGrid> gridRow in grid.Rows)
+                {
+                    col = 1;
+                    foreach (IGridColumn column in grid.Columns)
+                        sheet.Cells[row, col++].Value = column.ValueFor(gridRow);
+
+                    row++;
+                }
+
+                return File(package.GetAsByteArray(), "application/unknown", @System.Configuration.ConfigurationManager.AppSettings["MissedCallsInformation"] + DateTime.UtcNow.AddHours(5).AddMinutes(30).ToString() + ".xlsx");
+            }
+        }
+
     }
 }
