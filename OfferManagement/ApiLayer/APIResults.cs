@@ -36,17 +36,13 @@ namespace OfferManagement.ApiLayer
 
         public List<ValidCall> GetValidCallGrid()
         {
-            List<ValidCall> validCalls= APIHttpGet<ValidCall>(ValidCallEndPoint);
+            List<ValidCall> validCalls = APIHttpGet<ValidCall>(ValidCallEndPoint);
 
-            foreach(ValidCall vc in validCalls)
+            foreach (ValidCall vc in validCalls)
             {
-                if(vc.MissedCalls?.Count > 0)
+                if (vc.MissedCalls?.Count > 0)
                 {
-                    foreach( MissedCall missedCall in vc.MissedCalls)
-                    {
-                        vc.MissedFollowUpOf = "ID : "+ missedCall.Id +"- Lab :"+ missedCall.LabName;
-                        break;
-                    }
+                    vc.MissedFollowUpOf = "Id: " + vc.MissedCalls[0].Id + " - Lab: " + vc.MissedCalls[0].LabName;
                 }
             }
 
@@ -88,7 +84,7 @@ namespace OfferManagement.ApiLayer
         {
             //var endpoint = ValidCallPutEndPoint + validcall.ValidCallId;
 
-            var endpoint = ValidCallPutEndPoint ;
+            var endpoint = ValidCallPutEndPoint;
 
             APIHttpPut<ValidCall>(endpoint, validcall);
         }

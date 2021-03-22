@@ -37,7 +37,7 @@ namespace OfferManagement.Models
 
         public DateTime UpdatedDateTime { get; set; } = DateTime.Now;
 
-        public ICollection<MissedCall> MissedCalls { get; set; }
+        public IList<MissedCall> MissedCalls { get; set; }
 
         public string MissedFollowUpOf { get; set; }
     }
