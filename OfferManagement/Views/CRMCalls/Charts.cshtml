@@ -318,7 +318,7 @@
                             display: true,
                             scaleLabel: {
                                 display: true,
-                                labelString: '# LabName:' + labNamefull
+                                labelString: 'Lab Name* :' + labNamefull
                             }
                         }],
                         yAxes: [{
@@ -378,9 +378,17 @@
         <div class="col-sm-6 col-md-6 col-lg-6 spacing">
             @Html.DropDownListFor(model => model.LabName, (IEnumerable<SelectListItem>)ViewData["PCCNames"],
            "All", htmlAttributes: new { @class = "form-control", @id = "ddlLabName" })
-            <span style="color:brown"># Select Lab to see respective Trend Chart</span>
         </div>
-       
+
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6 col-md-6 col-lg-6 text-center spacing">
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-6 spacing" style="color: brown">
+            * Applicable only for 'Call Trend Chart - Line'
+        </div>
+
     </div>
 
     <div class="row">
@@ -398,7 +406,7 @@
 <div class="container">
     <div class="row">
         <div class="card col-xs-12 col-md-12 col-lg-12">
-            <div class="card-header text-center"><h2><b>Call Purpose Chart - Pie</b></h2></div>
+            <div class="card-header text-center"><h4><b>Call Purpose Chart - Pie</b></h4></div>
             <div class="card-body">
                 <canvas id="piechartpurpose"></canvas>
                 <div id="purposepiechrt" hidden class="text-center">No Data to Prepare Chart !!!</div>
@@ -410,7 +418,7 @@
     <br />
     <div class="row">
         <div class="card col-xs-12 col-md-12 col-lg-12">
-            <div class="card-header text-center"> <h2><b>Call Purpose Chart - Stack </b></h2></div>
+            <div class="card-header text-center"> <h4><b>Call Purpose Chart - Stack </b></h4></div>
         </div>
         <div class="card-body">
             <canvas id="stackChartpurpose"></canvas>
@@ -422,7 +430,7 @@
     <br />
     <div class="row">
         <div class="card col-xs-12 col-md-12 col-lg-12">
-            <div class="card-header text-center"><h2><b>Call Volume Chart - Stack </b></h2></div>
+            <div class="card-header text-center"><h4><b>Call Volume Chart - Stack </b></h4></div>
             <div class="card-body">
                 <canvas id="stackChartVolume"></canvas>
             </div>
@@ -432,7 +440,7 @@
     <br />
     <div class="row">
         <div class="card col-xs-12 col-md-12 col-lg-12">
-            <div class="card-header text-center"><h2><b>Call Trend Chart - Line  </b></h2></div>
+            <div class="card-header text-center"><h4><b>Call Trend Chart - Line </b></h4></div>
             <div class="card-body">
                 <canvas id="lineChartTrend"></canvas>
             </div>

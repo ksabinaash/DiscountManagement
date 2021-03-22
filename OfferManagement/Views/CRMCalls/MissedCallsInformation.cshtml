@@ -51,13 +51,17 @@
 
              var callId = $(this).data('id');
 
-             console.log(callId);
+             if (callId == '') {
+                 alert("Edit functionality is not applicable for not responded calls!");
+             }
+             else {
 
-            var route = '@Url.Action("PrepareModalPopup", "CRMCalls")?id=' + callId;
+                 var route = '@Url.Action("PrepareModalPopup", "CRMCalls")?id=' + callId;
 
-            $('#partial').load(route);
+                 $('#partial').load(route);
 
-            $('#validCallsModal').modal('show');
+                 $('#validCallsModal').modal('show');
+             }
 
         });
 

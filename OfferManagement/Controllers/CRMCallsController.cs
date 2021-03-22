@@ -22,6 +22,14 @@ namespace OfferManagement.Controllers
 
             var apiResults = new APIResults();
 
+            var callActions = apiResults.GetCallActions();
+
+            var callPurpose = apiResults.GetCallPurpose();
+
+            Session["CallActions"] = (callActions != null && callActions.Count > 0) ? callActions.Select(x => x.Actions).ToList() as List<string> : new List<string>();
+
+            Session["CallPurpose"] = (callPurpose != null && callPurpose.Count > 0) ? callPurpose.Select(x => x.PurposeoftheCall).ToList() as List<string> : new List<string>();
+
             List<MissedCallGrid> missedcallsList = apiResults.GetMissedCallGrids() as List<MissedCallGrid>;
 
             bool IsChecked = (Session["NotRespondedCheckBox"]!=null) ? (bool)Session["NotRespondedCheckBox"] : false;
@@ -72,17 +80,16 @@ namespace OfferManagement.Controllers
             grid.ViewContext = new ViewContext { HttpContext = HttpContext };
 
             grid.Query = Request.QueryString;
+            
             grid.Columns.Add(model => "<button type = \"button\" class=\"btn btn-primary glyphicon glyphicon-pencil\" data-id=\"" + model.ValidCallId + "\" data-toggle=\"modal\" id=\"btnModalPopup\"></button>").Encoded(false).Titled("Action").Filter.IsEnabled = false;
-            grid.Columns.Add(model => model.LabName).Titled("LabName");
-            //grid.Columns.Add(model => model.LabPhoneNumber).Titled("LabPhoneNumber");
-            grid.Columns.Add(model => model.CustomerMobileNumber).Titled("CustomerMobileNumber");
-            grid.Columns.Add(model => model.CallBackStatus).Titled("CallBackStatus");
-            grid.Columns.Add(model => model.IsWhiteListedCall).Titled("IsWhiteListed");
-            grid.Columns.Add(model => model.RespondedTime).Titled("RespondedTime").Filterable(GridFilterType.Double);
-            grid.Columns.Add(model => model.ValidCallId).Titled("RespondedCallId");
-            grid.Columns.Add(model => model.RespondedLabName).Titled("RespondedLabName");
-            //grid.Columns.Add(model => model.RespondedLabPhoneNumber).Titled("RespondedLabPhoneNumber");
-            grid.Columns.Add(model => model.RespondedCallType).Titled("RespondedCallType");
+            grid.Columns.Add(model => model.LabName).Titled("Lab Name");
+            grid.Columns.Add(model => model.CustomerMobileNumber).Titled("Customer MobileNumber");
+            grid.Columns.Add(model => model.CallBackStatus).Titled("CallBackS tatus");
+            grid.Columns.Add(model => model.IsWhiteListedCall).Titled("Is WhiteListed");
+            grid.Columns.Add(model => model.RespondedTime).Titled("Responded Time").Filterable(GridFilterType.Double);
+            grid.Columns.Add(model => model.ValidCallId).Titled("Responded CallId");
+            grid.Columns.Add(model => model.RespondedLabName).Titled("Responded LabName");
+            grid.Columns.Add(model => model.RespondedCallType).Titled("Responded CallType");
             grid.Columns.Add(model => model.CallPurpose).Titled("CallPurpose");
             grid.Columns.Add(model => model.Action).Titled("Action");
             grid.Columns.Add(model => model.EventTime).Titled("Responded EventTime").Filterable(GridFilterType.Double);
@@ -157,20 +164,17 @@ namespace OfferManagement.Controllers
             grid.Query = Request.QueryString;
             grid.Columns.Add(model => "<button type = \"button\" class=\"btn btn-primary glyphicon glyphicon-pencil\" data-id=\"" + model.ValidCallId + "\" data-toggle=\"modal\" id=\"btnModalPopup\"></button>").Encoded(false).Titled("Edit").Filter.IsEnabled = false;
             grid.Columns.Add(model => model.ValidCallId).Titled("Id");
-            grid.Columns.Add(model => model.LabName).Titled("LabName");
-            //grid.Columns.Add(model => model.LabPhoneNumber).Titled("LabPhoneNumber");
-            grid.Columns.Add(model => model.CustomerMobileNumber).Titled("CustomerMobileNumber");
-            //grid.Columns.Add(model => model.CallDuration).Titled("CallDuration");
-            grid.Columns.Add(model => model.CallType).Titled("CallType");
-            grid.Columns.Add(model => model.MissedFollowUpOf).Titled("MissedFollowUpOf");
-            grid.Columns.Add(model => model.CallPurpose).Titled("CallPurpose");
+            grid.Columns.Add(model => model.LabName).Titled("Lab Name");
+            grid.Columns.Add(model => model.CustomerMobileNumber).Titled("Customer MobileNumber");
+            grid.Columns.Add(model => model.CallType).Titled("Call Type");
+            grid.Columns.Add(model => model.MissedFollowUpOf).Titled("Missed Call Info");
+            grid.Columns.Add(model => model.CallPurpose).Titled("Call Purpose");
             grid.Columns.Add(model => model.Action).Titled("Action");
             grid.Columns.Add(model => model.Comment).Titled("Comment");
-            //grid.Columns.Add(model => model.CallStatus).Titled("CallStatus");
-            grid.Columns.Add(model => model.EventTime).Titled("EventTime").Filterable(GridFilterType.Double);
-            grid.Columns.Add(model => model.UpdatedUser).Titled("UpdatedUser");
-            grid.Columns.Add(model => model.UpdatedDateTime).Titled("UpdatedDateTime").Filterable(GridFilterType.Double);
-            grid.Columns.Add(model => model.FollowUpTime).Titled("FollowUpTime").Filterable(GridFilterType.Double);
+            grid.Columns.Add(model => model.EventTime).Titled("Event Time").Filterable(GridFilterType.Double);
+            grid.Columns.Add(model => model.UpdatedUser).Titled("Updated User");
+            grid.Columns.Add(model => model.UpdatedDateTime).Titled("Updated DateTime").Filterable(GridFilterType.Double);
+            grid.Columns.Add(model => model.FollowUpTime).Titled("FollowUp Time").Filterable(GridFilterType.Double);
             grid.Columns.Add(model => model.Comment).Titled("Comment");
 
             grid.Pager = new GridPager<ValidCall>(grid);
@@ -200,6 +204,7 @@ namespace OfferManagement.Controllers
             {
                 validCall = new OfferManagement.Models.ValidCall();
             }
+
             if (validCall.Action != null && validCall.Action.Equals("Closed", StringComparison.InvariantCultureIgnoreCase))
             {
                 ViewData["enableForm"] = "false";
