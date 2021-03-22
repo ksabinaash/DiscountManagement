@@ -30,20 +30,26 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li class="nav-item">@Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["TransactionsPageName"], "Index", "Home")</li>
-                    <li class="nav-item">@Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["ReportPageName"], "About", "Home")</li>
-
-                    @if (((UserModel)Session["UserModel"]).Role.ToUpper()=="ADMINUSER")
-                    {
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="true">  Reports  </a>
+                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="true">  Discount  </a>
+                        <ul class="dropdown-menu">
+                            <li class="nav-item">@Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["TransactionsPageName"], "Index", "Home")</li>
+                            <li class="nav-item">@Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["ReportPageName"], "About", "Home")</li>
+
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="true">  CRM  </a>
                         <ul class="dropdown-menu">
                             <li>@Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["MissedCallsInformation"], "MissedCallsInformation", "CRMCalls")</li>
                             <li>@Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["ValidCallsInformation"], "ValidCallsInformation", "CRMCalls")</li>
-                            <li> @Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["Charts"], "Charts", "CRMCalls") </li>
+                            @if (((UserModel)Session["UserModel"]).Role.ToUpper() == "ADMINUSER")
+                            {
+                                <li> @Html.ActionLink(@System.Configuration.ConfigurationManager.AppSettings["Charts"], "Charts", "CRMCalls") </li>
+                            }
                         </ul>
                     </li>
-                    }
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

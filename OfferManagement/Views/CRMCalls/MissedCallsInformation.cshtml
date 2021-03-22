@@ -47,6 +47,20 @@
             }
         });
 
+         $(document).on("click", "#btnModalPopup", function (e) {
+
+             var callId = $(this).data('id');
+
+             console.log(callId);
+
+            var route = '@Url.Action("PrepareModalPopup", "CRMCalls")?id=' + callId;
+
+            $('#partial').load(route);
+
+            $('#validCallsModal').modal('show');
+
+        });
+
     });
 </script>
 
@@ -62,5 +76,24 @@
 
 <div id="divMissedCallsGrid">
     @(new HtmlGrid<OfferManagement.Models.MissedCallGrid>(Html, Model))
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="validCallsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-center" id="exampleModalLabel"> @System.Configuration.ConfigurationManager.AppSettings["ValidCallsInformationEdit"]</h3>
+            </div>
+            <div class="modal-body">
+                <div class="container" id="partial">
+                    @*@Html.Partial("ValidCallsInformationEdit", Session["ValidCallsEdit"])*@
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnmdlclose" class="btn btn-info" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 

@@ -72,16 +72,16 @@ namespace OfferManagement.Controllers
             grid.ViewContext = new ViewContext { HttpContext = HttpContext };
 
             grid.Query = Request.QueryString;
-
+            grid.Columns.Add(model => "<button type = \"button\" class=\"btn btn-primary glyphicon glyphicon-pencil\" data-id=\"" + model.ValidCallId + "\" data-toggle=\"modal\" id=\"btnModalPopup\"></button>").Encoded(false).Titled("Action").Filter.IsEnabled = false;
             grid.Columns.Add(model => model.LabName).Titled("LabName");
-            grid.Columns.Add(model => model.LabPhoneNumber).Titled("LabPhoneNumber");
+            //grid.Columns.Add(model => model.LabPhoneNumber).Titled("LabPhoneNumber");
             grid.Columns.Add(model => model.CustomerMobileNumber).Titled("CustomerMobileNumber");
             grid.Columns.Add(model => model.CallBackStatus).Titled("CallBackStatus");
             grid.Columns.Add(model => model.IsWhiteListedCall).Titled("IsWhiteListed");
             grid.Columns.Add(model => model.RespondedTime).Titled("RespondedTime").Filterable(GridFilterType.Double);
             grid.Columns.Add(model => model.ValidCallId).Titled("RespondedCallId");
             grid.Columns.Add(model => model.RespondedLabName).Titled("RespondedLabName");
-            grid.Columns.Add(model => model.RespondedLabPhoneNumber).Titled("RespondedLabPhoneNumber");
+            //grid.Columns.Add(model => model.RespondedLabPhoneNumber).Titled("RespondedLabPhoneNumber");
             grid.Columns.Add(model => model.RespondedCallType).Titled("RespondedCallType");
             grid.Columns.Add(model => model.CallPurpose).Titled("CallPurpose");
             grid.Columns.Add(model => model.Action).Titled("Action");
@@ -162,6 +162,7 @@ namespace OfferManagement.Controllers
             grid.Columns.Add(model => model.CustomerMobileNumber).Titled("CustomerMobileNumber");
             //grid.Columns.Add(model => model.CallDuration).Titled("CallDuration");
             grid.Columns.Add(model => model.CallType).Titled("CallType");
+            grid.Columns.Add(model => model.MissedFollowUpOf).Titled("MissedFollowUpOf");
             grid.Columns.Add(model => model.CallPurpose).Titled("CallPurpose");
             grid.Columns.Add(model => model.Action).Titled("Action");
             grid.Columns.Add(model => model.Comment).Titled("Comment");
@@ -175,7 +176,7 @@ namespace OfferManagement.Controllers
             grid.Pager = new GridPager<ValidCall>(grid);
             grid.Processors.Add(grid.Pager);
             grid.Pager.RowsPerPage = PageCount;
-
+            
             foreach (IGridColumn column in grid.Columns)
             {
                 column.Filter.IsEnabled = true;

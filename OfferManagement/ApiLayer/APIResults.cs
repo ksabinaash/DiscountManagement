@@ -36,7 +36,21 @@ namespace OfferManagement.ApiLayer
 
         public List<ValidCall> GetValidCallGrid()
         {
-            return APIHttpGet<ValidCall>(ValidCallEndPoint);
+            List<ValidCall> validCalls= APIHttpGet<ValidCall>(ValidCallEndPoint);
+
+            foreach(ValidCall vc in validCalls)
+            {
+                if(vc.MissedCalls?.Count > 0)
+                {
+                    foreach( MissedCall missedCall in vc.MissedCalls)
+                    {
+                        vc.MissedFollowUpOf = "ID : "+ missedCall.Id +"- Lab :"+ missedCall.LabName;
+                        break;
+                    }
+                }
+            }
+
+            return validCalls;
         }
 
         public List<CallAction> GetCallActions()
