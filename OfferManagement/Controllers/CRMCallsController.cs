@@ -236,7 +236,9 @@ namespace OfferManagement.Controllers
 
             existingValidCall.Action = currentValidCall.Action;
 
-            existingValidCall.FollowUpTime = currentValidCall.FollowUpTime;
+            var followUpTime = currentValidCall.FollowUpTime.GetValueOrDefault();
+
+            existingValidCall.FollowUpTime = new DateTime(followUpTime.Year, followUpTime.Day, followUpTime.Month, followUpTime.Hour, followUpTime.Minute, followUpTime.Second);
 
             var apiResults = new APIResults();
 
