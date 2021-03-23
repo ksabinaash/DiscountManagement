@@ -88,7 +88,7 @@ namespace OfferManagement.Controllers
             grid.Columns.Add(model => model.Discount).Titled("Discount");
             grid.Columns.Add(model => model.BilledValue).Titled("Billed Value");
             grid.Columns.Add(model => model.MessageTemplate).Titled("Template");
-            grid.Columns.Add(model => model.BilledDateTime).Titled("Billed Date").Filterable(GridFilterType.Double);
+            grid.Columns.Add(model => model.BilledDateTime).Titled("Billed Date").Filterable(GridFilterType.Double).Formatted("{0:G}");
             grid.Columns.Add(model => model.ValidationStatus).Titled("Status");
 
             grid.Pager = new GridPager<DiscountTransaction>(grid);
