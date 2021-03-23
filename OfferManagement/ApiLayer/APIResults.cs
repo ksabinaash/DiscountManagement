@@ -82,8 +82,6 @@ namespace OfferManagement.ApiLayer
 
         public void UpdateValidCall(ValidCall validcall)
         {
-            //var endpoint = ValidCallPutEndPoint + validcall.ValidCallId;
-
             var endpoint = ValidCallPutEndPoint;
 
             APIHttpPut<ValidCall>(endpoint, validcall);
