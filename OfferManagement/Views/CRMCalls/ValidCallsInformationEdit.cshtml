@@ -3,14 +3,12 @@
 <script>
     $(document).ready(function () {
         //https://getdatepicker.com/4/
-        $('#datetimepicker').datetimepicker({
-            format: 'DD-MM-YYYY HH:mm:ss',
-            sideBySide: false,
-            showTodayButton: true,
-            showClear: true,
-            showClose: true,
-            minDate: new Date()
-            
+        var todayDate = new Date().getDate();
+
+        $('#datetimepicker').datepicker({
+            "format": 'mm-dd-yyyy',
+            "autoclose": true,
+            "startDate": todayDate
         });
 
         var actionName = $("#ddlAction option:selected").text();
@@ -125,7 +123,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.FollowUpTime, htmlAttributes: new { @class = "control-label col-md-2 col-sm-6" })
             <div class="col-md-3 col-sm-6">
-                @Html.TextBoxFor(model => model.FollowUpTime, "{0:dd/MM/yyyy  HH:mm:ss}", new { @class = "form-control", @id = "datetimepicker" })
+                @Html.TextBoxFor(model => model.FollowUpTime, "{0:MM-dd-yyyy}", new { @class = "form-control", @id = "datetimepicker" })
                 @Html.ValidationMessageFor(model => model.FollowUpTime, "", new { @class = "text-danger" })
             </div>
         </div>

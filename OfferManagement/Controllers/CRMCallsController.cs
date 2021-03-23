@@ -86,13 +86,13 @@ namespace OfferManagement.Controllers
             grid.Columns.Add(model => model.CustomerMobileNumber).Titled("Customer MobileNumber");
             grid.Columns.Add(model => model.CallBackStatus).Titled("CallBackS tatus");
             grid.Columns.Add(model => model.IsWhiteListedCall).Titled("Is WhiteListed");
-            grid.Columns.Add(model => model.RespondedTime).Titled("Responded Time").Filterable(GridFilterType.Double).Formatted("{0:G}");
+            grid.Columns.Add(model => model.RespondedTime).Titled("Responded Time").Filterable(GridFilterType.Double);
             grid.Columns.Add(model => model.ValidCallId).Titled("Responded CallId");
             grid.Columns.Add(model => model.RespondedLabName).Titled("Responded LabName");
             grid.Columns.Add(model => model.RespondedCallType).Titled("Responded CallType");
             grid.Columns.Add(model => model.CallPurpose).Titled("CallPurpose");
             grid.Columns.Add(model => model.Action).Titled("Action");
-            grid.Columns.Add(model => model.EventTime).Titled("Responded EventTime").Filterable(GridFilterType.Double).Formatted("{0:G}");
+            grid.Columns.Add(model => model.EventTime).Titled("Responded EventTime").Filterable(GridFilterType.Double);
             grid.Columns.Add(model => model.Comment).Titled("Comment");
 
             grid.Pager = new GridPager<MissedCallGrid>(grid);
@@ -171,10 +171,10 @@ namespace OfferManagement.Controllers
             grid.Columns.Add(model => model.CallPurpose).Titled("Call Purpose");
             grid.Columns.Add(model => model.Action).Titled("Action");
             grid.Columns.Add(model => model.Comment).Titled("Comment");
-            grid.Columns.Add(model => model.EventTime).Titled("Event Time").Filterable(GridFilterType.Double).Formatted("{0:G}");
+            grid.Columns.Add(model => model.EventTime).Titled("Event Time").Filterable(GridFilterType.Double);
             grid.Columns.Add(model => model.UpdatedUser).Titled("Updated User");
-            grid.Columns.Add(model => model.UpdatedDateTime).Titled("Updated DateTime").Filterable(GridFilterType.Double).Formatted("{0:G}");
-            grid.Columns.Add(model => model.FollowUpTime).Titled("FollowUp Time").Filterable(GridFilterType.Double).Formatted("{0:G}");
+            grid.Columns.Add(model => model.UpdatedDateTime).Titled("Updated DateTime").Filterable(GridFilterType.Double);
+            grid.Columns.Add(model => model.FollowUpTime).Titled("FollowUp Time").Filterable(GridFilterType.Double);
             grid.Columns.Add(model => model.Comment).Titled("Comment");
 
             grid.Pager = new GridPager<ValidCall>(grid);
