@@ -30,15 +30,21 @@ namespace OfferManagement
 
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js", "~/scripts/bootstrap-datetimepicker.js",
-                      "~/scripts/bootstrap-datepicker.js"));
+                      "~/Scripts/bootstrap.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/datetime").Include(
+                     //"~/scripts/bootstrap-datetimepicker.js",
+                     //"~/scripts/bootstrap-datepicker.js",
+                     "~/scripts/jquery.datetimepicker.js"));
+
 
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/themes/base/jquery-ui.css",
                       "~/Content/Site.css",
-                      "~/Content/Chart.css"));
+                      "~/Content/Chart.css",
+                      "~/Content/jquery.datetimepicker.css"));
         }
     }
 }
