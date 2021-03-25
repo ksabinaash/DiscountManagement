@@ -236,7 +236,10 @@ namespace OfferManagement.Controllers
 
             existingValidCall.Action = currentValidCall.Action;
 
-            existingValidCall.FollowUpTime = currentValidCall.FollowUpTime;
+            if (currentValidCall.FollowUpTime != null)
+            {
+                existingValidCall.FollowUpTime = currentValidCall.FollowUpTime.GetValueOrDefault().AddHours(-7);
+            }
 
             var apiResults = new APIResults();
 
