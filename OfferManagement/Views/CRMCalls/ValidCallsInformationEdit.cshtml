@@ -2,26 +2,13 @@
 
 <script>
     $(document).ready(function () {
-        //https://getdatepicker.com/4/
-        var todayDate = new Date().getDate();
-
-        //$('#datetimepicker').datetimepicker({
-        //    format: 'MM-DD-YYYY HH:mm:ss',
-        //    sideBySide: false,
-        //    showTodayButton: true,
-        //    showClear: true,
-        //    showClose: true,
-        //    minDate: new Date()
-
-        //});
+        
         $('#datetimepicker').datetimepicker({
-            defaultDate: new Date(),
-            step: 5,
+            step: 30,
             theme: 'dark',
             minDate: new Date()
         });
-        //$('#datetimepicker').datetimepicker();
-
+        
         var actionName = $("#ddlAction option:selected").text();
         if (actionName.includes('Follow')) {
             $('#datetimepicker').prop('readonly', false);
