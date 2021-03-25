@@ -238,7 +238,7 @@ namespace OfferManagement.Controllers
 
             if (currentValidCall.FollowUpTime != null)
             {
-                existingValidCall.FollowUpTime = currentValidCall.FollowUpTime.GetValueOrDefault().AddHours(-7);
+                existingValidCall.FollowUpTime = currentValidCall.FollowUpTime.GetValueOrDefault().AddHours(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["ServerHoursDifference"])).AddMinutes(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["ServerMinsDifference"]));
             }
 
             var apiResults = new APIResults();
