@@ -2,13 +2,18 @@
 
 <script>
     $(document).ready(function () {
-        
+
+        var savedDate = new Date();
+        if ('@Model.FollowUpTime' != null) {
+            savedDate = new Date(@Model.FollowUpTime.Value.Year, @Model.FollowUpTime.Value.Month - 1, @Model.FollowUpTime.Value.Day, @Model.FollowUpTime.Value.Hour, @Model.FollowUpTime.Value.Minute);
+        }
         $('#datetimepicker').datetimepicker({
+            defaultDate: savedDate,
             step: 30,
             theme: 'dark',
             minDate: new Date()
         });
-        
+
         var actionName = $("#ddlAction option:selected").text();
         if (actionName.includes('Follow')) {
             $('#datetimepicker').prop('readonly', false);
@@ -23,8 +28,6 @@
         else {
             enableForm = false;
         }
-
-        console.log("enableForm" + enableForm);
 
         if (enableForm == true) {
             $('#validCallsEditForm *').prop('disabled', false);

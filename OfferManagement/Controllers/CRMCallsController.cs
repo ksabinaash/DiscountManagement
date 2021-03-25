@@ -16,7 +16,7 @@ namespace OfferManagement.Controllers
     [HandleError]
     public class CRMCallsController : Controller
     {
-       public ActionResult MissedCallsInformation()
+        public ActionResult MissedCallsInformation()
         {
             ViewBag.ExportPermission = ((UserModel)Session["UserModel"]) != null ? (bool)((UserModel)Session["UserModel"]).Role.ToString().Equals("ADMINUSER", StringComparison.InvariantCultureIgnoreCase) : false;
 
@@ -32,7 +32,7 @@ namespace OfferManagement.Controllers
 
             List<MissedCallGrid> missedcallsList = apiResults.GetMissedCallGrids() as List<MissedCallGrid>;
 
-            bool IsChecked = (Session["NotRespondedCheckBox"]!=null) ? (bool)Session["NotRespondedCheckBox"] : false;
+            bool IsChecked = (Session["NotRespondedCheckBox"] != null) ? (bool)Session["NotRespondedCheckBox"] : false;
 
             ViewBag.NotRespondedCheckBox = IsChecked;
 
@@ -80,7 +80,7 @@ namespace OfferManagement.Controllers
             grid.ViewContext = new ViewContext { HttpContext = HttpContext };
 
             grid.Query = Request.QueryString;
-            
+
             grid.Columns.Add(model => "<button type = \"button\" class=\"btn btn-primary glyphicon glyphicon-pencil\" data-id=\"" + model.ValidCallId + "\" data-toggle=\"modal\" id=\"btnModalPopup\"></button>").Encoded(false).Titled("Action");
             grid.Columns.Add(model => model.LabName).Titled("Lab Name");
             grid.Columns.Add(model => model.CustomerMobileNumber).Titled("Customer MobileNumber");
@@ -180,7 +180,7 @@ namespace OfferManagement.Controllers
             grid.Pager = new GridPager<ValidCall>(grid);
             grid.Processors.Add(grid.Pager);
             grid.Pager.RowsPerPage = PageCount;
-            
+
             foreach (IGridColumn column in grid.Columns)
             {
                 column.Filter.IsEnabled = true;
@@ -204,6 +204,8 @@ namespace OfferManagement.Controllers
             {
                 validCall = new OfferManagement.Models.ValidCall();
             }
+
+            ViewData["FollowUpTime"] = (validCall.FollowUpTime != null) ? validCall.FollowUpTime : DateTime.Now;
 
             if (validCall.Action != null && validCall.Action.Equals("Closed", StringComparison.InvariantCultureIgnoreCase))
             {
