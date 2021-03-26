@@ -13,14 +13,26 @@
 
         var labNamefull;
 
-        $('#fromDatePicker').datepicker({
-            "format": 'mm-dd-yyyy',
-            "autoclose": true
+        $('#fromDatePicker').datetimepicker({
+            format: 'm/d/Y',
+            theme: 'dark',
+            onShow: function (ct) {
+                this.setOptions({
+                    maxDate: jQuery('#toDatepicker').val() ? jQuery('#toDatepicker').val() : false
+                })
+            },
+            timepicker: false
         });
 
-        $('#toDatepicker').datepicker({
-            "format": 'mm-dd-yyyy',
-            "autoclose": true
+        $('#toDatepicker').datetimepicker({
+            format: 'm/d/Y',
+            onShow: function (ct) {
+                this.setOptions({
+                    minDate: jQuery('#fromDatePicker').val() ? jQuery('#fromDatePicker').val() : false
+                })
+            },
+            theme: 'dark',
+            timepicker: false
         });
 
 

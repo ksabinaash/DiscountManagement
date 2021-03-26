@@ -4,9 +4,15 @@
     $(document).ready(function () {
 
         var savedDate = new Date();
-        if ('@Model.FollowUpTime' != null) {
-            savedDate = new Date(@Model.FollowUpTime.Value.Year, @Model.FollowUpTime.Value.Month - 1, @Model.FollowUpTime.Value.Day, @Model.FollowUpTime.Value.Hour, @Model.FollowUpTime.Value.Minute);
+
+        var model = @Html.Raw(Json.Encode(Model));
+
+        var followUpTime = @Html.Raw(Json.Encode(Model.FollowUpTime));
+
+        if (followUpTime != null) {
+            savedDate = new Date(followUpTime.Value.Year, followUpTime.Value.Month - 1, followUpTime.Value.Day, followUpTime.Value.Hour, followUpTime.Value.Minute);
         }
+
         $('#datetimepicker').datetimepicker({
             defaultDate: savedDate,
             step: 30,
@@ -50,8 +56,6 @@
                $('#datetimepicker').prop('readonly', true);
             }
         });
-
-
 
     });
 

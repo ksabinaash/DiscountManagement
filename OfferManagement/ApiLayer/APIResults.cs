@@ -31,12 +31,16 @@ namespace OfferManagement.ApiLayer
 
         public List<MissedCallGrid> GetMissedCallGrids()
         {
-            return APIHttpGet<MissedCallGrid>(MissedCallEndPoint);
+            var endpoint = MissedCallEndPoint + "?dateTime=" + (DateTime.Now.AddDays(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["CallsGridDaysRange"]))).ToString("MM-dd-yyyy");
+
+            return APIHttpGet<MissedCallGrid>(endpoint);
         }
 
         public List<ValidCall> GetValidCallGrid()
         {
-            List<ValidCall> validCalls = APIHttpGet<ValidCall>(ValidCallEndPoint);
+            var endpoint = ValidCallEndPoint + "?dateTime=" + (DateTime.Now.AddDays(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["CallsGridDaysRange"]))).ToString("MM-dd-yyyy");
+
+            List<ValidCall> validCalls = APIHttpGet<ValidCall>(endpoint);
 
             foreach (ValidCall vc in validCalls)
             {
