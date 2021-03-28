@@ -38,7 +38,7 @@ namespace OfferManagement.Controllers
 
             if (IsChecked)
             {
-                missedcallsList = missedcallsList.Where(x => x.CallBackStatus.Equals("Not Called Back Yet", StringComparison.InvariantCultureIgnoreCase)).ToList();
+                missedcallsList = missedcallsList.Where(x => x.CallBackStatus.Equals(System.Configuration.ConfigurationManager.AppSettings["NotCalledBackMsg"], StringComparison.InvariantCultureIgnoreCase)).ToList();
 
                 Session["NotRespondedCheckBox"] = false;
             }

@@ -24,6 +24,8 @@ namespace OfferManagement.Models
 
         public string CallType { get; set; }
 
+        [Required]
+        [Display(Name = "Purpose *")]
         public string CallPurpose { get; set; }
 
         [Required]
@@ -38,7 +40,6 @@ namespace OfferManagement.Models
 
         public string UpdatedUser { get; set; }
 
-        [Required]
         public DateTime? FollowUpTime { get; set; }
 
         public DateTime UpdatedDateTime { get; set; } = DateTime.Now;
