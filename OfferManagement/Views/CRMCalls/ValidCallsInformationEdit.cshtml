@@ -10,6 +10,9 @@
         var followUpTime = @Html.Raw(Json.Encode(Model.FollowUpTime));
 
         if (followUpTime != null) {
+
+            console.log(followUpTime)
+
             savedDate = new Date(followUpTime.Value.Year, followUpTime.Value.Month - 1, followUpTime.Value.Day, followUpTime.Value.Hour, followUpTime.Value.Minute);
         }
 
@@ -21,11 +24,18 @@
         });
 
         var actionName = $("#ddlAction option:selected").text();
+
         if (actionName.includes('Follow')) {
+
+            console.log("includes followup");
+
             $('#datetimepicker').prop('readonly', false);
         }
         else {
-            $('#datetimepicker').prop('readonly', true);
+
+            console.log("Not includes followup");
+
+            $("#datetimepicker").attr('readonly', true);
         }
 
         if (@ViewData["enableForm"]!= null) {
@@ -136,7 +146,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-3 col-sm-6">
-                <input type="submit" id="btnSave" value="Save" onclick="" class="btn btn-primary" />
+                <input type="submit" disabled="disabled" id="btnSave" value="Save" class="btn btn-primary" />
             </div>
         </div>
     </div>

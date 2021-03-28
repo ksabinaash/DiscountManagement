@@ -86,14 +86,15 @@ namespace OfferManagement.Controllers
             grid.Columns.Add(model => model.CustomerMobileNumber).Titled("Customer MobileNumber");
             grid.Columns.Add(model => model.CallBackStatus).Titled("CallBackS tatus");
             grid.Columns.Add(model => model.IsWhiteListedCall).Titled("Is WhiteListed");
-            grid.Columns.Add(model => model.RespondedTime).Titled("Responded Time").Filterable(GridFilterType.Double);
-            grid.Columns.Add(model => model.ValidCallId).Titled("Responded CallId");
             grid.Columns.Add(model => model.RespondedLabName).Titled("Responded LabName");
-            grid.Columns.Add(model => model.RespondedCallType).Titled("Responded CallType");
             grid.Columns.Add(model => model.CallPurpose).Titled("CallPurpose");
             grid.Columns.Add(model => model.Action).Titled("Action");
-            grid.Columns.Add(model => model.EventTime).Titled("Responded EventTime").Filterable(GridFilterType.Double);
+            grid.Columns.Add(model => model.RespondedTime).Titled("Responded Time").Filterable(GridFilterType.Double);
+            grid.Columns.Add(model => model.EventTime).Titled("CallMissedTime").Filterable(GridFilterType.Double);
+            grid.Columns.Add(model => model.RespondedEventTime).Titled("Responded Call").Filterable(GridFilterType.Double);
             grid.Columns.Add(model => model.Comment).Titled("Comment");
+            grid.Columns.Add(model => model.ValidCallId).Titled("Responded CallId");
+            grid.Columns.Add(model => model.RespondedCallType).Titled("Responded CallType");
 
             grid.Pager = new GridPager<MissedCallGrid>(grid);
             grid.Processors.Add(grid.Pager);
@@ -167,15 +168,15 @@ namespace OfferManagement.Controllers
             grid.Columns.Add(model => model.LabName).Titled("Lab Name");
             grid.Columns.Add(model => model.CustomerMobileNumber).Titled("Customer MobileNumber");
             grid.Columns.Add(model => model.CallType).Titled("Call Type");
-            grid.Columns.Add(model => model.MissedFollowUpOf).Titled("Missed Call Info");
             grid.Columns.Add(model => model.CallPurpose).Titled("Call Purpose");
             grid.Columns.Add(model => model.Action).Titled("Action");
+            grid.Columns.Add(model => model.FollowUpTime).Titled("FollowUp Time").Filterable(GridFilterType.Double);
             grid.Columns.Add(model => model.Comment).Titled("Comment");
+            grid.Columns.Add(model => model.MissedFollowUpOf).Titled("Missed Call Info");
             grid.Columns.Add(model => model.EventTime).Titled("Event Time").Filterable(GridFilterType.Double);
             grid.Columns.Add(model => model.UpdatedUser).Titled("Updated User");
             grid.Columns.Add(model => model.UpdatedDateTime).Titled("Updated DateTime").Filterable(GridFilterType.Double);
-            grid.Columns.Add(model => model.FollowUpTime).Titled("FollowUp Time").Filterable(GridFilterType.Double);
-            grid.Columns.Add(model => model.Comment).Titled("Comment");
+
 
             grid.Pager = new GridPager<ValidCall>(grid);
             grid.Processors.Add(grid.Pager);
@@ -226,28 +227,48 @@ namespace OfferManagement.Controllers
 
             var existingValidCall = validCalls.Where(m => m.ValidCallId == currentValidCall.ValidCallId).ToList().FirstOrDefault();
 
-            var user = (UserModel)Session["UserModel"];
+            //if (ModelState.IsValid)
+            //{
 
-            existingValidCall.UpdatedUser = user?.UserName;
+                var user = (UserModel)Session["UserModel"];
 
-            existingValidCall.UpdatedDateTime = DateTime.Now;
+                existingValidCall.UpdatedUser = user?.UserName;
 
-            existingValidCall.Comment = currentValidCall.Comment;
+                existingValidCall.UpdatedDateTime = DateTime.Now;
 
-            existingValidCall.CallPurpose = currentValidCall.CallPurpose;
+                existingValidCall.Comment = currentValidCall.Comment;
 
-            existingValidCall.Action = currentValidCall.Action;
+                existingValidCall.CallPurpose = currentValidCall.CallPurpose;
 
-            if (currentValidCall.FollowUpTime != null)
-            {
-                existingValidCall.FollowUpTime = currentValidCall.FollowUpTime.GetValueOrDefault().AddHours(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["ServerHoursDifference"])).AddMinutes(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["ServerMinsDifference"]));
-            }
+                existingValidCall.Action = currentValidCall.Action;
 
-            var apiResults = new APIResults();
+                if (currentValidCall.FollowUpTime != null)
+                {
+                    existingValidCall.FollowUpTime = currentValidCall.FollowUpTime.GetValueOrDefault().AddHours(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["ServerHoursDifference"])).AddMinutes(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["ServerMinsDifference"]));
+                }
 
-            apiResults.UpdateValidCall(existingValidCall);
+                var apiResults = new APIResults();
 
-            return View();
+                apiResults.UpdateValidCall(existingValidCall);
+                return View();
+            //}
+            //else
+            //{
+            //    ViewData["FollowUpTime"] = (currentValidCall.FollowUpTime != null) ? currentValidCall.FollowUpTime : DateTime.Now;
+
+            //    if (currentValidCall.Action != null && currentValidCall.Action.Equals("Closed", StringComparison.InvariantCultureIgnoreCase))
+            //    {
+            //        ViewData["enableForm"] = "false";
+            //    }
+            //    else
+            //    {
+            //        ViewData["enableForm"] = "true";
+            //    }
+            //    //return PartialView("ValidCallsInformationEdit", currentValidCall);
+
+            //    return PrepareModalPopup(existingValidCall.ValidCallId);
+            //}
+            
         }
 
         public JsonResult GetCallVolume(DateTime fromDate, DateTime toDate)

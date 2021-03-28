@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -25,14 +26,19 @@ namespace OfferManagement.Models
 
         public string CallPurpose { get; set; }
 
+        [Required]
+        [Display(Name = "Action *")]
         public string Action { get; set; }
 
+        [Required]
+        [Display(Name = "Comment *")]
         public string Comment { get; set; }
 
         public string CallStatus { get; set; }
 
         public string UpdatedUser { get; set; }
 
+        [Required]
         public DateTime? FollowUpTime { get; set; }
 
         public DateTime UpdatedDateTime { get; set; } = DateTime.Now;
