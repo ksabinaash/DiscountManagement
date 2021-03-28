@@ -3,6 +3,8 @@
 <script>
     $(document).ready(function () {
 
+        $('#datetimepicker').prop('readonly', true);
+
         var savedDate = new Date();
 
         var model = @Html.Raw(Json.Encode(Model));
@@ -11,9 +13,9 @@
 
         if (followUpTime != null) {
 
-            console.log(followUpTime)
+            //console.log(followUpTime)
 
-            savedDate = new Date(followUpTime.Value.Year, followUpTime.Value.Month - 1, followUpTime.Value.Day, followUpTime.Value.Hour, followUpTime.Value.Minute);
+            //savedDate = new Date(followUpTime.Value.Year, followUpTime.Value.Month - 1, followUpTime.Value.Day, followUpTime.Value.Hour, followUpTime.Value.Minute);
         }
 
         $('#datetimepicker').datetimepicker({
@@ -27,15 +29,12 @@
 
         if (actionName.includes('Follow')) {
 
-            console.log("includes followup");
-
-            $('#datetimepicker').prop('readonly', false);
+           //`\$('#datetimepicker').prop('readonly', false);
+            $('#datetimepicker').prop('disabled', false);
         }
         else {
-
-            console.log("Not includes followup");
-
-            $("#datetimepicker").attr('readonly', true);
+            //$("#datetimepicker").attr('readonly', true);
+            $('#datetimepicker').prop('disabled', true);
         }
 
         if (@ViewData["enableForm"]!= null) {
@@ -53,18 +52,61 @@
         }
 
         $("#ddlAction").change(function () {
-
-            var followUpDate = $('#datetimepicker').val();
             var actionName = $("#ddlAction option:selected").text();
-            if (actionName.includes('Follow'))
-            {
-               $('#datetimepicker').prop('readonly', false);
+
+            if (actionName.includes('Follow')) {
+                $('#datetimepicker').prop('disabled', false);
             }
-            else
-            {
-               var followUpDate = $('#datetimepicker').val();
-               $('#datetimepicker').prop('readonly', true);
+            else if (actionName.includes('Close')) {
+                $('#datetimepicker').prop('disabled', true);
             }
+            else if (actionName.includes('Select a Action'))
+            {
+                $('#datetimepicker').prop('disabled', true);
+                
+                //$('#datetimepicker').datetimepicker('setDate', null);
+
+                $('#datetimepicker').val('').datetimepicker('update');
+            }
+        });
+
+        //$(document).on("click", "#btnSave", function (e) {
+        //    var UpdateValidCallModelForm = $('#validCallsEditForm').serialize();
+        //    console.log(UpdateValidCallModelForm);
+
+        //    $.ajax({
+        //        url: "/CRMCalls/UpdateValidCallModel",
+        //        type: "POST",
+        //        data: UpdateValidCallModelForm,
+        //        success: function (result) {
+        //            alert("Success");
+        //        }
+        //    })
+        //});
+
+        ////$("#validCallsEditForm").submit(function (e) {
+
+
+        ////    console.log(model);
+
+         
+        ////   e.preventDefault();
+        ////    if ($('#validCallsEditForm').valid()) {
+
+        ////        console.log($(this));
+        ////        console.log($(this).valid());
+        ////        console.log($(this).serialize());
+
+
+        ////        $.ajax({
+        ////            type: "POST",
+        ////            url: $(this).attr('action'),
+        ////            data: $(this).serialize(),
+        ////            success: function (res) {
+        ////                alert("Records added Successfully.");
+        ////            }
+        ////        });
+        ////    }
         });
 
     });
@@ -146,11 +188,11 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-3 col-sm-6">
-                <input type="submit" disabled="disabled" id="btnSave" value="Save" class="btn btn-primary" />
+                <input type="submit" id="btnSave" value="Save" class="btn btn-primary" />
             </div>
         </div>
     </div>
-    }
+}
 
     @section Scripts {
         @Scripts.Render("~/bundles/jqueryval")
