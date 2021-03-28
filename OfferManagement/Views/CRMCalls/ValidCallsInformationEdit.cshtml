@@ -37,19 +37,29 @@
             $('#datetimepicker').prop('disabled', true);
         }
 
-        if (@ViewData["enableForm"]!= null) {
+        @*if (@ViewData["enableForm"]!= null) {
             enableForm = @ViewData["enableForm"].ToString();
         }
         else {
             enableForm = false;
-        }
+        }*@
 
-        if (enableForm == true) {
+
+        if (!actionName.includes('Close')) {
             $('#validCallsEditForm *').prop('disabled', false);
         }
         else {
             $('#validCallsEditForm *').prop('disabled', true);
         }
+
+
+
+        //if (enableForm == true) {
+        //    $('#validCallsEditForm *').prop('disabled', false);
+        //}
+        //else {
+        //    $('#validCallsEditForm *').prop('disabled', true);
+        //}
 
         $("#ddlAction").change(function () {
             var actionName = $("#ddlAction option:selected").text();
@@ -63,7 +73,7 @@
             else if (actionName.includes('Select a Action'))
             {
                 $('#datetimepicker').prop('disabled', true);
-                
+
                 //$('#datetimepicker').datetimepicker('setDate', null);
 
                 $('#datetimepicker').val('').datetimepicker('update');
@@ -89,7 +99,7 @@
 
         ////    console.log(model);
 
-         
+
         ////   e.preventDefault();
         ////    if ($('#validCallsEditForm').valid()) {
 
@@ -107,7 +117,7 @@
         ////            }
         ////        });
         ////    }
-        });
+        //});
 
     });
 
