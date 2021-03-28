@@ -217,58 +217,49 @@ namespace OfferManagement.Controllers
                 ViewData["enableForm"] = "true";
             }
 
-            return PartialView("ValidCallsInformationEdit", validCall);
+            ValidCallEdit popUpModel = new ValidCallEdit();
+            popUpModel.ValidCallId = validCall.ValidCallId;
+            popUpModel.EventTime = validCall.EventTime;
+            popUpModel.LabName = validCall.LabName;
+            popUpModel.CustomerMobileNumber = validCall.CustomerMobileNumber;
+            popUpModel.Action = validCall.Action;
+            popUpModel.CallPurpose = validCall.CallPurpose;
+            popUpModel.Comment = validCall.Comment;
+            popUpModel.FollowUpTime = validCall.FollowUpTime;
+
+            return PartialView("ValidCallsInformationEdit", popUpModel);
         }
 
         [HttpPost]
-        public ActionResult UpdateValidCallModel(ValidCall currentValidCall)
+        public ActionResult UpdateValidCallModel(int validCallId, string purpose, string action, string comment, DateTime? followUpTime)
         {
             var validCalls = Session["ValidCallList"] as List<ValidCall>;
 
-            var existingValidCall = validCalls.Where(m => m.ValidCallId == currentValidCall.ValidCallId).ToList().FirstOrDefault();
+            var existingValidCall = validCalls.Where(m => m.ValidCallId == validCallId).ToList().FirstOrDefault();
 
-            //if (ModelState.IsValid)
-            //{
+            var user = (UserModel)Session["UserModel"];
 
-                var user = (UserModel)Session["UserModel"];
+            existingValidCall.UpdatedUser = user?.UserName;
 
-                existingValidCall.UpdatedUser = user?.UserName;
+            existingValidCall.UpdatedDateTime = DateTime.Now;
 
-                existingValidCall.UpdatedDateTime = DateTime.Now;
+            existingValidCall.Comment = comment;
 
-                existingValidCall.Comment = currentValidCall.Comment;
+            existingValidCall.CallPurpose = purpose;
 
-                existingValidCall.CallPurpose = currentValidCall.CallPurpose;
+            existingValidCall.Action = action;
 
-                existingValidCall.Action = currentValidCall.Action;
+            if (followUpTime != null)
+            {
+                existingValidCall.FollowUpTime = followUpTime.GetValueOrDefault().AddHours(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["ServerHoursDifference"])).AddMinutes(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["ServerMinsDifference"]));
+            }
+            var apiResults = new APIResults();
 
-                if (currentValidCall.FollowUpTime != null)
-                {
-                    existingValidCall.FollowUpTime = currentValidCall.FollowUpTime.GetValueOrDefault().AddHours(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["ServerHoursDifference"])).AddMinutes(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["ServerMinsDifference"]));
-                }
+            apiResults.UpdateValidCall(existingValidCall);
 
-                var apiResults = new APIResults();
+            return View();
 
-                apiResults.UpdateValidCall(existingValidCall);
-                return View();
-            //}
-            //else
-            //{
-            //    ViewData["FollowUpTime"] = (currentValidCall.FollowUpTime != null) ? currentValidCall.FollowUpTime : DateTime.Now;
 
-            //    if (currentValidCall.Action != null && currentValidCall.Action.Equals("Closed", StringComparison.InvariantCultureIgnoreCase))
-            //    {
-            //        ViewData["enableForm"] = "false";
-            //    }
-            //    else
-            //    {
-            //        ViewData["enableForm"] = "true";
-            //    }
-            //    //return PartialView("ValidCallsInformationEdit", currentValidCall);
-
-            //    return PrepareModalPopup(existingValidCall.ValidCallId);
-            //}
-            
         }
 
         public JsonResult GetCallVolume(DateTime fromDate, DateTime toDate)

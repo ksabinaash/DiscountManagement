@@ -7,6 +7,11 @@
 
 <script>
     $(document).ready(function () {
+        
+        function ReloadGrid()
+        {
+            new MvcGrid(document.querySelector('.mvc-grid')).reload();
+        }
 
         if ('@ViewBag.ExportPermission' == 'True') {
             $("#divExport").show();
@@ -36,7 +41,7 @@
                     url: "/CRMCalls/FilterValidCallsInformation",
                     type: "GET",
                     success: function (result) {
-                        new MvcGrid(document.querySelector('.mvc-grid')).reload();
+                        ReloadGrid();
                     }
                 })
             }
@@ -45,7 +50,7 @@
                     url: "/CRMCalls/ValidCallsInformation",
                     type: "GET",
                     success: function (result) {
-                        new MvcGrid(document.querySelector('.mvc-grid')).reload();
+                        ReloadGrid();
                     }
                 })
             }

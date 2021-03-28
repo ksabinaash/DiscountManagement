@@ -1,25 +1,48 @@
-﻿@model OfferManagement.Models.ValidCall
+﻿@model OfferManagement.Models.ValidCallEdit
 
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
 <script>
     $(document).ready(function () {
 
         $('#datetimepicker').prop('readonly', true);
 
-        var savedDate = new Date();
+        $("#validCallsEditForm").submit(function (e) {
+            e.preventDefault();
 
-        var model = @Html.Raw(Json.Encode(Model));
+            if ($("#ddlPurpose option:selected").text().includes("Select") || $("#ddlAction option:selected").text().includes("Select") || $('#txtComment').val() == "" || $('#txtComment').val() == null) {
+                return;
+            }
+            else {
+                if ($("#ddlAction option:selected").text().includes("Follow") && ($('#datetimepicker').val() == "" || $('#datetimepicker').val() == null)) {
+                    return;
+                }
 
-        var followUpTime = @Html.Raw(Json.Encode(Model.FollowUpTime));
+                var params = {
+                    'validCallId': $("#txtValidCallId").val(),
+                    'purpose': $("#ddlPurpose option:selected").text(),
+                    'action': $("#ddlAction option:selected").text(),
+                    'comment': $('#txtComment').val(),
+                    'followUpTime': $('#datetimepicker').val()
+                };
 
-        if (followUpTime != null) {
+                $.ajax({
+                    type: "POST",
+                    url: "/CRMCalls/UpdateValidCallModel",
+                    data: params,
+                    success: function (res) {
+                        alert("Record Updated Successfully.");
+                        $('#validCallsModal').modal('hide');
+                        new MvcGrid(document.querySelector('.mvc-grid')).reload();
+                    }
 
-            //console.log(followUpTime)
+                });
+            }
 
-            //savedDate = new Date(followUpTime.Value.Year, followUpTime.Value.Month - 1, followUpTime.Value.Day, followUpTime.Value.Hour, followUpTime.Value.Minute);
-        }
+        });
 
         $('#datetimepicker').datetimepicker({
-            defaultDate: savedDate,
+            defaultDate: new Date(),
             step: 30,
             theme: 'dark',
             minDate: new Date()
@@ -29,21 +52,11 @@
 
         if (actionName.includes('Follow')) {
 
-           //`\$('#datetimepicker').prop('readonly', false);
             $('#datetimepicker').prop('disabled', false);
         }
         else {
-            //$("#datetimepicker").attr('readonly', true);
             $('#datetimepicker').prop('disabled', true);
         }
-
-        @*if (@ViewData["enableForm"]!= null) {
-            enableForm = @ViewData["enableForm"].ToString();
-        }
-        else {
-            enableForm = false;
-        }*@
-
 
         if (!actionName.includes('Close')) {
             $('#validCallsEditForm *').prop('disabled', false);
@@ -51,15 +64,6 @@
         else {
             $('#validCallsEditForm *').prop('disabled', true);
         }
-
-
-
-        //if (enableForm == true) {
-        //    $('#validCallsEditForm *').prop('disabled', false);
-        //}
-        //else {
-        //    $('#validCallsEditForm *').prop('disabled', true);
-        //}
 
         $("#ddlAction").change(function () {
             var actionName = $("#ddlAction option:selected").text();
@@ -70,59 +74,16 @@
             else if (actionName.includes('Close')) {
                 $('#datetimepicker').prop('disabled', true);
             }
-            else if (actionName.includes('Select a Action'))
-            {
+            else if (actionName.includes('Select a Action')) {
                 $('#datetimepicker').prop('disabled', true);
-
-                //$('#datetimepicker').datetimepicker('setDate', null);
 
                 $('#datetimepicker').val('').datetimepicker('update');
             }
         });
 
-        //$(document).on("click", "#btnSave", function (e) {
-        //    var UpdateValidCallModelForm = $('#validCallsEditForm').serialize();
-        //    console.log(UpdateValidCallModelForm);
-
-        //    $.ajax({
-        //        url: "/CRMCalls/UpdateValidCallModel",
-        //        type: "POST",
-        //        data: UpdateValidCallModelForm,
-        //        success: function (result) {
-        //            alert("Success");
-        //        }
-        //    })
-        //});
-
-        ////$("#validCallsEditForm").submit(function (e) {
-
-
-        ////    console.log(model);
-
-
-        ////   e.preventDefault();
-        ////    if ($('#validCallsEditForm').valid()) {
-
-        ////        console.log($(this));
-        ////        console.log($(this).valid());
-        ////        console.log($(this).serialize());
-
-
-        ////        $.ajax({
-        ////            type: "POST",
-        ////            url: $(this).attr('action'),
-        ////            data: $(this).serialize(),
-        ////            success: function (res) {
-        ////                alert("Records added Successfully.");
-        ////            }
-        ////        });
-        ////    }
-        //});
-
     });
 
 </script>
-
 
 @using (Html.BeginForm("UpdateValidCallModel", "CRMCalls", FormMethod.Post, new { @id = "validCallsEditForm" }))
 {
@@ -130,32 +91,32 @@
 
     <div class="form-horizontal">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        
+
         <div class="form-group">
             @Html.LabelFor(model => model.ValidCallId, htmlAttributes: new { @class = "control-label col-md-2 col-sm-6" })
             <div class="col-md-3 col-sm-6">
-                @Html.EditorFor(model => model.ValidCallId, new { htmlAttributes = new { @class = "form-control" , @readonly="readonly"} })
+                @Html.EditorFor(model => model.ValidCallId, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @id = "txtValidCallId" } })
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.EventTime, htmlAttributes: new { @class = "control-label col-md-2 col-sm-6" })
             <div class="col-md-3 col-sm-6">
-                @Html.EditorFor(model => model.EventTime, new { htmlAttributes = new { @class = "form-control", @readonly="readonly" } })
+                @Html.EditorFor(model => model.EventTime, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.LabName, htmlAttributes: new { @class = "control-label col-md-2 col-sm-6" })
             <div class="col-md-3 col-sm-6">
-                @Html.EditorFor(model => model.LabName, new { htmlAttributes = new { @class = "form-control", @readonly="readonly" } })
+                @Html.EditorFor(model => model.LabName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.CustomerMobileNumber, htmlAttributes: new { @class = "control-label col-md-2 col-sm-6" })
             <div class="col-md-3 col-sm-6">
-                @Html.EditorFor(model => model.CustomerMobileNumber, new { htmlAttributes = new { @class = "form-control", @readonly="readonly" } })
+                @Html.EditorFor(model => model.CustomerMobileNumber, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
             </div>
         </div>
 
@@ -164,7 +125,7 @@
             <div class="col-md-3 col-sm-6">
                 @Html.DropDownListFor(model => model.CallPurpose,
                      ((List<string>)Session["CallPurpose"]).Select(m => new SelectListItem { Text = m, Value = m }), "Select a Purpose",
-                         htmlAttributes: new { @class = "form-control" })
+                         htmlAttributes: new { @class = "form-control", @id = "ddlPurpose" })
                 @Html.ValidationMessageFor(model => model.CallPurpose, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -182,7 +143,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Comment, htmlAttributes: new { @class = "control-label col-md-2 col-sm-6" })
             <div class="col-md-3 col-sm-6">
-                @Html.EditorFor(model => model.Comment, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Comment, new { htmlAttributes = new { @class = "form-control", @id = "txtComment" } })
                 @Html.ValidationMessageFor(model => model.Comment, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -190,9 +151,15 @@
         <div class="form-group">
             @Html.LabelFor(model => model.FollowUpTime, htmlAttributes: new { @class = "control-label col-md-2 col-sm-6" })
             <div class="col-md-3 col-sm-6">
-                @Html.EditorFor(model => model.FollowUpTime, 
+                @Html.EditorFor(model => model.FollowUpTime,
                new { htmlAttributes = new { @class = "form-control", @id = "datetimepicker" } })
-                @Html.ValidationMessageFor(model => model.FollowUpTime, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-2 col-sm-6">
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <p>*Mandatory Fields</p> <p>**Mandatory for 'Follow up' action</p>
             </div>
         </div>
 
@@ -204,8 +171,9 @@
     </div>
 }
 
-    @section Scripts {
-        @Scripts.Render("~/bundles/jqueryval")
-        @Styles.Render("~/Content/css")
-        @Scripts.Render("~/bundles/bootstrap")
-    }
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/bootstrap")
+}

@@ -24,16 +24,10 @@ namespace OfferManagement.Models
 
         public string CallType { get; set; }
 
-        [Required]
-        [Display(Name = "Purpose *")]
         public string CallPurpose { get; set; }
 
-        [Required]
-        [Display(Name = "Action *")]
         public string Action { get; set; }
 
-        [Required]
-        [Display(Name = "Comment *")]
         public string Comment { get; set; }
 
         public string CallStatus { get; set; }
