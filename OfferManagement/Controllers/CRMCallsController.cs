@@ -81,14 +81,15 @@ namespace OfferManagement.Controllers
 
             grid.Query = Request.QueryString;
 
-            grid.Columns.Add(model => "<button type = \"button\" class=\"btn btn-primary glyphicon glyphicon-pencil\" data-id=\"" + model.ValidCallId + "\" data-toggle=\"modal\" id=\"btnModalPopup\"></button>").Encoded(false).Titled("Action");
+            grid.Columns.Add(model => "<button type = \"button\" class=\"btn btn-primary glyphicon glyphicon-pencil\" data-id=\"" + model.ValidCallId + "\" data-toggle=\"modal\" id=\"btnModalPopup\"></button>").Encoded(false).Titled("Edit");
             grid.Columns.Add(model => model.LabName).Titled("Lab Name");
             grid.Columns.Add(model => model.CustomerMobileNumber).Titled("Customer MobileNumber");
-            grid.Columns.Add(model => model.CallBackStatus).Titled("CallBackS tatus");
+            grid.Columns.Add(model => model.CallBackStatus).Titled("CallBack Status");
             grid.Columns.Add(model => model.IsWhiteListedCall).Titled("Is WhiteListed");
             grid.Columns.Add(model => model.RespondedLabName).Titled("Responded LabName");
             grid.Columns.Add(model => model.CallPurpose).Titled("CallPurpose");
             grid.Columns.Add(model => model.Action).Titled("Action");
+            grid.Columns.Add(model => model.FollowUpTime).Titled("FollowUp Time");
             grid.Columns.Add(model => model.RespondedTime).Titled("Responded Time").Filterable(GridFilterType.Double);
             grid.Columns.Add(model => model.EventTime).Titled("CallMissedTime").Filterable(GridFilterType.Double);
             grid.Columns.Add(model => model.RespondedEventTime).Titled("Responded Call").Filterable(GridFilterType.Double);
@@ -341,7 +342,7 @@ namespace OfferManagement.Controllers
                 IGrid<MissedCallGrid> grid = CreateExportableMissedCallsGrid(Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["ExportPageCount"]), missedCallGridValue);
                 ExcelWorksheet sheet = package.Workbook.Worksheets["Data"];
 
-                foreach (IGridColumn column in grid.Columns)
+                foreach (IGridColumn column in grid.Columns.Skip(1))
                 {
                     sheet.Cells[1, col].Value = column.Title;
                     sheet.Column(col++).Width = 18;
@@ -352,7 +353,7 @@ namespace OfferManagement.Controllers
                 foreach (IGridRow<MissedCallGrid> gridRow in grid.Rows)
                 {
                     col = 1;
-                    foreach (IGridColumn column in grid.Columns)
+                    foreach (IGridColumn column in grid.Columns.Skip(1))
                         sheet.Cells[row, col++].Value = column.ValueFor(gridRow);
 
                     row++;
