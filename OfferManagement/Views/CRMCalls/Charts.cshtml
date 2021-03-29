@@ -139,7 +139,6 @@
                      data: chartFilter,
                      success: function (data) {
                          LoadCallTrendData(data);
-                        return data;
                     },
                     error: function (ex) {
                 console.log(ex);
@@ -212,10 +211,7 @@
             var sum = CallPurposeData.sumData.reduce(function (a, b) {
                 return parseInt(a) + parseInt(b);
             }, 0);
-
-            console.log(sum);
-
-            if (sum > 0) {
+if (sum > 0) {
 
                 chrtlbls = CallPurposeData.purposes;
                 var ctx = document.getElementById('piechartpurpose');
@@ -280,7 +276,17 @@
                 mybarChart.update();
             }
             else {
-    
+
+                var ctx1 = document.getElementById('piechartpurpose');
+                var myChart = new Chart(ctx1, {
+                    type: 'pie'
+                });
+
+                var ctx2 = document.getElementById('stackChartpurpose');
+                var myChart = new Chart(ctx2, {
+                    type: 'bar'
+                });
+
                 document.getElementById('piechartpurpose').remove();
                 document.getElementById('stackChartpurpose').remove();
 

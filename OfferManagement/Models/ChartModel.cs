@@ -19,7 +19,7 @@ namespace OfferManagement.Models
 
     public class ChartMetrics
     {
-        public string labName { get; set; }
+        public string name { get; set; }
 
         public int count { get; set; }
     }
