@@ -139,7 +139,6 @@
                      data: chartFilter,
                      success: function (data) {
                          LoadCallTrendData(data);
-                         console.log(data);
                         return data;
                     },
                     error: function (ex) {
@@ -207,6 +206,7 @@
  }
 
         function LoadCallPurposeData(data) {
+
             CallPurposeData = data;
 
             var sum = CallPurposeData.sumData.reduce(function (a, b) {
@@ -442,7 +442,7 @@
             <div class="card-header text-center"> <h4><b>Call Purpose Chart - Stack </b></h4></div>
         </div>
         <div class="card-body">
-            <canvas id="stackChartpurpose" class="chartsize"></canvas>
+            <canvas id="stackChartpurpose"></canvas>
             <div id="purposestackchrt" hidden class="text-center">No Data to Prepare Chart !!!</div>
         </div>
     </div>
@@ -452,8 +452,8 @@
     <div class="row">
         <div class="card col-xs-12 col-md-12 col-lg-12">
             <div class="card-header text-center"><h4><b>Call Volume Chart - Stack </b></h4></div>
-            <div class="card-body chartsize">
-                <canvas id="stackChartVolume" class="chartsize"></canvas>
+            <div class="card-body">
+                <canvas id="stackChartVolume"></canvas>
             </div>
         </div>
     </div>
@@ -462,8 +462,8 @@
     <div class="row">
         <div class="card col-xs-12 col-md-12 col-lg-12">
             <div class="card-header text-center"><h4><b>Call Trend Chart - Line </b></h4></div>
-            <div class="card-body chartsize">
-                <canvas id="lineChartTrend" class="chartsize"></canvas>
+            <div class="card-body">
+                <canvas id="lineChartTrend"></canvas>
             </div>
         </div>
     </div>
