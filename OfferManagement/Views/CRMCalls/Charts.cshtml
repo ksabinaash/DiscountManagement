@@ -19,7 +19,7 @@
             timepicker: false,
             maxDate: new Date()
         });
-            
+
 
         $('#toDatepicker').datetimepicker({
             format: 'm/d/Y',
@@ -28,7 +28,7 @@
             maxDate: new Date()
         }
         );
-    
+
         function getRandomColor() {
             var letters = '0123456789ABCDEF'.split('');
             var color = '#';
@@ -63,7 +63,7 @@
                 alert("ToDate can't be greater than FromDate!");
             }
 
-            
+
         });
 
         function LoadCharts() {
@@ -100,7 +100,7 @@
         function LoadCallVolume(chartFilter)
         {
 
-        
+
            $.ajax({
                     type: 'GET',
                     url: '@Url.Action("GetCallVolume", "CRMCalls")',
@@ -116,12 +116,12 @@
 
         function LoadCallPurpose(chartFilter)
         {
-            
+
                        $.ajax({
                     type: 'GET',
                     url: '@Url.Action("GetCallPurpose", "CRMCalls")',
                     data: chartFilter,
-                    success: function (data) {
+                           success: function (data) {
                         LoadCallPurposeData(data);
                     },
                     error: function (ex) {
@@ -132,7 +132,7 @@
 
         function LoadCallTrend(chartFilter)
         {
-                
+
                  $.ajax({
                     type: 'GET',
                      url: '@Url.Action("GetCallTrends", "CRMCalls")',
@@ -149,7 +149,7 @@
         function LoadCallVolumeData(data)
         {
             callVolumeData = data;
-            
+
             var r = () => Math.random() * 256 >> 0;
             var ctx = document.getElementById('stackChartVolume');
             var myChart = new Chart(ctx, {
@@ -211,7 +211,11 @@
             var sum = CallPurposeData.sumData.reduce(function (a, b) {
                 return parseInt(a) + parseInt(b);
             }, 0);
-if (sum > 0) {
+
+            if (sum > 0) {
+
+                document.getElementById('purposepiechrt').hidden = true;
+                document.getElementById('purposestackchrt').hidden = true;
 
                 chrtlbls = CallPurposeData.purposes;
                 var ctx = document.getElementById('piechartpurpose');
@@ -276,25 +280,9 @@ if (sum > 0) {
                 mybarChart.update();
             }
             else {
-
-                var ctx1 = document.getElementById('piechartpurpose');
-                var myChart = new Chart(ctx1, {
-                    type: 'pie'
-                });
-
-                var ctx2 = document.getElementById('stackChartpurpose');
-                var myChart = new Chart(ctx2, {
-                    type: 'bar'
-                });
-
-                document.getElementById('piechartpurpose').remove();
-                document.getElementById('stackChartpurpose').remove();
-
                 document.getElementById('purposepiechrt').hidden = false;
                 document.getElementById('purposestackchrt').hidden = false;
-
-
-            }
+}
 
         }
 
@@ -371,10 +359,10 @@ if (sum > 0) {
 
     .chartsize {
         display: block;
-        align-content:center!important;
+        align-content: center !important;
         height: 450px !important;
         width: 920px !important;
-        padding-left:100px !important;
+        padding-left: 100px !important;
     }
 </style>
 
@@ -438,9 +426,9 @@ if (sum > 0) {
                 <canvas id="piechartpurpose"></canvas>
                 <div id="purposepiechrt" hidden class="text-center">No Data to Prepare Chart !!!</div>
             </div>
-            </div>
         </div>
-    
+    </div>
+
     <hr />
     <br />
     <div class="row">
@@ -452,7 +440,7 @@ if (sum > 0) {
             <div id="purposestackchrt" hidden class="text-center">No Data to Prepare Chart !!!</div>
         </div>
     </div>
-    
+
     <hr />
     <br />
     <div class="row">
