@@ -30,7 +30,7 @@ namespace OfferManagement.Models
 
 
         //Why ? RespondedEventTime number is the RespondedTime right
-        public DateTime RespondedEventTime { get; set; }
+        public DateTime? RespondedEventTime { get; set; }
 
         public int RespondedCallDuration { get; set; }
 

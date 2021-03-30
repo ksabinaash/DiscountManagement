@@ -82,6 +82,7 @@ namespace OfferManagement.Controllers
             grid.Query = Request.QueryString;
 
             grid.Columns.Add(model => "<button type = \"button\" class=\"btn btn-primary glyphicon glyphicon-pencil\" data-id=\"" + model.ValidCallId + "\" data-toggle=\"modal\" id=\"btnModalPopup\"></button>").Encoded(false).Titled("Edit");
+            grid.Columns.Add(model => model.Id).Titled("Id");
             grid.Columns.Add(model => model.LabName).Titled("Lab Name");
             grid.Columns.Add(model => model.CustomerMobileNumber).Titled("Customer MobileNumber");
             grid.Columns.Add(model => model.CallBackStatus).Titled("CallBack Status");
@@ -92,7 +93,7 @@ namespace OfferManagement.Controllers
             grid.Columns.Add(model => model.FollowUpTime).Titled("FollowUp Time");
             grid.Columns.Add(model => model.RespondedTime).Titled("Responded Time").Filterable(GridFilterType.Double);
             grid.Columns.Add(model => model.EventTime).Titled("CallMissedTime").Filterable(GridFilterType.Double);
-            grid.Columns.Add(model => model.RespondedEventTime).Titled("Responded Call").Filterable(GridFilterType.Double);
+            grid.Columns.Add(model => model.RespondedEventTime).Titled("Responded EventTime").Filterable(GridFilterType.Double);
             grid.Columns.Add(model => model.Comment).Titled("Comment");
             grid.Columns.Add(model => model.ValidCallId).Titled("Responded CallId");
             grid.Columns.Add(model => model.RespondedCallType).Titled("Responded CallType");
