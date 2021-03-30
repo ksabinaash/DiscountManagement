@@ -39,7 +39,8 @@ namespace OfferManagement
                      //"~/scripts/bootstrap-datepicker.js",
                      "~/scripts/jquery.datetimepicker.js"));
 
-
+            bundles.Add(new ScriptBundle("~/bundles/MVCGrid").Include(
+                                  "~/Scripts/MvcGrid/mvc-grid.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",

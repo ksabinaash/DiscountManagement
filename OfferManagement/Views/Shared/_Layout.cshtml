@@ -13,6 +13,7 @@
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/Chart")
     @Scripts.Render("~/bundles/datetime")
+    @Scripts.Render("~/bundles/MVCGrid")
     <link href="~/Content/MvcGrid/mvc-grid.css" rel="stylesheet" />
 </head>
 <body>
@@ -58,7 +59,6 @@
     </div>
     <div class="container body-content">
         @RenderBody()
-        <script src="~/Scripts/MvcGrid/mvc-grid.js"></script>
         <script>
             [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
                 new MvcGrid(element);
