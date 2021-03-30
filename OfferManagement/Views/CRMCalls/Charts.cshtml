@@ -12,6 +12,9 @@
     $(document).ready(function () {
 
         var labNamefull;
+        let pallet = ["#0074D9", "#FF4136", "#2ECC40", "#FF851B", "#7FDBFF",
+            "#B10DC9", "#FFDC00", "#001f3f", "#39CCCC", "#01FF70", "#85144b",
+            "#F012BE", "#3D9970", "#111111", "#AAAAAA"];
 
         $('#fromDatePicker').datetimepicker({
             format: 'm/d/Y',
@@ -29,14 +32,17 @@
         }
         );
 
-        function getRandomColor() {
-            var letters = '0123456789ABCDEF'.split('');
-            var color = '#';
-            for (var i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
+        function getColors(length) {
+          
+            let colors = [];
+
+            for (let i = 0; i < length; i++) {
+                colors.push(pallet[i % pallet.length]);
             }
-            return color;
+
+            return colors;
         }
+
 
         var chartColors = {
             red: 'rgb(255, 99, 132)',
@@ -208,15 +214,24 @@
 
             CallPurposeData = data;
 
+            toggleChartBlocks('show');
+
             var sum = CallPurposeData.sumData.reduce(function (a, b) {
                 return parseInt(a) + parseInt(b);
             }, 0);
 
             if (sum > 0) {
 
-                document.getElementById('purposepiechrt').hidden = true;
-                document.getElementById('purposestackchrt').hidden = true;
 
+                //var backgroundColorArr = [];
+
+                //for (i = 0; i < CallPurposeData.purposes.length; i++) {
+
+
+                //    backgroundColorArr.push(
+                //        getRandomColor())
+                //};
+    
                 chrtlbls = CallPurposeData.purposes;
                 var ctx = document.getElementById('piechartpurpose');
                 var myChart = new Chart(ctx, {
@@ -224,11 +239,8 @@
                     data: {
                         datasets: [{
                             data: CallPurposeData.sumData,
-                            backgroundColor: [
-                                chartColors.red,
-                                chartColors.blue,
-                                chartColors.green,
-                            ]
+                            //backgroundColor: backgroundColorArr
+                            backgroundColor: getColors(CallPurposeData.purposes.length)
                         }],
                         labels: chrtlbls,
                     },
@@ -272,7 +284,7 @@
 
                     mybarChart.data.datasets.push({
                         label: CallPurposeData.purposes[i],
-                        backgroundColor: getRandomColor(),
+                        backgroundColor: pallet[i],
                         data: CallPurposeData.countData[i]
                     });
 
@@ -280,9 +292,8 @@
                 mybarChart.update();
             }
             else {
-                document.getElementById('purposepiechrt').hidden = false;
-                document.getElementById('purposestackchrt').hidden = false;
-}
+                toggleChartBlocks('hide');
+            }
 
         }
 
@@ -346,6 +357,23 @@
             });
 
         }
+
+        function toggleChartBlocks(action) {
+
+            if (action == 'hide') {
+                document.getElementById("piechartpurpose").style.display = "none"
+                document.getElementById("stackChartpurpose").style.display = "none"
+                document.getElementById("purposepiechrt").style.display = "block"
+                document.getElementById("purposestackchrt").style.display = "block"
+            }
+            else if (action == 'show') {
+                document.getElementById("piechartpurpose").style.display = "block"
+                document.getElementById("stackChartpurpose").style.display = "block"
+                document.getElementById("purposepiechrt").style.display = "none"
+                document.getElementById("purposestackchrt").style.display = "none"
+            }
+        }
+
     });
 
 
@@ -424,7 +452,7 @@
             <div class="card-header text-center"><h4><b>Call Purpose Chart - Pie</b></h4></div>
             <div class="card-body">
                 <canvas id="piechartpurpose"></canvas>
-                <div id="purposepiechrt" hidden class="text-center">No Data to Prepare Chart !!!</div>
+                <div id="purposepiechrt"  class="text-center">No Data to Prepare Chart !!!</div>
             </div>
         </div>
     </div>
@@ -437,7 +465,7 @@
         </div>
         <div class="card-body">
             <canvas id="stackChartpurpose"></canvas>
-            <div id="purposestackchrt" hidden class="text-center">No Data to Prepare Chart !!!</div>
+            <div id="purposestackchrt"  class="text-center">No Data to Prepare Chart !!!</div>
         </div>
     </div>
 
