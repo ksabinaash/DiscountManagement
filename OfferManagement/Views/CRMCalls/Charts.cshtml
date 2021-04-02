@@ -12,18 +12,22 @@
     $(document).ready(function () {
 
         var labNamefull;
+
+        var purposePie;
+        var purposeBar;
+        var barVolume;
+        var lineTrend;
+
+
         let pallet = ["#0074D9", "#FF4136", "#2ECC40", "#FF851B", "#7FDBFF",
             "#B10DC9", "#FFDC00", "#001f3f", "#39CCCC", "#01FF70", "#85144b",
             "#F012BE", "#3D9970", "#111111", "#AAAAAA"];
-
         $('#fromDatePicker').datetimepicker({
             format: 'm/d/Y',
             theme: 'dark',
             timepicker: false,
             maxDate: new Date()
         });
-
-
         $('#toDatepicker').datetimepicker({
             format: 'm/d/Y',
             theme: 'dark',
@@ -31,9 +35,8 @@
             maxDate: new Date()
         }
         );
-
         function getColors(length) {
-          
+
             let colors = [];
 
             for (let i = 0; i < length; i++) {
@@ -42,7 +45,6 @@
 
             return colors;
         }
-
 
         var chartColors = {
             red: 'rgb(255, 99, 132)',
@@ -57,6 +59,20 @@
         LoadCharts();
 
         $(document).on("click", "#btnsubmit", function (e) {
+
+            if (purposePie != undefined && purposeBar != undefined && barVolume != undefined && lineTrend != undefined) {
+
+                console.log(purposePie);
+                console.log(purposeBar);
+                console.log(barVolume);
+                console.log(lineTrend);
+
+                purposePie.destroy();
+                purposeBar.destroy();
+                barVolume.destroy();
+                lineTrend.destroy();
+
+            }
 
             var fromDate = $('#fromDatePicker').val();
 
@@ -158,7 +174,7 @@
 
             var r = () => Math.random() * 256 >> 0;
             var ctx = document.getElementById('stackChartVolume');
-            var myChart = new Chart(ctx, {
+            barVolume = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: callVolumeData.labs,
@@ -231,10 +247,10 @@
                 //    backgroundColorArr.push(
                 //        getRandomColor())
                 //};
-    
+
                 chrtlbls = CallPurposeData.purposes;
                 var ctx = document.getElementById('piechartpurpose');
-                var myChart = new Chart(ctx, {
+                purposePie = new Chart(ctx, {
                     type: 'pie',
                     data: {
                         datasets: [{
@@ -257,7 +273,7 @@
 
                 var barpurposes = [];
                 var bardata = [];
-                var mybarChart = new Chart(ctx, {
+                purposeBar = new Chart(ctx, {
                     type: 'bar',
 
                     data: {
@@ -282,14 +298,14 @@
 
                 for (i = 0; i < CallPurposeData.purposes.length; i++) {
 
-                    mybarChart.data.datasets.push({
+                    purposeBar.data.datasets.push({
                         label: CallPurposeData.purposes[i],
                         backgroundColor: pallet[i],
                         data: CallPurposeData.countData[i]
                     });
 
                 }
-                mybarChart.update();
+                purposeBar.update();
             }
             else {
                 toggleChartBlocks('hide');
@@ -301,7 +317,9 @@
             callTrendData = data;
             var ctx = document.getElementById('lineChartTrend');
             var period = callTrendData.period;
-            var myChart = new Chart(ctx, {
+
+
+            lineTrend = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: period,
@@ -452,7 +470,7 @@
             <div class="card-header text-center"><h4><b>Call Purpose Chart - Pie</b></h4></div>
             <div class="card-body">
                 <canvas id="piechartpurpose"></canvas>
-                <div id="purposepiechrt"  class="text-center">No Data to Prepare Chart !!!</div>
+                <div id="purposepiechrt" class="text-center">No Data to Prepare Chart !!!</div>
             </div>
         </div>
     </div>
@@ -465,7 +483,7 @@
         </div>
         <div class="card-body">
             <canvas id="stackChartpurpose"></canvas>
-            <div id="purposestackchrt"  class="text-center">No Data to Prepare Chart !!!</div>
+            <div id="purposestackchrt" class="text-center">No Data to Prepare Chart !!!</div>
         </div>
     </div>
 
